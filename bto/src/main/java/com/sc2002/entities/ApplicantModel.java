@@ -17,7 +17,7 @@ public class ApplicantModel extends User{
     // Contains Project booked(NOT SURE HOW WE GONNA HANDLE BTOPROJECT OBJECT)
     private BTOProjectModel bookedProject;
 
-    ApplicantModel(String name, String nric, int age, String isMarried, String password){
+    public ApplicantModel(String name, String nric, int age, String isMarried, String password){
         super(nric, name, age, isMarried, password,UserRole.APPLICANT);
     }
 

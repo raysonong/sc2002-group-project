@@ -134,10 +134,7 @@ public abstract class User {
      * @throws AuthenticationException If the NRIC or password does not match
      * the stored credentials.
      */
-    public void authenticate(String nric, String password) throws AuthenticationException {
-        if (!nric.equals(this.nric)) {
-            throw new AuthenticationException("NRIC does not match.");
-        }
+    public void authenticate(String password) throws AuthenticationException {
         if (!hashPasswd(password).equals(this.password)) { // very good tool for a lot of things!
             throw new AuthenticationException("Password does not match.");
         }
