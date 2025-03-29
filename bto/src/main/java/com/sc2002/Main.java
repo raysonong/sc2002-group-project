@@ -3,6 +3,10 @@ package com.sc2002;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.sc2002.entities.BTOProjectModel;
+import com.sc2002.entities.HDBManagerModel;
+import com.sc2002.vendors.HDBManager;
+
 /**
  * The main entry point for the BTO project management application.
  */

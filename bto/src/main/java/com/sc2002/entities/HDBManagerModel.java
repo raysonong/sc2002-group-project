@@ -1,10 +1,10 @@
-package com.sc2002;
+package com.sc2002.entities;
 
 /**
  * This class is a model class that stores the information of each HDB Manager
  */
 
-class HDBManagerModel extends User {
+public class HDBManagerModel extends User {
 
     /**
      * The projectID that they are handling
@@ -19,7 +19,7 @@ class HDBManagerModel extends User {
      * @param isMarried Marital Status of the user
      * @param password The password of the account 
      */
-    HDBManagerModel(String name, String nric, int age, String isMarried, String password) {
+    public HDBManagerModel(String name, String nric, int age, String isMarried, String password) {
         super(nric, name, age, isMarried, password);
     }
 
