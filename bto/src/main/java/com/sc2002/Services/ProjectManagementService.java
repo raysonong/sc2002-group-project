@@ -6,6 +6,9 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 import com.sc2002.entities.BTOProjectModel;
+import com.sc2002.entities.HDBManagerModel;
+import com.sc2002.entities.User;
+import com.sc2002.enums.UserRole;
 
 public class ProjectManagementService {
 
@@ -16,7 +19,12 @@ public class ProjectManagementService {
      * @param scanner The Scanner object for user input.
      * @return A new BTOProjectModel object with the specified details.
      */
-    public BTOProjectModel createProject(int newProjectID, Scanner scanner) {
+    public BTOProjectModel createProject(int newProjectID, Scanner scanner,User currentUser) {
+        if(currentUser.getUsersRole() != UserRole.HDB_MANAGER) {
+            System.out.println("You do not have permission to create a project.");
+            return null;
+        }
+        
         String projectName, neighborhood;
         int twoRoomCount = 0, threeRoomCount = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
@@ -117,6 +125,6 @@ public class ProjectManagementService {
             }
         } while (maxOfficer < 0 || maxOfficer > 10);
 
-        return new BTOProjectModel(newProjectID, projectName, neighborhood, twoRoomCount, threeRoomCount, openingDate, closingDate, maxOfficer, hdbManagerModel.getNRIC());
+        return new BTOProjectModel(newProjectID, projectName, neighborhood, twoRoomCount, threeRoomCount, openingDate, closingDate, maxOfficer, currentUser.getUserID());
     }
 }

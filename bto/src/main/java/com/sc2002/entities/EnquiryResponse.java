@@ -3,20 +3,30 @@ package com.sc2002.entities;
 import java.util.Date;
 
 public class EnquiryResponse {
+    private static int nextResponseId = 0; // Static counter for auto-incrementing IDs
     private int responseId;
-    private String respondingOfficerNRIC;
+    private int respondingOfficerUserID;
     private int enquiryId;
     private String responseText;
     private Date responseDate;
-    protected EnquiryResponse(int enquiryIds){
-        // get next responseId from enquiry repo
-        //
+    EnquiryResponse(String officerResponse,int enquiryIds,int officerUserID){
+        responseId = nextResponseId++; // Assign current ID and increment for next use
         enquiryId=enquiryIds;
-        
+        responseText=officerResponse;
+        respondingOfficerUserID=officerUserID;
+        responseDate = new Date(); // Initialize response date
     }
-    // unsure how to proceed, should i do public so that services can handle it?
-    //protected ,i think public 
     public int getResponseId() {
         return responseId;
+    }
+    public Date getResponseDate() {
+        return responseDate;
+    }
+
+    public String getResponseText() {
+        return responseText;
+    }
+    public int getOfficerUserId() {
+        return respondingOfficerUserID;
     }
 }

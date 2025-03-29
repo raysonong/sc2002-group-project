@@ -48,9 +48,9 @@ public class BTOProjectModel {
     private LocalDate closingDate;
 
     /**
-     * The ID of the manager assigned to the project.
+     * The UserID of the manager assigned to the project.
      */
-    private String managerID;
+    private int managerUserID;
 
     /**
      * The visibility status of the project.
@@ -79,7 +79,7 @@ public class BTOProjectModel {
      * @param closingDate        The application closing date.
      * @param maxManagingOfficer The maximum number of managing officers allowed.
      */
-    public BTOProjectModel(int projectID, String projectName, String neighborhood, int twoRoomCount, int threeRoomCount, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, String managerID) {
+    public BTOProjectModel(int projectID, String projectName, String neighborhood, int twoRoomCount, int threeRoomCount, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
         managingOfficerID = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public class BTOProjectModel {
         this.openingDate = openingDate;
         this.closingDate = closingDate;
         this.maxManagingOfficer = maxManagingOfficer;
-        this.managerID = managerID;
+        this.managerUserID = managerUserID;
 
         this.isVisibility = false;
     }
@@ -165,7 +165,7 @@ public class BTOProjectModel {
      * @return The count of 3-room flats.
      */
     public int getThreeRoomCount() {
-        return threeRoomCount;
+        return this.threeRoomCount;
     }
 
     /**
@@ -183,7 +183,7 @@ public class BTOProjectModel {
      * @return The opening date.
      */
     public LocalDate getOpeningDate() {
-        return openingDate;
+        return this.openingDate;
     }
 
     /**
@@ -201,7 +201,7 @@ public class BTOProjectModel {
      * @return The closing date.
      */
     public LocalDate getClosingDate() {
-        return closingDate;
+        return this.closingDate;
     }
 
     /**
@@ -218,17 +218,17 @@ public class BTOProjectModel {
      *
      * @return The manager ID.
      */
-    public String getManagerID() {
-        return managerID;
+    public int getManagerID() {
+        return this.managerUserID;
     }
 
     /**
      * Sets the ID of the manager assigned to the project.
      *
-     * @param managerID The manager ID to set.
+     * @param managerUserID The manager ID to set.
      */
-    public void setManagerID(String managerID) {
-        this.managerID = managerID;
+    public void setManagerID(int managerUserID) {
+        this.managerUserID = managerUserID;
     }
 
     /**
@@ -237,7 +237,7 @@ public class BTOProjectModel {
      * @return True if the project is visible, false otherwise.
      */
     public boolean isVisibility() {
-        return isVisibility;
+        return this.isVisibility;
     }
 
     /**
@@ -246,7 +246,7 @@ public class BTOProjectModel {
      * @param visibility The visibility status to set.
      */
     public void setVisibility(boolean visibility) {
-        isVisibility = visibility;
+        this.isVisibility = visibility;
     }
 
     /**
@@ -255,7 +255,7 @@ public class BTOProjectModel {
      * @return The maximum number of managing officers.
      */
     public int getMaxManagingOfficer() {
-        return maxManagingOfficer;
+        return this.maxManagingOfficer;
     }
 
     /**
@@ -273,7 +273,7 @@ public class BTOProjectModel {
      * @return The list of managing officer IDs.
      */
     public ArrayList<String> getManagingOfficerID() {
-        return managingOfficerID;
+        return this.managingOfficerID;
     }
 
     /**
@@ -303,16 +303,16 @@ public class BTOProjectModel {
      */
     public void printAll() {
         System.out.println("BTO Project Details:");
-        System.out.println("Project ID: " + projectID);
-        System.out.println("Project Name: " + projectName);
-        System.out.println("Neighborhood: " + neighborhood);
-        System.out.println("2-Room Flats Count: " + twoRoomCount);
-        System.out.println("3-Room Flats Count: " + threeRoomCount);
-        System.out.println("Opening Date: " + openingDate);
-        System.out.println("Closing Date: " + closingDate);
-        System.out.println("Manager ID: " + (managerID));
-        System.out.println("Visibility: " + (isVisibility ? "Visible" : "Not Visible"));
-        System.out.println("Max Managing Officers: " + maxManagingOfficer);
-        System.out.println("Managing Officer IDs: " + (managingOfficerID.isEmpty() ? "None" : managingOfficerID));
+        System.out.println("Project ID: " + this.projectID);
+        System.out.println("Project Name: " + this.projectName);
+        System.out.println("Neighborhood: " + this.neighborhood);
+        System.out.println("2-Room Flats Count: " + this.twoRoomCount);
+        System.out.println("3-Room Flats Count: " + this.threeRoomCount);
+        System.out.println("Opening Date: " + this.openingDate);
+        System.out.println("Closing Date: " + this.closingDate);
+        System.out.println("Manager ID: " + (this.managerUserID));
+        System.out.println("Visibility: " + (this.isVisibility ? "Visible" : "Not Visible"));
+        System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
+        System.out.println("Managing Officer IDs: " + (this.managingOfficerID.isEmpty() ? "None" : this.managingOfficerID));
     }
 }

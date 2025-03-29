@@ -40,6 +40,8 @@ public abstract class User {
      */
     private String password;
 
+    private static int nextUserId = 0; // Static counter for auto-incrementing IDs
+    private int userID;
     /**
      * The constructor
      *
@@ -64,6 +66,7 @@ public abstract class User {
         this.nric = nric;
         this.name = name;
         this.age = age;
+        this.userID = nextUserId++; // Assign current ID and increment for next use
     }
 
     /**
@@ -103,6 +106,13 @@ public abstract class User {
         return this.isMarried;
     }
 
+    public UserRole getUsersRole(){
+        return this.usersRole;
+    }
+
+    public int getUserID() {
+        return this.userID;
+    }
     /**
      * Sets the password of the user after hashing it.
      *

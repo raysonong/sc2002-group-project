@@ -27,12 +27,12 @@ public class ApplicantModel extends User{
         options.addAll(Arrays.asList("Register for Project Team", "View Registration Status", "Update Flat Details", "Generate Flat Selection Receipt"));
         return options;
     }
-    public int getProjectID(){
-        return appliedProject;
+    public int getProjectID(){ // may not be needed
+        return this.appliedProject;
     }
 
-    public FlatType getFlatType(){
-        return bookedFlatType;
+    public FlatType getFlatType(){ // may not be needed
+        return this.bookedFlatType;
     }
 }
 
