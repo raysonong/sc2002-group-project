@@ -1,8 +1,10 @@
-package com.sc2002;
+package com.sc2002.entities;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import com.sc2002.enums.FlatType; // for FlatType enums
+import com.sc2002.enums.UserRole; // for UserRole enums
 
 /**
  * Represents a BTO (Build-To-Order) project with details such as project name, neighborhood, 

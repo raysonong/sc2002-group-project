@@ -1,0 +1,6 @@
+All the data
+e.g. Users Projects and Enquries
+
+with methods that allow searching/adding/editing etc
+sort of like a database but since they dont let us use database
+we create our terrible one :)

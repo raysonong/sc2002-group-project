@@ -1,25 +1,13 @@
-package com.sc2002;
+package com.sc2002.Services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-/**
- * Manages the creation and operations of BTO projects.
- */
-public class HDBManager {
+import com.sc2002.entities.BTOProjectModel;
 
-    private HDBManagerModel hdbManagerModel = null;
-
-    /**
-     * Constructs an HDBManager with the specified HDBManagerModel.
-     *
-     * @param hdbManagerModel The model representing the HDB manager.
-     */
-    HDBManager(HDBManagerModel hdbManagerModel) {
-        this.hdbManagerModel = hdbManagerModel;
-    }
+public class ProjectManagementService {
 
     /**
      * Creates a new BTO project with user input.

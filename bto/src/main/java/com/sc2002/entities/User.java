@@ -1,18 +1,23 @@
-package com.sc2002;
+package com.sc2002.entities;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 
 import javax.naming.AuthenticationException;
+
+import com.sc2002.enums.UserRole;
 
 /**
  * Abstract class representing a user in the system. This class provides basic
  * user attributes and functionalities
  */
 public abstract class User {
-
+    // Contains user's role
+    private UserRole usersRole; // view com.sc2002.enums.UserRole for more info 
+    
     /**
      * The National Registration Identity Card (NRIC) of the user.
      */
@@ -44,7 +49,7 @@ public abstract class User {
      * @param isMarried Marital Status of the user
      * @param password The password of the account
      */
-    User(String nric, String name, int age, String isMarried, String password) {
+    User(String nric, String name, int age, String isMarried, String password, UserRole role) {
         this.password = hashPasswd(password);
         if (this.password == null) {
             System.out.println("User not created");
@@ -55,6 +60,7 @@ public abstract class User {
         } else {
             this.isMarried = false;
         }
+        this.usersRole=role;
         this.nric = nric;
         this.name = name;
         this.age = age;
@@ -143,4 +149,6 @@ public abstract class User {
             return null;
         }
     }
+
+    public abstract List<String> getMenuOptions();
 }
