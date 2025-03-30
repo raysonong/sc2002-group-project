@@ -3,11 +3,10 @@ package com.sc2002.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import com.sc2002.enums.FlatType; // for FlatType enums
 import com.sc2002.enums.UserRole; // for UserRole enums
 
-public class HDBOfficerModel extends User {
+public class HDBOfficerModel extends User{
     private int projectID;
     private boolean registrationStatus;
 

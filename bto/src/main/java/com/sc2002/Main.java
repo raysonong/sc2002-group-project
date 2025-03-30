@@ -24,7 +24,7 @@ public class Main {
      *
      * @param args Command-line arguments (not used).
      */
-    private ArrayList<BTOProjectModel> btoProjectModels = new ArrayList<>();
+    // private ArrayList<BTOProjectModel> btoProjectModels = new ArrayList<>();
     
 
     public static void main(String[] args) {
@@ -35,14 +35,15 @@ public class Main {
         // Declaring InitilizationService
         InitializationService initialService = new InitializationService();
         // Declaring the repositories
-        EnquiryRepo enquiryRepo = new EnquiryRepo();
+        EnquiryRepo enquiryList = new EnquiryRepo();
         UserRepo userList = new UserRepo();
+        ProjectRepo projectList = new ProjectRepo();
+        ApplicationRepo applicationList = new ApplicationRepo();
         // Initialize userList
         initialService.initializeUsers(userList);
         // Declaring variables
         User currentUser = null;
         String userInput = null;
-        User newUser = null;
         
         // Project
         System.out.println("Hello world!");
@@ -52,12 +53,45 @@ public class Main {
             if(userInput.equals("1")){
                 currentUser=menuService.LoginMenu(scanner, userList);
             }else if(userInput.equals("2")){
-                currentUser=menuService.RegisterMenu(scanner, userList);
+                currentUser=menuService.RegisterMenu(scanner, userList);// we will use this as 'login token'
             }
-            while(currentUser!=null){ // we will use this as 'login token'
-                // TODO: Add a switch case for the different user roles
-                System.out.println("Logging out...");
-                currentUser=null;
+            while (currentUser != null) { 
+                // Handle different user roles using a switch-case
+                switch (currentUser.getUsersRole()) {
+                    case APPLICANT:
+                        currentUser=menuService.ApplicantMenu(scanner,
+                                            currentUser,
+                                            userList,
+                                            projectList,
+                                            enquiryList,
+                                            applicationList
+                                            );
+                        break;
+                    case HDB_OFFICER:
+                        currentUser=menuService.HDBOfficerMenu(scanner,
+                                            currentUser,
+                                            userList,
+                                            projectList,
+                                            enquiryList,
+                                            applicationList
+                                            );
+                        break;
+                    case HDB_MANAGER:
+                        currentUser=menuService.HDBManagerMenu(scanner,
+                                            currentUser,
+                                            userList,
+                                            projectList,
+                                            enquiryList,
+                                            applicationList
+                                            );
+                        break;
+                    default:
+                        System.out.println("Unknown role. Logging out...");
+                        currentUser = null;
+                        break;
+                }
+            }
+            
             }
         }
 
@@ -83,9 +117,6 @@ public class Main {
 
         // String input = null;
 
-    }
-
-
-
-
 }
+
+

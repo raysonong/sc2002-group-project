@@ -68,14 +68,27 @@ public class MenuService {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void HDBManagerMenu(Scanner scanner, ArrayList<BTOProjectModel> btoProjectModels) {
-        System.out.printf("Total amount of BTO Projects: %d%n", btoProjectModels.size());
+    public User HDBManagerMenu(Scanner scanner, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+        // TODO: Menu for HDB Manager
+        
+        // System.out.printf("Total amount of BTO Projects: %d%n", btoProjectModels.size());
 
-        System.out.println("\nPrinting all BTO Projects:");
-        for (BTOProjectModel project : btoProjectModels) {
-            project.printAll();
-            System.out.println("----------------------------");
-        }
+        // System.out.println("\nPrinting all BTO Projects:");
+        // for (BTOProjectModel project : btoProjectModels) {
+        //     project.printAll();
+        //     System.out.println("----------------------------");
+        // }
+        return currentUser;
+    }
+
+    public User ApplicantMenu(Scanner scanner, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList){
+        // TODO: Menu for Applicant
+        return currentUser;
+    }
+
+    public User HDBOfficerMenu(Scanner scanner, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList){
+        // TODO: Menu for HDB Manager
+        return currentUser;
     }
 
 }

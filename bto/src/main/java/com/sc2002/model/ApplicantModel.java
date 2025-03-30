@@ -7,7 +7,7 @@ import java.util.List;
 import com.sc2002.enums.FlatType; // for FlatType enums
 import com.sc2002.enums.UserRole; // for UserRole enums
 
-public class ApplicantModel extends User{
+public class ApplicantModel extends User {
     // contain ID of project applicant applied to
     private int appliedProject; // ProjectID in INT
     
@@ -24,7 +24,12 @@ public class ApplicantModel extends User{
     @Override
     public List<String> getMenuOptions() {
         List<String> options = new ArrayList<>();
-        options.addAll(Arrays.asList("Register for Project Team", "View Registration Status", "Update Flat Details", "Generate Flat Selection Receipt"));
+        options.addAll(Arrays.asList(
+        "Register for Project Team",
+        "View Registration Status",
+        "Update Flat Details",
+        "Generate Flat Selection Receipt"
+        ));
         return options;
     }
     public int getProjectID(){ // may not be needed
