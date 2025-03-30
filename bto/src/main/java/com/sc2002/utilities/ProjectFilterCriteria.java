@@ -1,9 +1,6 @@
 package com.sc2002.utilities;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import com.sc2002.entities.BTOProjectModel; 
+
 import com.sc2002.enums.FlatType;
 
 public class ProjectFilterCriteria {
@@ -15,7 +12,6 @@ public class ProjectFilterCriteria {
         this.flatType = flatType;
     }
 
-    // Getters
     public String getLocation() { 
         return location; 
     }
