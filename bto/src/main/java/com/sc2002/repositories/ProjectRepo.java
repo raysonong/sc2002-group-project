@@ -4,9 +4,10 @@ package com.sc2002.repositories;
  import java.util.List;
  import java.util.Optional;
  import java.util.stream.Collectors;
- import com.sc2002.entities.BTOProjectModel;
- import com.sc2002.utilities.ProjectFilterCriteria;
+
+import com.sc2002.utilities.ProjectFilterCriteria;
  import com.sc2002.enums.FlatType;
+import com.sc2002.model.BTOProjectModel;
 
  public class ProjectRepo{
     private List<BTOProjectModel> projects = new ArrayList<>();

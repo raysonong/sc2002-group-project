@@ -1,8 +1,8 @@
-package com.sc2002.Services;
+package com.sc2002.controller;
 
-import com.sc2002.entities.BTOProjectModel;
-import com.sc2002.entities.Enquiry;
-import com.sc2002.entities.User;
+import com.sc2002.model.BTOProjectModel;
+import com.sc2002.model.Enquiry;
+import com.sc2002.model.User;
 import com.sc2002.enums.UserRole;
 import com.sc2002.repositories.EnquiryRepo;
 

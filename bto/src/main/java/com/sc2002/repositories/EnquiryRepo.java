@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import com.sc2002.entities.Enquiry;
+
+import com.sc2002.model.Enquiry;
 // do double check & change if necessary (delete this comment before submission)
 public class EnquiryRepo {
     private List<Enquiry> enquiries;

@@ -1,5 +1,5 @@
-package com.sc2002.Services;
-import com.sc2002.entities.HDBOfficerModel;
+package com.sc2002.controller;
+import com.sc2002.model.HDBOfficerModel;
 
 public class HDBOfficer {
     HDBOfficerModel hdbOfficerModel;

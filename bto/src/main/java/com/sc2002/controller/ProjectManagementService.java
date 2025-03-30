@@ -1,13 +1,13 @@
-package com.sc2002.Services;
+package com.sc2002.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import com.sc2002.entities.BTOProjectModel;
-import com.sc2002.entities.HDBManagerModel;
-import com.sc2002.entities.User;
+import com.sc2002.model.BTOProjectModel;
+import com.sc2002.model.HDBManagerModel;
+import com.sc2002.model.User;
 import com.sc2002.enums.UserRole;
 
 public class ProjectManagementService {

@@ -2,7 +2,7 @@ package com.sc2002.utilities;
 
 import java.util.List;
 
-import com.sc2002.entities.User;
+import com.sc2002.model.User;
 
 public class MenuManager {
 

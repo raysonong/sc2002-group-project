@@ -1,4 +1,4 @@
-package com.sc2002.entities;
+package com.sc2002.model;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

@@ -1,4 +1,4 @@
-package com.sc2002.entities;
+package com.sc2002.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

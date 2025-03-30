@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.sc2002.entities.BTOApplication;
-import com.sc2002.entities.Enquiry;
-import com.sc2002.entities.User;
+import com.sc2002.model.BTOApplication;
+import com.sc2002.model.Enquiry;
+import com.sc2002.model.User;
 
 
 public class ApplicationRepo {

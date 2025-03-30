@@ -1,11 +1,11 @@
-package com.sc2002.Services;
+package com.sc2002.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import com.sc2002.entities.HDBManagerModel;
+import com.sc2002.model.HDBManagerModel;
 
 /**
  * Manages the creation and operations of BTO projects.

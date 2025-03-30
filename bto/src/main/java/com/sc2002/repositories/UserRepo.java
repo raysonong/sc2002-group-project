@@ -3,7 +3,7 @@ package com.sc2002.repositories;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sc2002.entities.User;
+import com.sc2002.model.User;
 
 
 
