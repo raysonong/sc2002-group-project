@@ -55,6 +55,9 @@ public class Main {
             }else if(userInput.equals("2")){
                 currentUser=registerMenu(scanner, userList);
             }
+            while(currentUser!=null){ // we will use this as 'login token'
+                // TODO: Add a switch case for the different user roles
+            }
         }
 
         // // Testing Code

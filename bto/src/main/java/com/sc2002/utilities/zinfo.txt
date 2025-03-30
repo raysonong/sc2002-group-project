@@ -1,0 +1,3 @@
+Under MVC Model-View-Controller
+
+This would be more of outside utilities/formatters

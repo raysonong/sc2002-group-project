@@ -1,0 +1,3 @@
+MVC Model-View-Controller
+
+Shared Methods used by users a.k.a controllers

@@ -5,7 +5,7 @@ package com.sc2002.repositories;
  import java.util.Optional;
  import java.util.stream.Collectors;
  import com.sc2002.entities.BTOProjectModel;
- import com.sc2002.entities.ProjectFilterCriteria;
+ import com.sc2002.utilities.ProjectFilterCriteria;
  import com.sc2002.enums.FlatType;
 
  public class ProjectRepo{
