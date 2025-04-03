@@ -9,6 +9,7 @@ import com.sc2002.controller.MenuService;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ApplicationRepo;
 import com.sc2002.repositories.EnquiryRepo;
+import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 
@@ -37,6 +38,7 @@ public class Main {
         UserRepo userList = new UserRepo();
         ProjectRepo projectList = new ProjectRepo();
         ApplicationRepo applicationList = new ApplicationRepo();
+        OfficerRegistrationRepo officerRegistrationList = new OfficerRegistrationRepo();
         // Initialize userList
         initialService.initializeUsers(userList);
         // Declaring variables
@@ -44,7 +46,7 @@ public class Main {
         String userInput = null;
 
         // AppContext service, To make things less clustered, improving readibility
-        AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList);
+        AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
         // Project
         System.out.println("Welcome to the BTO Project Management System!");
         while (true) {

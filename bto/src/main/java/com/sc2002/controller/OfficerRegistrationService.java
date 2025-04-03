@@ -3,18 +3,14 @@ package com.sc2002.controller;
 import java.util.Scanner;
 
 import com.sc2002.enums.UserRole;
-import com.sc2002.model.BTOApplication;
+import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ProjectRepo;
 
-public class ApplicationService {
-    //
-    // PS: ruba pls refer to my code, think i have accidentally did ur part :,) - rayson
-    //
-
-    public BTOApplication applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
+public class OfficerRegistrationService {
+    public OfficerRegistrationModel registerForProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
         // Check role
-        if(currentUser.getUsersRole() != UserRole.APPLICANT) {
+        if(currentUser.getUsersRole() != UserRole.HDB_OFFICER) {
             System.out.println("You do not have permission to apply an application to join a project.");
             return null;
         }
@@ -45,7 +41,7 @@ public class ApplicationService {
             }
         }
 
-        System.out.println("Your application has been created and submitted successfully!");
-        return new BTOApplication(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
+        System.out.println("Your application has been created successfully and is pending approval from the project manager!");
+        return new OfficerRegistrationModel(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
     }
 }

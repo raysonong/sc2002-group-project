@@ -5,31 +5,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.sc2002.model.BTOApplication;
+import com.sc2002.model.OfficerRegistrationModel;
 
 
-public class ApplicationRepo {
-    private List<BTOApplication> applications;
+public class OfficerRegistrationRepo {
+    private List<OfficerRegistrationModel> applications;
     
     /**
      * Constructor initializes an empty list of applications
      */
-    public ApplicationRepo() {
+    public OfficerRegistrationRepo() {
         this.applications = new ArrayList<>();
     }
 
-    public Optional<BTOApplication> findbyUserID(long userId) {
-        for (BTOApplication application : this.applications) {
-            if (application.getApplicantUserID() == userId) {
+    public Optional<OfficerRegistrationModel> findbyUserID(long userId) {
+        for (OfficerRegistrationModel application : this.applications) {
+            if (application.getUserID() == userId) {
                 return Optional.of(application);
             }
         }
         return Optional.empty();
     }
 
-    public void save(BTOApplication application) {
+    public void save(OfficerRegistrationModel application) {
         // Check if the application already exists
-        Optional<BTOApplication> existingApplication = findbyUserID(application.getApplicantUserID());
+        Optional<OfficerRegistrationModel> existingApplication = findbyUserID(application.getUserID());
         
         if(existingApplication.isPresent()) {
             // Remove the existing application
@@ -40,13 +40,13 @@ public class ApplicationRepo {
         applications.add(application);
     }
 
-    public Optional<BTOApplication> findActiveByApplicantID(String userID) {
+    public Optional<OfficerRegistrationModel> findActiveByOfficerID(String userID) {
         return applications.stream()
-                .filter(application -> String.valueOf(application.getApplicantUserID()).equals(userID))
+                .filter(application -> String.valueOf(application.getUserID()).equals(userID))
                 .findFirst();
     }
 
-    public List<BTOApplication> findByProjectID(String projectID) {
+    public List<OfficerRegistrationModel> findByProjectID(String projectID) {
         return applications.stream()
         .filter(application -> String.valueOf(application.getProjectID()).equals(projectID))
         .collect(Collectors.toList());
