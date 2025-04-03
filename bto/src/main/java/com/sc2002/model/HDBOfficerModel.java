@@ -3,6 +3,7 @@ package com.sc2002.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import com.sc2002.enums.FlatType; // for FlatType enums
 import com.sc2002.enums.UserRole; // for UserRole enums
 
@@ -16,7 +17,7 @@ public class HDBOfficerModel extends User{
     // Contains Project booked(NOT SURE HOW WE GONNA HANDLE BTOPROJECT OBJECT)
     private BTOProjectModel bookedProject;
 
-    public HDBOfficerModel(String nric, String name, int age, String isMarried, String password) {
+    public HDBOfficerModel(String name, String nric, int age, String isMarried, String password) {
         super(nric, name, age, isMarried, password, UserRole.HDB_OFFICER);
     }
 
@@ -37,7 +38,7 @@ public class HDBOfficerModel extends User{
         List<String> options = new ArrayList<>();
         //options.addAll(super.getMenuOptions()); // Inherit Applicant's options
         options.addAll(Arrays.asList("Register for Project Team", "View Registration Status", "Update Flat Details",
-                "Generate Flat Selection Receipt"));
+                "Generate Flat Selection Receipt", "Logout"));
         return options;
     }
 }

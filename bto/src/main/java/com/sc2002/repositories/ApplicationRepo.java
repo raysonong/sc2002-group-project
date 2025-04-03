@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.sc2002.model.BTOApplication;
-import com.sc2002.model.Enquiry;
-import com.sc2002.model.User;
 
 
 public class ApplicationRepo {
@@ -20,9 +18,9 @@ public class ApplicationRepo {
         this.applications = new ArrayList<>();
     }
 
-    public Optional<BTOApplication> findbyUserID(long applicationId) {
+    public Optional<BTOApplication> findbyUserID(long userId) {
         for (BTOApplication application : this.applications) {
-            if (application.getApplicantUserID() == applicationId) {
+            if (application.getApplicantUserID() == userId) {
                 return Optional.of(application);
             }
         }

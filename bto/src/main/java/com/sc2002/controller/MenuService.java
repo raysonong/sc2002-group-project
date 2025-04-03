@@ -3,10 +3,9 @@ package com.sc2002.controller;
 import java.util.List;
 import java.util.Scanner;
 
+import com.sc2002.model.BTOApplication;
+import com.sc2002.model.HDBOfficerModel;
 import com.sc2002.model.User;
-import com.sc2002.repositories.ApplicationRepo;
-import com.sc2002.repositories.EnquiryRepo;
-import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 
 public class MenuService {
@@ -179,7 +178,59 @@ public class MenuService {
 
     public void HDBOfficerMenu(AppContext appContext) {
         // TODO: Menu for HDB Officer
+        HDBOfficerModel officerModel = (HDBOfficerModel) appContext.getCurrentUser();
+
+        String userInput = "";
+        List<String> menus = appContext.getCurrentUser().getMenuOptions();
+
+        // Service declaration
+        ApplicationService applicationService = new ApplicationService();
+
         System.out.println("HDB Officer Menu:");
+
+        // Loop variable `i` is used to generate menu numbers starting from 1
+        for (int i = 0; i < menus.size(); i++) {
+            System.out.println("Option " + (i + 1) + ": " + menus.get(i));
+        }
+
+        System.out.print("Please select an option: ");
+        userInput = appContext.getScanner().nextLine();
+
+        switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
+            case "1" -> {
+                // Option 1: Register for Project Team
+                BTOApplication application = applicationService.applyToProject(appContext.getProjectRepo(), appContext.getScanner(), appContext.getCurrentUser());
+                if (application != null) {
+                    appContext.getApplicationRepo().save(application);
+                }
+            }
+            case "2" -> {
+                // Option 2: View Registration Status
+                if (appContext.getApplicationRepo().findbyUserID(appContext.getCurrentUser().getUserID()).isEmpty()) {
+                    System.out.println("You have not submitted an application to join a project yet!");
+                    break;
+                }
+
+                System.out.println(appContext.getApplicationRepo().findbyUserID(appContext.getCurrentUser().getUserID()).get().getStatus());
+            }
+            case "3" -> {
+                // Option 3: Update Flat Details
+                
+            }
+            case "4" -> {
+                // Option 4: Generate Flat Selection Receipt
+                
+            }
+            case "5" -> {
+                // Option 5: Logout
+                System.out.println("Logging out...");
+                appContext.setCurrentUser(null); // set the CurrentUser null
+                }
+            default -> {
+                // Invalid option selected
+                System.out.println("Please select a valid option!");
+            }
+        }
     }
 
 }
