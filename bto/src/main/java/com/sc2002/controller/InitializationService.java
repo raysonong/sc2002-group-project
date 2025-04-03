@@ -25,7 +25,7 @@ public class InitializationService {
      * HDB_MANAGER
      */
     public void initializeUsers(UserRepo userList) {
-        String projectDir = System.getProperty("user.dir") + "/sc2002-group-project/bto/src/main/data";
+        String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
         // Initializing userList from Excel
         ArrayList<List<Object>> userData = XLSXReader.readUserList(projectDir + "/ApplicantList.xlsx");
         addUserbyArrayList(userData, UserRole.APPLICANT, userList);

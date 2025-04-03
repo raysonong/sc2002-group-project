@@ -2,6 +2,7 @@ package com.sc2002;
 
 import java.util.Scanner;
 
+import com.sc2002.controller.AuthService;
 import com.sc2002.controller.InitializationService;
 import com.sc2002.controller.MenuService;
 import com.sc2002.model.User;
@@ -24,6 +25,8 @@ public class Main {
     public static void main(String[] args) {
         // Declaring Scanner
         Scanner scanner = new Scanner(System.in);
+        // Declaring AuthService
+        AuthService authService = new AuthService();
         // Declaring MenuManagerService
         MenuService menuService = new MenuService();
         // Declaring InitilizationService
@@ -42,7 +45,7 @@ public class Main {
         // Project
         System.out.println("Welcome to the BTO Project Management System!");
         while (true) {
-            userInput = menuService.MainMenu(scanner);
+            userInput = menuService.MainMenu(scanner); // We should be using VIEW to print Menu, JUST TAKE NOTE DURING MEETING AGENDA
             if (userInput.equals("1")) {
                 currentUser = menuService.LoginMenu(scanner, userList);
             } else if (userInput.equals("2")) {
@@ -50,60 +53,39 @@ public class Main {
             }
             while (currentUser != null) {
                 // Handle different user roles using a switch-case
-                switch (currentUser.getUsersRole()) {
-                    case APPLICANT:
-                        currentUser = menuService.ApplicantMenu(scanner,
-                                currentUser,
-                                userList,
-                                projectList,
-                                enquiryList,
-                                applicationList
-                        );
-                        break;
-                    case HDB_OFFICER:
-                        currentUser = menuService.HDBOfficerMenu(scanner,
-                                currentUser,
-                                userList,
-                                projectList,
-                                enquiryList,
-                                applicationList
-                        );
-                        break;
-                    case HDB_MANAGER:
-                        currentUser = menuService.HDBManagerMenu(scanner,
-                                currentUser,
-                                userList,
-                                projectList,
-                                enquiryList,
-                                applicationList
-                        );
-                        break;
-                    default:
-                        System.out.println("Unknown role. Logging out...");
-                        currentUser = null;
-                        break;
+                if(authService.isApplicant(currentUser)){
+                    currentUser = menuService.ApplicantMenu(scanner,
+                                                            authService,
+                                                            currentUser,
+                                                            userList,
+                                                            projectList,
+                                                            enquiryList,
+                                                            applicationList
+                                                            );
+                }else if(authService.isOfficer(currentUser)){
+                    currentUser = menuService.HDBOfficerMenu(scanner,
+                                                            authService,
+                                                            currentUser,
+                                                            userList,
+                                                            projectList,
+                                                            enquiryList,
+                                                            applicationList
+                                                            );
+                }else if(authService.isOfficer(currentUser)){
+                    currentUser = menuService.HDBManagerMenu(scanner,
+                                                            authService,
+                                                            currentUser,
+                                                            userList,
+                                                            projectList,
+                                                            enquiryList,
+                                                            applicationList
+                                                            );
                 }
-            }
-
-        }
-    }
-
-    // // Testing Code
-    // HDBManagerModel hdbManagerModel1 = new HDBManagerModel("Tew",
-    //                                                         "123",
-    //                                                         18,
-    //                                                         "Married",
-    //                                                         "123"
-    //                                                         );
-    // HDBManagerModel hdbManagerModel2 = new HDBManagerModel("Huw",
-    //                                                         "126",
-    //                                                         18,
-    //                                                         "Married",
-    //                                                         "123"
-    //                                                         );
-    // ArrayList<HDBManagerModel> hDBManagerModels = new ArrayList<>();
-    // hDBManagerModels.add(hdbManagerModel1);
-    // hDBManagerModels.add(hdbManagerModel2);
-    // HDBManager hdbManager = new HDBManager(hdbManagerModel1);
-    // String input = null;
-}
+                else{
+                    System.out.println("Unknown role. Logging out...");
+                    currentUser = null;
+                }// End of if-else for checking user type
+            }// end of while loop for when currentUser!=null
+        }// while program is running
+    }// end of public main class
+}// end of main class

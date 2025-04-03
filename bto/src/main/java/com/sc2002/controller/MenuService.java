@@ -102,7 +102,7 @@ public class MenuService {
      * "Approve Application", "Reject Application", "Approve Withdrawal",
      * "Reject Withdrawal", "Generate Reports", "Logout"
      */
-    public User HDBManagerMenu(Scanner scanner, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+    public User HDBManagerMenu(Scanner scanner, AuthService authService, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
         // TODO: Menu for HDB Manager
         String userInput = "";
         List<String> menus = currentUser.getMenuOptions();
@@ -119,7 +119,7 @@ public class MenuService {
         System.out.print("Please select an option: ");
         userInput = scanner.nextLine();
 
-        switch (userInput) {
+        switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
             case "1" -> {
             // Option 1: Create a new BTO project
             projectList.save(projectManagementService.createProject(projectList.getLastProjectID(), scanner, currentUser));
@@ -174,13 +174,13 @@ public class MenuService {
         return currentUser;
     }
 
-    public User ApplicantMenu(Scanner scanner, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+    public User ApplicantMenu(Scanner scanner, AuthService authService, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
         // TODO: Menu for Applicant
         System.out.println("Applicant Menu:");
         return currentUser;
     }
 
-    public User HDBOfficerMenu(Scanner scanner, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+    public User HDBOfficerMenu(Scanner scanner, AuthService authService, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
         // TODO: Menu for HDB Officer
         System.out.println("HDB Officer Menu:");
         return currentUser;
