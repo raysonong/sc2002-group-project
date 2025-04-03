@@ -102,10 +102,10 @@ public class MenuService {
      * "Approve Application", "Reject Application", "Approve Withdrawal",
      * "Reject Withdrawal", "Generate Reports", "Logout"
      */
-    public User HDBManagerMenu(Scanner scanner, AuthService authService, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+    public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         String userInput = "";
-        List<String> menus = currentUser.getMenuOptions();
+        List<String> menus = appContext.getCurrentUser().getMenuOptions();
 
         // Service declaration
         ProjectManagementService projectManagementService = new ProjectManagementService();
@@ -117,12 +117,12 @@ public class MenuService {
         }
 
         System.out.print("Please select an option: ");
-        userInput = scanner.nextLine();
+        userInput = appContext.getScanner().nextLine();
 
         switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
             case "1" -> {
             // Option 1: Create a new BTO project
-            projectList.save(projectManagementService.createProject(projectList.getLastProjectID(), scanner, currentUser));
+            appContext.getProjectRepo().save(projectManagementService.createProject(appContext.getProjectRepo().getLastProjectID(), appContext.getScanner(), appContext.getCurrentUser()));
             }
             case "2" -> {
             // Option 2: Edit an existing BTO project
@@ -163,27 +163,23 @@ public class MenuService {
             case "14" -> {
             // Option 14: Logout
             System.out.println("Logging out...");
-            return null;
+            appContext.setCurrentUser(null); // set the CurrentUser null
             }
             default -> {
             // Invalid option selected
             System.out.println("Please select a valid option!");
             }
         }
-
-        return currentUser;
     }
 
-    public User ApplicantMenu(Scanner scanner, AuthService authService, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+    public void ApplicantMenu(AppContext appContext) {
         // TODO: Menu for Applicant
         System.out.println("Applicant Menu:");
-        return currentUser;
     }
 
-    public User HDBOfficerMenu(Scanner scanner, AuthService authService, User currentUser, UserRepo userList, ProjectRepo projectList, EnquiryRepo enquiryList, ApplicationRepo applicationList) {
+    public void HDBOfficerMenu(AppContext appContext) {
         // TODO: Menu for HDB Officer
         System.out.println("HDB Officer Menu:");
-        return currentUser;
     }
 
 }

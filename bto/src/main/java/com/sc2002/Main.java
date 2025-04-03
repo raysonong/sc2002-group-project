@@ -2,6 +2,7 @@ package com.sc2002;
 
 import java.util.Scanner;
 
+import com.sc2002.controller.AppContext;
 import com.sc2002.controller.AuthService;
 import com.sc2002.controller.InitializationService;
 import com.sc2002.controller.MenuService;
@@ -42,48 +43,29 @@ public class Main {
         User currentUser = null;
         String userInput = null;
 
+        // AppContext service, To make things less clustered, improving readibility
+        AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList);
         // Project
         System.out.println("Welcome to the BTO Project Management System!");
         while (true) {
-            userInput = menuService.MainMenu(scanner); // We should be using VIEW to print Menu, JUST TAKE NOTE DURING MEETING AGENDA
+            userInput = menuService.MainMenu(appContext.getScanner()); // We should be using VIEW to print Menu, JUST TAKE NOTE DURING MEETING AGENDA
             if (userInput.equals("1")) {
-                currentUser = menuService.LoginMenu(scanner, userList);
+                appContext.setCurrentUser(menuService.LoginMenu(appContext.getScanner(), appContext.getUserRepo()));
             } else if (userInput.equals("2")) {
-                currentUser = menuService.RegisterMenu(scanner, userList);// we will use this as 'login token'
+                appContext.setCurrentUser(menuService.RegisterMenu(appContext.getScanner(), appContext.getUserRepo()));// we will use this as 'login token'
             }
-            while (currentUser != null) {
+            while (appContext.getCurrentUser() != null) {
                 // Handle different user roles using a switch-case
-                if(authService.isApplicant(currentUser)){
-                    currentUser = menuService.ApplicantMenu(scanner,
-                                                            authService,
-                                                            currentUser,
-                                                            userList,
-                                                            projectList,
-                                                            enquiryList,
-                                                            applicationList
-                                                            );
-                }else if(authService.isOfficer(currentUser)){
-                    currentUser = menuService.HDBOfficerMenu(scanner,
-                                                            authService,
-                                                            currentUser,
-                                                            userList,
-                                                            projectList,
-                                                            enquiryList,
-                                                            applicationList
-                                                            );
-                }else if(authService.isOfficer(currentUser)){
-                    currentUser = menuService.HDBManagerMenu(scanner,
-                                                            authService,
-                                                            currentUser,
-                                                            userList,
-                                                            projectList,
-                                                            enquiryList,
-                                                            applicationList
-                                                            );
+                if(authService.isApplicant(appContext.getCurrentUser())){
+                    menuService.ApplicantMenu(appContext);
+                }else if(authService.isOfficer(appContext.getCurrentUser())){
+                    menuService.HDBOfficerMenu(appContext);
+                }else if(authService.isManager(appContext.getCurrentUser())){
+                    menuService.HDBManagerMenu(appContext);
                 }
                 else{
                     System.out.println("Unknown role. Logging out...");
-                    currentUser = null;
+                    appContext.setCurrentUser(null);
                 }// End of if-else for checking user type
             }// end of while loop for when currentUser!=null
         }// while program is running
