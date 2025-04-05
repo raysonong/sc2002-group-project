@@ -7,13 +7,20 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectManagementService;
+import com.sc2002.controller.UserService;
+import com.sc2002.enums.UserRole;
+import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.model.User;
 import com.sc2002.repositories.UserRepo;
+import com.sc2002.utilities.NRICValidator;
 import com.sc2002.view.ApplicantView;
 import com.sc2002.view.HDBOfficerView;
 import com.sc2002.view.HDBManagerView;
+
 public class mainAppView {
+    private final UserService userService = new UserService();
+
     public void startMenu(AppContext appContext){
         System.out.println("Welcome to the BTO Project Management System!");
         String userInput=null;
@@ -87,30 +94,149 @@ public class mainAppView {
         String nric;
         String password;
         User currentUser = null;
+        
         while (true) {
             System.out.println("--Login to your account--");
             System.out.print("Please enter your NRIC: ");
-            nric = scanner.nextLine();
-            // TODO: Add NRIC validation (REMEMBER TO OFF CASE SENSITIVITY) & DO CHECKING
+            nric = scanner.nextLine().trim();
+            
+            // Validate NRIC format
+            if (!NRICValidator.isValidNRIC(nric)) {
+                System.out.println("Invalid NRIC format. Please enter a valid Singapore NRIC/FIN.");
+                continue;
+            }
+            
             System.out.print("Please enter your password: ");
             password = scanner.nextLine();
-
-            currentUser = userList.getUserByNRIC(nric);
-
-            try {
-                currentUser.authenticate(password);
+            
+            currentUser = userService.authenticateUser(nric, password, userList);
+            
+            if (currentUser != null) {
                 System.out.println("Login successful!");
                 return currentUser;
-            } catch (Exception e) {
-                System.out.println("Login failed: " + e.getMessage());
+            } else {
+                System.out.println("Would you like to try again? (yes/no): ");
+                String option = scanner.nextLine().trim().toLowerCase();
+                if (!option.equals("yes")) {
+                    return null;
+                }
             }
         }
     }
 
     public User RegisterMenu(Scanner scanner, UserRepo userList) {
         System.out.println("--Register new user--");
-        // TODO: 
-        throw new UnsupportedOperationException("Not yet implemented");
+        
+        String nric;
+        String name;
+        int age;
+        String maritalStatus;
+        String password;
+        String confirmPassword;
+        
+        // Input and validate NRIC
+        while (true) {
+            System.out.print("Enter your NRIC (e.g., S1234567D): ");
+            nric = scanner.nextLine().trim();
+            
+            // Validate NRIC format
+            if (!NRICValidator.isValidNRIC(nric)) {
+                System.out.println("Invalid NRIC format. Please enter a valid Singapore NRIC/FIN.");
+                continue;
+            }
+            
+            // Check if NRIC exists (using uppercase for consistency)
+            if (userList.getUserByNRIC(NRICValidator.formatNRIC(nric)) != null) {
+                System.out.println("An account with this NRIC already exists. Please login instead.");
+                System.out.print("Press enter to continue...");
+                scanner.nextLine();
+                return null;
+            }
+            
+            break;
+        }
+        
+        // Input name
+        while (true) {
+            System.out.print("Enter your full name: ");
+            name = scanner.nextLine().trim();
+            
+            if (name.isEmpty()) {
+                System.out.println("Name cannot be empty. Please try again.");
+                continue;
+            }
+            
+            break;
+        }
+        
+        // Input age
+        while (true) {
+            System.out.print("Enter your age: ");
+            try {
+                age = Integer.parseInt(scanner.nextLine().trim());
+                
+                if (age < 18) {
+                    System.out.println("You must be at least 18 years old to register.");
+                    continue;
+                }
+                
+                if (age > 120) {
+                    System.out.println("Please enter a valid age.");
+                    continue;
+                }
+                
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number for age.");
+            }
+        }
+        
+        // Input marital status
+        while (true) {
+            System.out.print("Enter your marital status (Married/Single): ");
+            maritalStatus = scanner.nextLine().trim();
+            
+            if (!maritalStatus.equalsIgnoreCase("Married") && !maritalStatus.equalsIgnoreCase("Single")) {
+                System.out.println("Please enter either 'Married' or 'Single'.");
+                continue;
+            }
+            
+            break;
+        }
+        
+        // Input password
+        while (true) {
+            System.out.print("Enter your password: ");
+            password = scanner.nextLine();
+            
+            if (password.length() < 8) {
+                System.out.println("Password must be at least 8 characters long.");
+                continue;
+            }
+            
+            System.out.print("Confirm your password: ");
+            confirmPassword = scanner.nextLine();
+            
+            if (!password.equals(confirmPassword)) {
+                System.out.println("Passwords do not match. Please try again.");
+                continue;
+            }
+            
+            break;
+        }
+        
+        // Register user using service
+        User newUser = userService.registerApplicant(nric, name, age, maritalStatus, password, userList);
+        
+        if (newUser != null) {
+            System.out.println("Registration successful! You are now logged in.");
+            return newUser;
+        } else {
+            System.out.println("Registration failed. Please try again later.");
+            System.out.print("Press enter to continue...");
+            scanner.nextLine();
+            return null;
+        }
     }
 
     /**
