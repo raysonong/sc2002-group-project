@@ -3,6 +3,8 @@ package com.sc2002.repositories;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import com.sc2002.enums.FlatType;
@@ -26,14 +28,24 @@ public class ProjectRepo {
         return projects.removeIf(project -> project.getProjectID() == projectID);
     }
 
-    public List<Integer> getAllProjectIDs() {
-        List<Integer> projectIDs = new ArrayList<>();
-        for (BTOProjectModel project : projects) {
-            projectIDs.add(project.getProjectID());
+    public Map<Integer, String> getAllProject() {
+        Map<Integer, String> toReturn = new HashMap<>();
+        for (int i = 0; i < projects.size(); i++) {
+            toReturn.put(i, projects.get(i).getProjectName());
         }
-        return projectIDs;
+        return toReturn;
     }
-    
+
+    public Map<Integer, String> getProjectsByManagerID(int managerUserID) {
+        Map<Integer, String> toReturn = new HashMap<>();
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i).getManagerUserID() == managerUserID) {
+                toReturn.put(i, projects.get(i).getProjectName());
+            }
+        }
+        return toReturn;
+    }
+
     public void save(BTOProjectModel project) {
         projects.add(project);
     }

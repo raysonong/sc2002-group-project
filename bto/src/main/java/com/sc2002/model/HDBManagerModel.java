@@ -9,9 +9,9 @@ import com.sc2002.enums.UserRole; // for FlatType enums
 public class HDBManagerModel extends User {
 
     /**
-     * The projectID that they are handling
+     * The projectID that they are handling at the moment
      */
-    private int projectID;
+    private Integer projectID;
 
     /**
      * The constructor
@@ -34,13 +34,18 @@ public class HDBManagerModel extends User {
     public void setProjectID(int projectID) {
         this.projectID = projectID;
     }
-
+    /**
+     * To delete the project ID
+     */
+    public void deleteProjectID() {
+        this.projectID = null;
+    }
     /**
      * To get the project ID
      *
      * @return the project ID
      */
-    public int getProjectID() {
+    public Integer getProjectID() {
         return this.projectID;
     }
 
@@ -49,7 +54,7 @@ public class HDBManagerModel extends User {
         List<String> options = new ArrayList<>();
         //options.addAll(super.getMenuOptions()); // Inherit HDBOfficer's options
         options.addAll(Arrays.asList("Create BTO Project", "Edit BTO Project",
-                "Delete BTO Project", "Toggle Project Visibility", "View All Project", "View Project Details",
+                "Delete BTO Project", "Toggle Project Visibility", "View All Project", "View Your Projects",
                 "Approve Officer Registration", "Reject Officer Registration",
                 "Approve Application", "Reject Application", "Approve Withdrawal",
                 "Reject Withdrawal", "Generate Reports", "Logout"));

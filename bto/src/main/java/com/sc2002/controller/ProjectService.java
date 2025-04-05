@@ -11,7 +11,7 @@ public class ProjectService {
                 BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
                 if(project!=null){
                     ApplicantModel currentUser = (ApplicantModel)appContext.getCurrentUser();
-                    if(project.isVisibility()) project.printAll();
+                    if(project.isVisible()) project.printAll();
                     else if(currentUser.getAppliedProjectID()==projectID){ // is safe since projectID in BTOProjectModel is final int
                         project.printAll();
                     }else{

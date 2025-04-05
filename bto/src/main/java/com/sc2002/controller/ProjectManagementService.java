@@ -197,14 +197,10 @@ public class ProjectManagementService {
         try{
             if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
                 HDBManagerModel currentUser=(HDBManagerModel) appContext.getCurrentUser();
-                // Additional checking incase
                 BTOProjectModel project=appContext.getProjectRepo().findByProjectID(currentUser.getProjectID());
-                if(project.getManagerUserID()==currentUser.getUserID()){ // double check project manager ID
-                    if(appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID()))return true;
-                    else throw new RuntimeException("Failed to delete project.");
-                }else{
-                    throw new RuntimeException("Project under another Manager.");
-                }
+                if(project.getManagerUserID()==currentUser.getUserID()) currentUser.deleteProjectID(); // if deleting currently managing project
+                if(appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID()))return true;
+                else throw new RuntimeException("Failed to delete project.");
             }else{
                 throw new RuntimeException("User is not authorized to perform this action.");
             }
@@ -212,5 +208,24 @@ public class ProjectManagementService {
             System.out.println("An error occurred: " + e.getMessage());
         }
         return false;
+    }
+
+    public void toggleProjectVisibility(AppContext appContext, Integer projectID) {
+        try {
+            if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
+                if (project == null) {
+                    throw new RuntimeException("Project with the given ID does not exist.");
+                }
+                boolean currentVisibility = project.isVisible();
+                System.out.println("Current visibility: " + (currentVisibility ? "Visible" : "Hidden"));
+                project.setVisible(!currentVisibility);
+                System.out.println("Visibility toggled to: " + (project.isVisible() ? "Visible" : "Hidden"));
+            } else {
+                throw new RuntimeException("User is not authorized to perform this action.");
+            }
+        } catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
     }
 }

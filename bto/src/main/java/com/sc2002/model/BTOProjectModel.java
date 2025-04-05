@@ -58,7 +58,7 @@ public class BTOProjectModel {
     /**
      * The visibility status of the project.
      */
-    private boolean isVisibility;
+    private boolean isVisible;
 
     /**
      * The maximum number of managing officers allowed.
@@ -96,7 +96,7 @@ public class BTOProjectModel {
         this.maxManagingOfficer = maxManagingOfficer;
         this.managerUserID = managerUserID;
 
-        this.isVisibility = false;
+        this.isVisible = false;
     }
 
     /**
@@ -235,21 +235,21 @@ public class BTOProjectModel {
     }
 
     /**
-     * Gets the visibility status of the project.
+     * Gets the isVisible status of the project.
      *
      * @return True if the project is visible, false otherwise.
      */
-    public boolean isVisibility() {
-        return this.isVisibility;
+    public boolean isVisible() {
+        return this.isVisible;
     }
 
     /**
-     * Sets the visibility status of the project.
+     * Sets the isVisible status of the project.
      *
-     * @param visibility The visibility status to set.
+     * @param isVisible The visible status to set.
      */
-    public void setVisibility(boolean visibility) {
-        this.isVisibility = visibility;
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
     }
 
     /**
@@ -314,7 +314,7 @@ public class BTOProjectModel {
         System.out.println("Opening Date: " + this.openingDate);
         System.out.println("Closing Date: " + this.closingDate);
         System.out.println("Manager ID: " + (this.managerUserID));
-        System.out.println("Visibility: " + (this.isVisibility ? "Visible" : "Not Visible"));
+        System.out.println("Visibility: " + (this.isVisible ? "Visible" : "Not Visible"));
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
         System.out.println("Managing Officer IDs: " + (this.managingOfficerUserID.isEmpty() ? "None" : this.managingOfficerUserID));
         System.out.println("---------------------");

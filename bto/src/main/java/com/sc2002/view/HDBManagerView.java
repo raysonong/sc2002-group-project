@@ -1,6 +1,8 @@
 package com.sc2002.view;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.EnquiryService;
@@ -45,13 +47,15 @@ public class HDBManagerView {
             }
             case "5" -> {
             // Option 5: View all BTO projects
+            getAllBTOProjectMenu(appContext);
             }
             case "6" -> {
             // Option 6: View details of a specific BTO project
-            getBTOProjectbyIDMenu(appContext);
+            getBTOProjectByUserIDMenu(appContext);
             }
             case "7" -> {
             // Option 7: Approve officer registration
+            
             }
             case "8" -> {
             // Option 8: Reject officer registration
@@ -144,32 +148,75 @@ public class HDBManagerView {
     }
 
     private void toggleProjectVisibilityMenu(AppContext appContext){
-        List<Integer> listOfProjectIDs = appContext.getProjectRepo().getAllProjectIDs();
-        System.out.println("--getBTOProjectbyID--");
-        System.out.println("Available Project IDs: " + listOfProjectIDs);
-        System.out.print("Enter the Project ID to view details: ");
+        Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
+        System.out.println("-- All BTO Projects --");
+        System.out.println("Index\tProject ID\tProject Name");
+        System.out.println("-----------------------------------");
+        int index = 1;
+        for (Map.Entry<Integer, String> entry : listOfProjects.entrySet()) {
+            System.out.printf("%d\t%d\t\t%s%n", index++, entry.getKey(), entry.getValue());
+        }
+        System.out.print("Enter the Project ID to toggle visiblity: ");
+        try {
+            String projectIDString = appContext.getScanner().nextLine();
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (listOfProjects.containsKey(projectID)) {
+                projectManagementService.toggleProjectVisibility(appContext, projectID);
+            } else {
+                System.out.println("Invalid Project ID. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+        }
+        projectManagementService.toggleProjectVisibility(appContext, null);
     }
 
-    private void getBTOProjectbyIDMenu(AppContext appContext){
-        List<Integer> listOfProjectIDs = appContext.getProjectRepo().getAllProjectIDs();
-        System.out.println("--getBTOProjectbyID--");
-        System.out.println("Available Project IDs: " + listOfProjectIDs);
+    private void getAllBTOProjectMenu(AppContext appContext) {
+        Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
+        System.out.println("-- All BTO Projects --");
+        System.out.println("Index\tProject ID\tProject Name");
+        System.out.println("-----------------------------------");
+        int index = 1;
+        for (Map.Entry<Integer, String> entry : listOfProjects.entrySet()) {
+            System.out.printf("%d\t%d\t\t%s%n", index++, entry.getKey(), entry.getValue());
+        }
         System.out.print("Enter the Project ID to view details: ");
         try {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
-    
-            if (listOfProjectIDs.contains(projectID)) {
+            if (listOfProjects.containsKey(projectID)) {
                 projectService.viewProjectByID(appContext, projectID);
             } else {
-                throw new RuntimeException("Invalid Project ID.");
+                System.out.println("Invalid Project ID. Please try again.");
             }
             System.out.print("Press enter to continue...");
             appContext.getScanner().nextLine();
         } catch (NumberFormatException e) {
-            System.out.println("An error occurred: Please enter a valid integer for the Project ID.");
-        } catch (RuntimeException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+        }
+    }
+    private void getBTOProjectByUserIDMenu(AppContext appContext){
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        System.out.println("-- Projects Managed by You --");
+        System.out.println("Index\tProject ID\tProject Name");
+        System.out.println("-----------------------------------");
+        int index = 1;
+        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
+            System.out.printf("%d\t%d\t\t%s%n", index++, entry.getKey(), entry.getValue());
+        }
+        System.out.print("Enter the Project ID to view details: ");
+        try {
+            String projectIDString = appContext.getScanner().nextLine();
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) {
+            projectService.viewProjectByID(appContext, projectID);
+            } else {
+            System.out.println("Invalid Project ID. Please try again.");
+            }
+            System.out.print("Press enter to continue...");
+            appContext.getScanner().nextLine();
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
         }
     }
 
