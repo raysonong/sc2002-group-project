@@ -1,3 +1,0 @@
-MVC Model-View-Controller
-
-This folder would be Entities/Model

@@ -305,7 +305,7 @@ public class BTOProjectModel {
      * Prints all details of the BTO project.
      */
     public void printAll() {
-        System.out.println("BTO Project Details:");
+        System.out.println("--BTO Project Details--");
         System.out.println("Project ID: " + this.projectID);
         System.out.println("Project Name: " + this.projectName);
         System.out.println("Neighborhood: " + this.neighborhood);
@@ -317,5 +317,6 @@ public class BTOProjectModel {
         System.out.println("Visibility: " + (this.isVisibility ? "Visible" : "Not Visible"));
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
         System.out.println("Managing Officer IDs: " + (this.managingOfficerID.isEmpty() ? "None" : this.managingOfficerID));
+        System.out.println("---------------------");
     }
 }

@@ -13,7 +13,7 @@ public class ProjectRepo {
 
     private List<BTOProjectModel> projects = new ArrayList<>();
 
-    public BTOProjectModel findByProjectID(long projectID) {
+    public BTOProjectModel findByProjectID(int projectID) {
         for (BTOProjectModel project : projects) {
             if (project.getProjectID() == projectID) {
                 return project;
@@ -22,6 +22,14 @@ public class ProjectRepo {
         return null;
     }
 
+    public List<Integer> getAllProjectIDs() {
+        List<Integer> projectIDs = new ArrayList<>();
+        for (BTOProjectModel project : projects) {
+            projectIDs.add(project.getProjectID());
+        }
+        return projectIDs;
+    }
+    
     public void save(BTOProjectModel project) {
         projects.add(project);
     }

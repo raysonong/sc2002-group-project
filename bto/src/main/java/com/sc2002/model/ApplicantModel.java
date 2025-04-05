@@ -32,7 +32,7 @@ public class ApplicantModel extends User {
         ));
         return options;
     }
-    public int getProjectID(){ // may not be needed
+    public int getAppliedProjectID(){ // may not be needed
         return this.appliedProject;
     }
 

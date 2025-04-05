@@ -5,12 +5,13 @@ import java.util.List;
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectManagementService;
+import com.sc2002.controller.ProjectService;
 
 public class HDBManagerView {
     // declare all the services required by Manager
     private final ProjectManagementService projectManagementService=new ProjectManagementService();
     private final EnquiryService enquiryService = new EnquiryService();
-    
+    private final ProjectService projectService=new ProjectService();
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         String userInput = "";
@@ -36,6 +37,7 @@ public class HDBManagerView {
             }
             case "3" -> {
             // Option 3: Delete an existing BTO project
+            deleteBTOProjectMenu(appContext);
             }
             case "4" -> {
             // Option 4: Toggle the visibility of a BTO project
@@ -45,6 +47,7 @@ public class HDBManagerView {
             }
             case "6" -> {
             // Option 6: View details of a specific BTO project
+            getBTOProjectbyIDMenu(appContext);
             }
             case "7" -> {
             // Option 7: Approve officer registration
@@ -79,7 +82,7 @@ public class HDBManagerView {
         }
     }// End of HDBManagerMenu
 
-    public void editBTOProjectMenu(AppContext appContext) { 
+    private void editBTOProjectMenu(AppContext appContext) { 
         System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
@@ -125,19 +128,46 @@ public class HDBManagerView {
         }
     }
 
-    public void deleteBTOProjectMenu(AppContext appContext) {
+    private void deleteBTOProjectMenu(AppContext appContext) {
         System.out.println("--deleteBTOProjectMenu--\n(1) Confirm Deletion\n(2) Cancel\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
             case "1" -> {
                 // Confirm Deletion
+
             }
             case "2" -> {
                 // Cancel
             }
             default -> {
-                System.out.println("Invalid option selected!");
+            System.out.println("Invalid option selected!");
             }
         }
     }
+
+    private void getBTOProjectbyIDMenu(AppContext appContext){
+        List<Integer> listOfProjectIDs = appContext.getProjectRepo().getAllProjectIDs();
+        System.out.println("--getBTOProjectbyID--");
+        System.out.println("Available Project IDs: " + listOfProjectIDs);
+        System.out.print("Enter the Project ID to view details: ");
+        try {
+            String projectIDString = appContext.getScanner().nextLine();
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+    
+            if (listOfProjectIDs.contains(projectID)) {
+                projectService.viewProjectByID(appContext, projectID);
+            } else {
+                throw new RuntimeException("Invalid Project ID.");
+            }
+            System.out.print("Press enter to continue...");
+            appContext.getScanner().nextLine();
+        } catch (NumberFormatException e) {
+            System.out.println("An error occurred: Please enter a valid integer for the Project ID.");
+        } catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
+
+
+
 }
