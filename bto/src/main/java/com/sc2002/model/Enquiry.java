@@ -30,6 +30,14 @@ public class Enquiry {
         return this.projectId;
     }
 
+    public boolean getStatus(){ // return true if replied, else false
+        return enquiryResponse != null;
+    }
+
+    public String getEnquiryText() {
+        return this.enquiryText;
+    }
+
     public void replyEnquiry(String officerResponse, int officerUserID) {
         // Create a new EnquiryResponse with the provided details
         EnquiryResponse response = new EnquiryResponse(officerResponse,this.enquiryId,officerUserID);
@@ -46,7 +54,7 @@ public class Enquiry {
     }
 
     
-    public String getEnquiry() {
+    public String getFormattedEnquiry() {
         StringBuilder strToReturn = new StringBuilder();
         strToReturn.append("Enquiry ID: ").append(this.enquiryId).append("\n");
         strToReturn.append("Submitted by: ").append(this.submittedByApplicantNRIC).append("\n");

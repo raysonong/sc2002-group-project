@@ -8,6 +8,7 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.model.Enquiry;
 
 public class HDBManagerView {
     // declare all the services required by Manager
@@ -30,59 +31,73 @@ public class HDBManagerView {
 
         switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
             case "1" -> {
-            // Option 1: Create a new BTO project
-            appContext.getProjectRepo().save(projectManagementService.createProject(appContext));
+                // Option 1: Create a new BTO project
+                appContext.getProjectRepo().save(projectManagementService.createProject(appContext));
             }
             case "2" -> {
-            // Option 2: Edit an existing BTO project
-            editBTOProjectMenu(appContext);
+                // Option 2: Edit an existing BTO project
+                editBTOProjectMenu(appContext);
             }
             case "3" -> {
-            // Option 3: Delete an existing BTO project
-            deleteBTOProjectMenu(appContext);
+                // Option 3: Delete an existing BTO project
+                deleteBTOProjectMenu(appContext);
             }
             case "4" -> {
-            // Option 4: Toggle the visibility of a BTO project
-            toggleProjectVisibilityMenu(appContext);
+                // Option 4: Toggle the visibility of a BTO project
+                toggleProjectVisibilityMenu(appContext);
             }
             case "5" -> {
-            // Option 5: View all BTO projects
-            getAllBTOProjectMenu(appContext);
+                // Option 5: View all BTO projects
+                getAllBTOProjectMenu(appContext);
             }
             case "6" -> {
-            // Option 6: View details of a specific BTO project
-            getBTOProjectByUserIDMenu(appContext);
+                // Option 6: View details of a specific BTO project
+                getBTOProjectByUserIDMenu(appContext);
             }
             case "7" -> {
-            // Option 7: Approve officer registration
-            
+                // Option 7: View Enquiries
+                getAllEnquiryMenu(appContext);
             }
             case "8" -> {
-            // Option 8: Reject officer registration
+                // Option 8: Reply Enquiries
+
             }
             case "9" -> {
-            // Option 9: Approve an application
+                // Option 9: Approve officer registration
+                
             }
             case "10" -> {
-            // Option 10: Reject an application
+                // Option 10: Reject officer registration
+
             }
             case "11" -> {
-            // Option 11: Approve a withdrawal request
+                // Option 11: Approve an application
+
             }
             case "12" -> {
-            // Option 12: Reject a withdrawal request
+                // Option 12: Reject an application
+
             }
             case "13" -> {
-            // Option 13: Generate reports
+                // Option 13: Approve a withdrawal request
+
             }
             case "14" -> {
-            // Option 14: Logout
-            System.out.println("Logging out...");
-            appContext.setCurrentUser(null); // set the CurrentUser null
+                // Option 14: Reject a withdrawal request
+
+            }
+            case "15" -> {
+                // Option 15: Generate reports
+
+            }
+            case "16" -> {
+                // Option 16: Logout
+                System.out.println("Logging out...");
+                appContext.setCurrentUser(null); // set the CurrentUser null
             }
             default -> {
-            // Invalid option selected
-            System.out.println("Please select a valid option!");
+                // Invalid option selected
+                System.out.println("Please select a valid option!");
             }
         }
     }// End of HDBManagerMenu
@@ -92,43 +107,43 @@ public class HDBManagerView {
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
             case "1" -> {
-            // Project Name
-            System.out.println("Enter new Project Name: ");
-            String valueToChange = appContext.getScanner().nextLine();
-            projectManagementService.editProject(appContext, userOption, valueToChange);
+                // Project Name
+                System.out.println("Enter new Project Name: ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(appContext, userOption, valueToChange);
             }
             case "2" -> {
-            // Neighborhood
-            System.out.println("Enter new Neighborhood Name: ");
-            String valueToChange = appContext.getScanner().nextLine();
-            projectManagementService.editProject(appContext, userOption, valueToChange);
+                // Neighborhood
+                System.out.println("Enter new Neighborhood Name: ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(appContext, userOption, valueToChange);
             }
             case "3" -> {
-            // 2 Room Count
-            System.out.println("Enter new 2 Room Count: ");
-            String valueToChange = appContext.getScanner().nextLine();
-            projectManagementService.editProject(appContext, userOption, valueToChange);
+                // 2 Room Count
+                System.out.println("Enter new 2 Room Count: ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(appContext, userOption, valueToChange);
             }
             case "4" -> {
-            // 3 Room Count
-            System.out.println("Enter new 3 Room Count: ");
-            String valueToChange = appContext.getScanner().nextLine();
-            projectManagementService.editProject(appContext, userOption, valueToChange);
+                // 3 Room Count
+                System.out.println("Enter new 3 Room Count: ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(appContext, userOption, valueToChange);
             }
             case "5" -> {
-            // Opening Date
-            System.out.println("Enter new Opening Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-            String valueToChange = appContext.getScanner().nextLine();
-            projectManagementService.editProject(appContext, userOption, valueToChange);
+                // Opening Date
+                System.out.println("Enter new Opening Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(appContext, userOption, valueToChange);
             }
             case "6" -> {
-            // Closing Date
-            System.out.println("Enter new Closing Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-            String valueToChange = appContext.getScanner().nextLine();
-            projectManagementService.editProject(appContext, userOption, valueToChange);
+                // Closing Date
+                System.out.println("Enter new Closing Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(appContext, userOption, valueToChange);
             }
             default -> {
-            System.out.println("Invalid option selected!");
+                System.out.println("Invalid option selected!");
             }
         }
     }
@@ -220,6 +235,19 @@ public class HDBManagerView {
         }
     }
 
-
+    private void getAllEnquiryMenu(AppContext appContext) {
+        List<Enquiry> enquiries = enquiryService.getAllEnquiries(appContext);
+        if (enquiries.isEmpty()) {
+            System.out.println("No enquiries found.");
+        } else {
+            System.out.println("-- All Enquiries --");
+            for (Enquiry enquiry : enquiries) {
+                System.out.printf("ID: %d, Subject: %s, Status: %s%n", 
+                    enquiry.getId(), enquiry.getEnquiryText(), enquiry.getStatus());
+            }
+        }
+        System.out.print("Press enter to continue...");
+        appContext.getScanner().nextLine();
+    }
 
 }
