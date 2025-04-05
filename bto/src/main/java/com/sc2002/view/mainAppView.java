@@ -13,7 +13,7 @@ import com.sc2002.repositories.UserRepo;
 import com.sc2002.view.ApplicantView;
 import com.sc2002.view.HDBOfficerView;
 import com.sc2002.view.HDBManagerView;
-public class MenuView {
+public class mainAppView {
     public void startMenu(AppContext appContext){
         System.out.println("Welcome to the BTO Project Management System!");
         String userInput=null;

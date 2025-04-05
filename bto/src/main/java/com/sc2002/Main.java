@@ -11,7 +11,7 @@ import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
-import com.sc2002.view.MenuView;
+import com.sc2002.view.mainAppView;
 
 
 /**
@@ -31,7 +31,7 @@ public class Main {
         // Declaring AuthService
         AuthService authService = new AuthService();
         // Declaring MenuManagerService
-        MenuView menuView = new MenuView();
+        mainAppView mainAppView = new mainAppView();
         // Declaring InitilizationService
         InitializationService initialService = new InitializationService();
         // Declaring the repositories
@@ -47,6 +47,6 @@ public class Main {
         // AppContext service, To make things less clustered, improving readibility
         AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
         // Project
-        menuView.startMenu(appContext);
+        mainAppView.startMenu(appContext);
     }// end of public main class
 }// end of main class
