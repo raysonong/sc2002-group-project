@@ -31,7 +31,7 @@ public class HDBManagerModel extends User {
      *
      * @param projectID the project ID they are handling
      */
-    private void setProjectID(int projectID) {
+    public void setProjectID(int projectID) {
         this.projectID = projectID;
     }
 
@@ -40,7 +40,7 @@ public class HDBManagerModel extends User {
      *
      * @return the project ID
      */
-    private int getProjectID() {
+    public int getProjectID() {
         return this.projectID;
     }
 

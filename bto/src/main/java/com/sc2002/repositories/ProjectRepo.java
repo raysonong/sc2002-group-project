@@ -13,13 +13,13 @@ public class ProjectRepo {
 
     private List<BTOProjectModel> projects = new ArrayList<>();
 
-    public Optional<BTOProjectModel> findById(long projectID) {
+    public BTOProjectModel findByProjectID(long projectID) {
         for (BTOProjectModel project : projects) {
             if (project.getProjectID() == projectID) {
-                return Optional.of(project);
+                return project;
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     public void save(BTOProjectModel project) {

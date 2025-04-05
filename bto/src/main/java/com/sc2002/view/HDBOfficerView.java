@@ -8,14 +8,14 @@ import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.model.OfficerRegistrationModel;
 
 public class HDBOfficerView {
+    //Service Declaration
+    private final ApplicationService applicationService = new ApplicationService();
+    private final OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
     public void HDBOfficerMenu(AppContext appContext) {
         // TODO: Menu for HDB Officer
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
 
-        // Service declaration
-        ApplicationService applicationService = new ApplicationService();
-        OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
 
         System.out.println("HDB Officer Menu:");
 

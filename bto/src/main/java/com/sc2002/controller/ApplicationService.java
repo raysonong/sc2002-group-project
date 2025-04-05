@@ -34,7 +34,7 @@ public class ApplicationService {
                 }
 
                 // Validate input
-                if (projectRepo.findById(input_projectId).isEmpty()) {
+                if (projectRepo.findByProjectID(input_projectId)==null) {
                     System.out.println("This project ID does not exist. Please enter a valid ID.");
                 }
                 else {

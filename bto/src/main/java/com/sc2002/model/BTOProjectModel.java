@@ -11,7 +11,10 @@ import com.sc2002.enums.UserRole; // for UserRole enums
  * flat counts, application dates, and managing officers.
  */
 public class BTOProjectModel {
-
+    /**
+     * The next ID of the project. Auto increments everytime a project is created.
+     */
+    private static int nextprojectID;
     /**
      * The unique ID of the project.
      */
@@ -79,11 +82,11 @@ public class BTOProjectModel {
      * @param closingDate        The application closing date.
      * @param maxManagingOfficer The maximum number of managing officers allowed.
      */
-    public BTOProjectModel(int projectID, String projectName, String neighborhood, int twoRoomCount, int threeRoomCount, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
+    public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount, int threeRoomCount, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
         managingOfficerID = new ArrayList<>();
-
-        this.projectID = projectID;
+        this.projectID = this.nextprojectID;
+        this.nextprojectID += 1; 
         this.projectName = projectName;
         this.neighborhood = neighborhood;
         this.twoRoomCount = twoRoomCount;
