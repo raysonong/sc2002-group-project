@@ -21,6 +21,10 @@ public class ProjectRepo {
         }
         return null;
     }
+    
+    public boolean deleteByProjectID(int projectID) {
+        return projects.removeIf(project -> project.getProjectID() == projectID);
+    }
 
     public List<Integer> getAllProjectIDs() {
         List<Integer> projectIDs = new ArrayList<>();

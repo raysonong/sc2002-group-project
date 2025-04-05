@@ -41,6 +41,7 @@ public class HDBManagerView {
             }
             case "4" -> {
             // Option 4: Toggle the visibility of a BTO project
+            toggleProjectVisibilityMenu(appContext);
             }
             case "5" -> {
             // Option 5: View all BTO projects
@@ -129,20 +130,24 @@ public class HDBManagerView {
     }
 
     private void deleteBTOProjectMenu(AppContext appContext) {
-        System.out.println("--deleteBTOProjectMenu--\n(1) Confirm Deletion\n(2) Cancel\nPlease select an option: ");
+        System.out.println("--deleteBTOProjectMenu--\n(yes) To Confirm Deletion: ");
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
-            case "1" -> {
+            case "yes" -> {
                 // Confirm Deletion
-
-            }
-            case "2" -> {
-                // Cancel
+                if(projectManagementService.deleteProject(appContext)) System.out.println("Deletion Successful.");
             }
             default -> {
-            System.out.println("Invalid option selected!");
+            System.out.println("Deletion process cancelled.");
             }
         }
+    }
+
+    private void toggleProjectVisibilityMenu(AppContext appContext){
+        List<Integer> listOfProjectIDs = appContext.getProjectRepo().getAllProjectIDs();
+        System.out.println("--getBTOProjectbyID--");
+        System.out.println("Available Project IDs: " + listOfProjectIDs);
+        System.out.print("Enter the Project ID to view details: ");
     }
 
     private void getBTOProjectbyIDMenu(AppContext appContext){

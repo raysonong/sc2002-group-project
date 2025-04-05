@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+import javax.naming.AuthenticationException;
+
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 import com.sc2002.model.User;
@@ -189,5 +191,26 @@ public class ProjectManagementService {
             System.out.println("An error occurred: " + e.getMessage());
             return;
         }
+    }
+
+    public boolean deleteProject(AppContext appContext){
+        try{
+            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
+                HDBManagerModel currentUser=(HDBManagerModel) appContext.getCurrentUser();
+                // Additional checking incase
+                BTOProjectModel project=appContext.getProjectRepo().findByProjectID(currentUser.getProjectID());
+                if(project.getManagerUserID()==currentUser.getUserID()){ // double check project manager ID
+                    if(appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID()))return true;
+                    else throw new RuntimeException("Failed to delete project.");
+                }else{
+                    throw new RuntimeException("Project under another Manager.");
+                }
+            }else{
+                throw new RuntimeException("User is not authorized to perform this action.");
+            }
+        }catch(RuntimeException e){
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+        return false;
     }
 }

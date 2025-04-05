@@ -66,9 +66,9 @@ public class BTOProjectModel {
     private int maxManagingOfficer;
 
     /**
-     * The list of managing officer IDs assigned to the project.
+     * The list of managing officer UserIDs assigned to the project.
      */
-    private ArrayList<String> managingOfficerID;
+    private ArrayList<String> managingOfficerUserID;
 
     /**
      * Constructs a new BTOProjectModel with the specified details.
@@ -84,7 +84,7 @@ public class BTOProjectModel {
      */
     public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount, int threeRoomCount, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
-        managingOfficerID = new ArrayList<>();
+        managingOfficerUserID = new ArrayList<>();
         this.projectID = this.nextprojectID;
         this.nextprojectID += 1; 
         this.projectName = projectName;
@@ -217,20 +217,20 @@ public class BTOProjectModel {
     }
 
     /**
-     * Gets the ID of the manager assigned to the project.
+     * Gets the UserID of the manager assigned to the project.
      *
-     * @return The manager ID.
+     * @return The manager UserID.
      */
-    public int getManagerID() {
+    public int getManagerUserID() {
         return this.managerUserID;
     }
 
     /**
-     * Sets the ID of the manager assigned to the project.
+     * Sets the UserID of the manager assigned to the project.
      *
-     * @param managerUserID The manager ID to set.
+     * @param managerUserID The manager UserID to set.
      */
-    public void setManagerID(int managerUserID) {
+    public void setManagerUserID(int managerUserID) {
         this.managerUserID = managerUserID;
     }
 
@@ -271,33 +271,33 @@ public class BTOProjectModel {
     }
 
     /**
-     * Gets the list of managing officer IDs assigned to the project.
+     * Gets the list of managing officer UserIDs assigned to the project.
      *
-     * @return The list of managing officer IDs.
+     * @return The list of managing officer UserIDs.
      */
-    public ArrayList<String> getManagingOfficerID() {
-        return this.managingOfficerID;
+    public ArrayList<String> getManagingOfficerUserID() {
+        return this.managingOfficerUserID;
     }
 
     /**
-     * Adds a managing officer ID to the list.
+     * Adds a managing officer UserID to the list.
      *
-     * @param managingOfficerID The ID of the managing officer to add.
+     * @param managingOfficerUserID The UserID of the managing officer to add.
      */
-    public void addManagingOfficerID(String managingOfficerID) {
-        this.managingOfficerID.add(managingOfficerID);
+    public void addManagingOfficerUserID(String managingOfficerUserID) {
+        this.managingOfficerUserID.add(managingOfficerUserID);
     }
 
     /**
      * Removes a managing officer ID from the list.
      *
-     * @param managingOfficerID The ID of the managing officer to remove.
+     * @param managingOfficerUserID The ID of the managing officer to remove.
      * @throws NoSuchElementException If the ID is not found in the list.
      */
-    public void removeManagingOfficerID(String managingOfficerID) {
-        if (this.managingOfficerID.remove(managingOfficerID)) {
+    public void removeManagingOfficerUserID(String managingOfficerUserID) {
+        if (this.managingOfficerUserID.remove(managingOfficerUserID)) {
         } else {
-            throw new NoSuchElementException("Managing Officer ID '" + managingOfficerID + "' not found.");
+            throw new NoSuchElementException("Managing Officer ID '" + managingOfficerUserID + "' not found.");
         }
     }
 
@@ -316,7 +316,7 @@ public class BTOProjectModel {
         System.out.println("Manager ID: " + (this.managerUserID));
         System.out.println("Visibility: " + (this.isVisibility ? "Visible" : "Not Visible"));
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
-        System.out.println("Managing Officer IDs: " + (this.managingOfficerID.isEmpty() ? "None" : this.managingOfficerID));
+        System.out.println("Managing Officer IDs: " + (this.managingOfficerUserID.isEmpty() ? "None" : this.managingOfficerUserID));
         System.out.println("---------------------");
     }
 }
