@@ -6,6 +6,7 @@ import com.sc2002.enums.UserRole;
 import com.sc2002.model.BTOApplication;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ProjectRepo;
+import com.sc2002.utilities.Receipt;
 
 public class ApplicationService {
     //
@@ -47,5 +48,9 @@ public class ApplicationService {
 
         System.out.println("Your application has been created and submitted successfully!");
         return new BTOApplication(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
+    }
+
+    public Receipt generateReceipt(BTOApplication application) {
+        return new Receipt(application);
     }
 }
