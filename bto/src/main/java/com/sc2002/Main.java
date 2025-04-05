@@ -5,13 +5,14 @@ import java.util.Scanner;
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.AuthService;
 import com.sc2002.controller.InitializationService;
-import com.sc2002.controller.MenuService;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ApplicationRepo;
 import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
+import com.sc2002.view.MenuView;
+
 
 /**
  * The main entry point for the BTO project management application.
@@ -30,7 +31,7 @@ public class Main {
         // Declaring AuthService
         AuthService authService = new AuthService();
         // Declaring MenuManagerService
-        MenuService menuService = new MenuService();
+        MenuView menuView = new MenuView();
         // Declaring InitilizationService
         InitializationService initialService = new InitializationService();
         // Declaring the repositories
@@ -43,33 +44,9 @@ public class Main {
         initialService.initializeUsers(userList);
         // Declaring variables
         User currentUser = null;
-        String userInput = null;
-
         // AppContext service, To make things less clustered, improving readibility
         AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
         // Project
-        System.out.println("Welcome to the BTO Project Management System!");
-        while (true) {
-            userInput = menuService.MainMenu(appContext.getScanner()); // We should be using VIEW to print Menu, JUST TAKE NOTE DURING MEETING AGENDA
-            if (userInput.equals("1")) {
-                appContext.setCurrentUser(menuService.LoginMenu(appContext.getScanner(), appContext.getUserRepo()));
-            } else if (userInput.equals("2")) {
-                appContext.setCurrentUser(menuService.RegisterMenu(appContext.getScanner(), appContext.getUserRepo()));// we will use this as 'login token'
-            }
-            while (appContext.getCurrentUser() != null) {
-                // Handle different user roles using a switch-case
-                if(authService.isApplicant(appContext.getCurrentUser())){
-                    menuService.ApplicantMenu(appContext);
-                }else if(authService.isOfficer(appContext.getCurrentUser())){
-                    menuService.HDBOfficerMenu(appContext);
-                }else if(authService.isManager(appContext.getCurrentUser())){
-                    menuService.HDBManagerMenu(appContext);
-                }
-                else{
-                    System.out.println("Unknown role. Logging out...");
-                    appContext.setCurrentUser(null);
-                }// End of if-else for checking user type
-            }// end of while loop for when currentUser!=null
-        }// while program is running
+        menuView.startMenu(appContext);
     }// end of public main class
 }// end of main class
