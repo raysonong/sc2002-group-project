@@ -68,26 +68,26 @@ public class ApplicantView {
     }
 
     private void applyForProjectMenu(AppContext appContext) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new RuntimeException("Not implemented");
     }
 
     private void viewApplicationStatusMenu(AppContext appContext) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new RuntimeException("Not implemented");
     }
 
     private void updateFlatDetailsMenu(AppContext appContext) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new RuntimeException("Not implemented");
     }
 
     private void generateReceiptMenu(AppContext appContext) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new RuntimeException("Not implemented");
     }
 
     private void submitEnquiryMenu(AppContext appContext) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new RuntimeException("Not implemented");
     }
 
     private void viewMyEnquiriesMenu(AppContext appContext) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new RuntimeException("Not implemented");
     }
 }

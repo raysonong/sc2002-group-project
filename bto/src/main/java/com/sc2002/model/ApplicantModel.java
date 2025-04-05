@@ -25,10 +25,12 @@ public class ApplicantModel extends User {
     public List<String> getMenuOptions() {
         List<String> options = new ArrayList<>();
         options.addAll(Arrays.asList(
-        "Register for Project Team",
-        "View Registration Status",
+        "Apply for BTO Project",
+        "View Application Status",
         "Update Flat Details",
-        "Generate Flat Selection Receipt"
+        "Generate Flat Selection Receipt",
+        "Placeholder 1",
+        "Placeholder 2(open ApplicantModel.getMenuOptions to edit)"
         ));
         return options;
     }
