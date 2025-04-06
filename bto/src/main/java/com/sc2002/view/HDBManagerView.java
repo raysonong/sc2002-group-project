@@ -2,7 +2,6 @@ package com.sc2002.view;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.EnquiryService;
@@ -11,10 +10,12 @@ import com.sc2002.controller.ProjectService;
 import com.sc2002.model.Enquiry;
 
 public class HDBManagerView {
+
     // declare all the services required by Manager
-    private final ProjectManagementService projectManagementService=new ProjectManagementService();
+    private final ProjectManagementService projectManagementService = new ProjectManagementService();
     private final EnquiryService enquiryService = new EnquiryService();
-    private final ProjectService projectService=new ProjectService();
+    private final ProjectService projectService = new ProjectService();
+
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         String userInput = "";
@@ -64,7 +65,7 @@ public class HDBManagerView {
             }
             case "9" -> {
                 // Option 9: Approve officer registration
-                
+
             }
             case "10" -> {
                 // Option 10: Reject officer registration
@@ -102,7 +103,7 @@ public class HDBManagerView {
         }
     }// End of HDBManagerMenu
 
-    private void editBTOProjectMenu(AppContext appContext) { 
+    private void editBTOProjectMenu(AppContext appContext) {
         System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
@@ -150,19 +151,21 @@ public class HDBManagerView {
 
     private void deleteBTOProjectMenu(AppContext appContext) {
         System.out.println("--deleteBTOProjectMenu--\n(yes) To Confirm Deletion: ");
-        String userOption = appContext.getScanner().nextLine();
+        String userOption = appContext.getScanner().nextLine().toLowerCase();
         switch (userOption) {
             case "yes" -> {
                 // Confirm Deletion
-                if(projectManagementService.deleteProject(appContext)) System.out.println("Deletion Successful.");
+                if (projectManagementService.deleteProject(appContext)) {
+                    System.out.println("Deletion Successful.");
+                }
             }
             default -> {
-            System.out.println("Deletion process cancelled.");
+                System.out.println("Deletion process cancelled.");
             }
         }
     }
 
-    private void toggleProjectVisibilityMenu(AppContext appContext){
+    private void toggleProjectVisibilityMenu(AppContext appContext) {
         Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
         System.out.println("-- All BTO Projects --");
         System.out.println("Index\tProject ID\tProject Name");
@@ -210,7 +213,8 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
         }
     }
-    private void getBTOProjectByUserIDMenu(AppContext appContext){
+
+    private void getBTOProjectByUserIDMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         System.out.println("-- Projects Managed by You --");
         System.out.println("Index\tProject ID\tProject Name");
@@ -224,9 +228,9 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) {
-            projectService.viewProjectByID(appContext, projectID);
+                projectService.viewProjectByID(appContext, projectID);
             } else {
-            System.out.println("Invalid Project ID. Please try again.");
+                System.out.println("Invalid Project ID. Please try again.");
             }
             System.out.print("Press enter to continue...");
             appContext.getScanner().nextLine();
@@ -242,8 +246,8 @@ public class HDBManagerView {
         } else {
             System.out.println("-- All Enquiries --");
             for (Enquiry enquiry : enquiries) {
-                System.out.printf("ID: %d, Subject: %s, Status: %s%n", 
-                    enquiry.getId(), enquiry.getEnquiryText(), enquiry.getStatus());
+                System.out.printf("ID: %d, Subject: %s, Status: %s%n",
+                        enquiry.getId(), enquiry.getEnquiryText(), enquiry.getStatus());
             }
         }
         System.out.print("Press enter to continue...");

@@ -3,14 +3,9 @@ package com.sc2002.controller;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
-
-import javax.naming.AuthenticationException;
 
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
-import com.sc2002.model.User;
-import com.sc2002.enums.UserRole;
 
 public class ProjectManagementService {
 
@@ -22,11 +17,11 @@ public class ProjectManagementService {
      * @return A new BTOProjectModel object with the specified details.
      */
     public BTOProjectModel createProject(AppContext appContext) {
-        if(!appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+        if (!appContext.getAuthService().isManager(appContext.getCurrentUser())) {
             System.out.println("You do not have permission to create a project.");
             return null;
         }
-        
+
         String projectName, neighborhood;
         int twoRoomCount = 0, threeRoomCount = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
@@ -111,6 +106,7 @@ public class ProjectManagementService {
             }
         }
 
+        // Validate max Officer
         do {
             System.out.printf("Enter the maximum amount of HDB Officer Slots (max 10): ");
             if (appContext.getScanner().hasNextInt()) {
@@ -133,12 +129,16 @@ public class ProjectManagementService {
     public void editProject(AppContext appContext, String userOption, String valueToChange) {
         try {
             if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                int projectID=((HDBManagerModel) appContext.getCurrentUser()).getProjectID();
-                BTOProjectModel project=appContext.getProjectRepo().findByProjectID(projectID);
-                if(project==null) throw new RuntimeException("Current User has no project under it.");
+                int projectID = ((HDBManagerModel) appContext.getCurrentUser()).getProjectID();
+                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
+                if (project == null) {
+                    throw new RuntimeException("Current User has no project under it.");
+                }
                 switch (userOption) {
-                    case "1" -> project.setProjectName(valueToChange);
-                    case "2" -> project.setNeighborhood(valueToChange);
+                    case "1" ->
+                        project.setProjectName(valueToChange);
+                    case "2" ->
+                        project.setNeighborhood(valueToChange);
                     case "3" -> {
                         try {
                             int twoRoomCount = Integer.parseInt(valueToChange);
@@ -182,29 +182,34 @@ public class ProjectManagementService {
                             throw new RuntimeException("Invalid date format for Closing Date. Please use DD-MM-YYYY.");
                         }
                     }
-                    default -> throw new RuntimeException("Invalid option selected!");
+                    default ->
+                        throw new RuntimeException("Invalid option selected!");
                 }
             } else {
                 throw new RuntimeException("User is not authorized to perform this action.");
             }
         } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
-            return;
         }
     }
 
-    public boolean deleteProject(AppContext appContext){
-        try{
-            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
-                HDBManagerModel currentUser=(HDBManagerModel) appContext.getCurrentUser();
-                BTOProjectModel project=appContext.getProjectRepo().findByProjectID(currentUser.getProjectID());
-                if(project.getManagerUserID()==currentUser.getUserID()) currentUser.deleteProjectID(); // if deleting currently managing project
-                if(appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID()))return true;
-                else throw new RuntimeException("Failed to delete project.");
-            }else{
+    public boolean deleteProject(AppContext appContext) {
+        try {
+            if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+                HDBManagerModel currentUser = (HDBManagerModel) appContext.getCurrentUser();
+                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(currentUser.getProjectID());
+                if (project.getManagerUserID() == currentUser.getUserID()) {
+                    currentUser.deleteProjectID(); // if deleting currently managing project
+
+                                }if (appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID())) {
+                    return true; 
+                }else {
+                    throw new RuntimeException("Failed to delete project.");
+                }
+            } else {
                 throw new RuntimeException("User is not authorized to perform this action.");
             }
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
         return false;
