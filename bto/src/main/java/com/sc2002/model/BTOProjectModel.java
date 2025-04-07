@@ -287,29 +287,34 @@ public class BTOProjectModel {
      *
      * @return The list of managing officer UserIDs.
      */
-    public ArrayList<User> getManagingOfficerUserID() {
+    public ArrayList<User> getManagingOfficerUsers() {
         return this.managingOfficerUsers;
     }
 
     /**
-     * Adds a managing officer UserID to the list.
+     * Adds a managing officer User to the list. Returns Boolean base on success.
      *
-     * @param managingOfficerUserID The UserID of the managing officer to add.
+     * @param managingOfficerUser The User object of the managing officer to add.
      */
-    public void addManagingOfficerUserID(User managingOfficerUser) {
+    public boolean addManagingOfficerUser(User managingOfficerUser) {
+        if (this.managingOfficerUsers.size() >= this.maxManagingOfficer) {
+            return false;
+        }
         this.managingOfficerUsers.add(managingOfficerUser);
+        return true;
     }
 
     /**
-     * Removes a managing officer ID from the list.
+     * Removes a managing officer User object from the list.
      *
-     * @param managingOfficerUserID The ID of the managing officer to remove.
-     * @throws NoSuchElementException If the ID is not found in the list.
+     * @param managingOfficerUser The User object of the managing officer to remove.
+     * @throws NoSuchElementException If the User object is not found in the list.
      */
-    public void removeManagingOfficerUserID(User managingOfficerUser) {
+    public boolean removeManagingOfficerUser(User managingOfficerUser) {
         if (this.managingOfficerUsers.remove(managingOfficerUser)) {
+            return true;
         } else {
-            throw new NoSuchElementException("Managing Officer:  '" + managingOfficerUser.getName() + "' not found.");
+            return false;
         }
     }
 

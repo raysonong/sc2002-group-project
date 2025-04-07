@@ -8,7 +8,7 @@ public class ProjectService {
         try{
             if (appContext.getAuthService().isApplicant(appContext.getCurrentUser())){
                 // viewProject for applicant, cannot view if not visible
-                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
+                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(projectID);
                 if(project!=null){
                     ApplicantModel currentUser = (ApplicantModel)appContext.getCurrentUser();
                     if(project.isVisible()) project.printAll();
@@ -21,7 +21,7 @@ public class ProjectService {
             }
             else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser()) || appContext.getAuthService().isManager(appContext.getCurrentUser())){
                 // viewProject for Officer/Manager, view regardless of visilibty
-                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
+                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(projectID);
                 if(project!=null) project.printAll();
                 else throw new RuntimeException("No Project Found.");
             }else{

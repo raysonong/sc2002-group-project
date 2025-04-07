@@ -4,30 +4,43 @@ import com.sc2002.enums.OfficerRegistrationStatus;
 
 public class OfficerRegistrationModel {
     private static int nextRegistrationId = 1; // Static counter for auto-incrementing IDs
-
-    private int registrationId;
-    private String officerNRIC;
-    private int officerUserID;
+    private final int registrationId;
+    private User officer;
     private int projectID;
     private OfficerRegistrationStatus status;
 
-    public OfficerRegistrationModel(String officerNRIC, int officerUserID, int projectID) {
+    public OfficerRegistrationModel(User officer, int projectID) {
         this.registrationId = nextRegistrationId++;
-        this.officerNRIC = officerNRIC;
-        this.officerUserID = officerUserID;
+        this.officer = officer;
         this.projectID = projectID;
         this.status = OfficerRegistrationStatus.PENDING;
+    }
+
+    public int getRegistrationId(){
+        return this.registrationId;
     }
 
     public int getProjectID() {
         return this.projectID;
     }
 
+    public String getOfficerName(){
+        return this.officer.getName();
+    }
+
     public int getUserID() {
-        return this.officerUserID;
+        return this.officer.getUserID();
+    }
+
+    public User getOfficerUser(){
+        return this.officer;
     }
 
     public OfficerRegistrationStatus getStatus() {
         return this.status;
+    }
+
+    public void setStatus(OfficerRegistrationStatus status){
+        this.status=status;
     }
 }

@@ -156,7 +156,7 @@ public class ProjectManagementService {
         try {
             if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
                 int projectID = ((HDBManagerModel) appContext.getCurrentUser()).getProjectID();
-                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
+                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
@@ -223,7 +223,7 @@ public class ProjectManagementService {
         try {
             if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
                 HDBManagerModel currentUser = (HDBManagerModel) appContext.getCurrentUser();
-                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(currentUser.getProjectID());
+                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(currentUser.getProjectID());
                 if (project.getManagerUserID() == currentUser.getUserID()) {
                     currentUser.deleteProjectID(); // if deleting currently managing project
 
@@ -244,7 +244,7 @@ public class ProjectManagementService {
     public void toggleProjectVisibility(AppContext appContext, Integer projectID) {
         try {
             if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                BTOProjectModel project = appContext.getProjectRepo().findByProjectID(projectID);
+                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Project with the given ID does not exist.");
                 }

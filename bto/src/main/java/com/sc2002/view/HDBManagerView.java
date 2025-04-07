@@ -5,9 +5,11 @@ import java.util.Map;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.EnquiryService;
+import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
 import com.sc2002.model.EnquiryModel;
+import com.sc2002.model.OfficerRegistrationModel;
 
 public class HDBManagerView {
 
@@ -15,7 +17,7 @@ public class HDBManagerView {
     private final ProjectManagementService projectManagementService = new ProjectManagementService();
     private final EnquiryService enquiryService = new EnquiryService();
     private final ProjectService projectService = new ProjectService();
-
+    private final OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         String userInput = "";
@@ -65,11 +67,11 @@ public class HDBManagerView {
             }
             case "9" -> {
                 // Option 9: Approve officer registration
-
+                approveOfficerRegistrationMenu(appContext);
             }
             case "10" -> {
                 // Option 10: Reject officer registration
-
+                rejectOfficerRegistrationMenu(appContext);
             }
             case "11" -> {
                 // Option 11: Approve an application
@@ -281,6 +283,109 @@ public class HDBManagerView {
                     enquiryService.editEnquiryResponse(appContext, index, response);
                 } else {
                     System.out.println("Invalid index. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a valid integer for the index.");
+            }
+        }
+        System.out.print("Press enter to continue...");
+        appContext.getScanner().nextLine();
+    }
+
+    private void approveOfficerRegistrationMenu(AppContext appContext){
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        System.out.println("-- Projects Managed by You --");
+        System.out.println("Project ID\tProject Name");
+        System.out.println("-----------------------------------");
+
+        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
+            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
+        }
+        System.out.print("Enter the Project ID to manage officer registration: ");
+        List<OfficerRegistrationModel> listOfRegistration;
+        try {
+            String projectIDString = appContext.getScanner().nextLine();
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) {
+                // Call a method to handle officer registration for the selected project
+                listOfRegistration=appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
+            } else {
+                System.out.println("Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        if (listOfRegistration.isEmpty()) {
+            System.out.println("No officer registrations found for this project.");
+        } else {
+            System.out.println("-- Officer Registrations --");
+            for (int i = 0; i < listOfRegistration.size(); i++) {
+                OfficerRegistrationModel officer = listOfRegistration.get(i);
+                System.out.printf("Index: %d, Officer Name: %s, Status: %s%n", i, officer.getOfficerName(), officer.getStatus());
+            }
+            System.out.print("Enter the index of the officer registration you wish to approve: ");
+            try {
+                int index = Integer.parseInt(appContext.getScanner().nextLine());
+                if(index<=listOfRegistration.size() && index>=0){
+                    // approve registration
+                    OfficerRegistrationModel registration=listOfRegistration.get(index);
+                    if(officerRegistrationService.approveRegistration(appContext, registration)){
+                        System.out.println("Officer added.");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a valid integer for the index.");
+            }
+        }
+        System.out.print("Press enter to continue...");
+        appContext.getScanner().nextLine();
+    }
+
+
+    private void rejectOfficerRegistrationMenu(AppContext appContext){
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        System.out.println("-- Projects Managed by You --");
+        System.out.println("Project ID\tProject Name");
+        System.out.println("-----------------------------------");
+
+        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
+            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
+        }
+        System.out.print("Enter the Project ID to manage officer registration: ");
+        List<OfficerRegistrationModel> listOfRegistration;
+        try {
+            String projectIDString = appContext.getScanner().nextLine();
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) {
+                // Call a method to handle officer registration for the selected project
+                listOfRegistration=appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
+            } else {
+                System.out.println("Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        if (listOfRegistration.isEmpty()) {
+            System.out.println("No officer registrations found for this project.");
+        } else {
+            System.out.println("-- Officer Registrations --");
+            for (int i = 0; i < listOfRegistration.size(); i++) {
+                OfficerRegistrationModel officer = listOfRegistration.get(i);
+                System.out.printf("Index: %d, Officer Name: %s, Status: %s%n", i, officer.getOfficerName(), officer.getStatus());
+            }
+            System.out.print("Enter the index of the officer registration you wish to reject: ");
+            try {
+                int index = Integer.parseInt(appContext.getScanner().nextLine());
+                if(index<=listOfRegistration.size() && index>=0){
+                    // reject registration
+                    OfficerRegistrationModel registration=listOfRegistration.get(index);
+                    if(officerRegistrationService.rejectRegistration(appContext, registration)){
+                        System.out.println("Officer removed successfully.");
+                    }
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error: Please enter a valid integer for the index.");

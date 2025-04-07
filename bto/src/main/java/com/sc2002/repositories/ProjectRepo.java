@@ -15,7 +15,7 @@ public class ProjectRepo {
 
     private List<BTOProjectModel> projects = new ArrayList<>();
 
-    public BTOProjectModel findByProjectID(int projectID) {
+    public BTOProjectModel getProjectByID(int projectID) {
         for (BTOProjectModel project : projects) {
             if (project.getProjectID() == projectID) {
                 return project;

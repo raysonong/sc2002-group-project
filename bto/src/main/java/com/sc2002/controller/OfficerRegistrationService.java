@@ -2,7 +2,9 @@ package com.sc2002.controller;
 
 import java.util.Scanner;
 
+import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.enums.UserRole;
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ProjectRepo;
@@ -29,7 +31,7 @@ public class OfficerRegistrationService {
                 }
 
                 // Validate input
-                if (projectRepo.findByProjectID(input_projectId)==null) {
+                if (projectRepo.getProjectByID(input_projectId)==null) {
                     System.out.println("This project ID does not exist. Please enter a valid ID.");
                 }
                 else {
@@ -42,6 +44,47 @@ public class OfficerRegistrationService {
         }
 
         System.out.println("Your application has been created successfully and is pending approval from the project manager!");
-        return new OfficerRegistrationModel(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
+        return new OfficerRegistrationModel(currentUser, input_projectId);
+    }
+
+    public boolean approveRegistration(AppContext appContext, OfficerRegistrationModel registration){
+        try{
+            //Checking if isManager and is Project's manager
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(registration.getProjectID());
+            if(appContext.getAuthService().isManager(appContext.getCurrentUser()) && project.getManagerUserID()==appContext.getCurrentUser().getUserID()){
+                // Add to project 
+                if(project.addManagingOfficerUser(registration.getOfficerUser())){
+                    registration.setStatus(OfficerRegistrationStatus.APPROVED);
+                    return true;
+                }else{
+                    throw new RuntimeException("Failed to add Officer to project. (limit hit)");
+                }
+            }else{
+                throw new RuntimeException("User is not authorized to perform this action.");
+            }
+        }catch(RuntimeException e){
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
+    public boolean rejectRegistration(AppContext appContext, OfficerRegistrationModel registration){
+        try{
+            //Checking if isManager and is Project's manager
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(registration.getProjectID());
+            if(appContext.getAuthService().isManager(appContext.getCurrentUser()) && project.getManagerUserID()==appContext.getCurrentUser().getUserID()){
+                // Add to project 
+                if(project.removeManagingOfficerUser(registration.getOfficerUser())){
+                    registration.setStatus(OfficerRegistrationStatus.REJECTED);
+                    return true;
+                }else{
+                    throw new RuntimeException("Failed to remove Officer from project.");
+                }
+            }else{
+                throw new RuntimeException("User is not authorized to perform this action.");
+            }
+        }catch(RuntimeException e){
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
     }
 }
