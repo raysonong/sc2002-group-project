@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import com.sc2002.enums.FlatType; // for FlatType enums
 import com.sc2002.enums.UserRole; // for UserRole enums
-
+import com.sc2002.model.User;
 /**
  * Represents a BTO (Build-To-Order) project with details such as project name, neighborhood, 
  * flat counts, application dates, and managing officers.
@@ -74,9 +74,9 @@ public class BTOProjectModel {
     private int maxManagingOfficer;
 
     /**
-     * The list of managing officer UserIDs assigned to the project.
+     * The list of managing officer object who are assigned to the project.
      */
-    private ArrayList<Integer> managingOfficerUserID;
+    private ArrayList<User> managingOfficerUsers;
 
     /**
      * Constructs a new BTOProjectModel with the specified details.
@@ -94,7 +94,7 @@ public class BTOProjectModel {
      */
     public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount,int twoRoomPrice, int threeRoomCount,int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
-        managingOfficerUserID = new ArrayList<>();
+        this.managingOfficerUsers = new ArrayList<>();
         this.projectID = this.nextprojectID;
         this.nextprojectID += 1; 
         this.projectName = projectName;
@@ -287,8 +287,8 @@ public class BTOProjectModel {
      *
      * @return The list of managing officer UserIDs.
      */
-    public ArrayList<Integer> getManagingOfficerUserID() {
-        return this.managingOfficerUserID;
+    public ArrayList<User> getManagingOfficerUserID() {
+        return this.managingOfficerUsers;
     }
 
     /**
@@ -296,8 +296,8 @@ public class BTOProjectModel {
      *
      * @param managingOfficerUserID The UserID of the managing officer to add.
      */
-    public void addManagingOfficerUserID(int managingOfficerUserID) {
-        this.managingOfficerUserID.add(managingOfficerUserID);
+    public void addManagingOfficerUserID(User managingOfficerUser) {
+        this.managingOfficerUsers.add(managingOfficerUser);
     }
 
     /**
@@ -306,10 +306,10 @@ public class BTOProjectModel {
      * @param managingOfficerUserID The ID of the managing officer to remove.
      * @throws NoSuchElementException If the ID is not found in the list.
      */
-    public void removeManagingOfficerUserID(Integer managingOfficerUserID) {
-        if (this.managingOfficerUserID.remove(managingOfficerUserID)) {
+    public void removeManagingOfficerUserID(User managingOfficerUser) {
+        if (this.managingOfficerUsers.remove(managingOfficerUser)) {
         } else {
-            throw new NoSuchElementException("Managing Officer ID '" + managingOfficerUserID + "' not found.");
+            throw new NoSuchElementException("Managing Officer:  '" + managingOfficerUser.getName() + "' not found.");
         }
     }
 
@@ -330,7 +330,10 @@ public class BTOProjectModel {
         System.out.println("Manager ID: " + (this.managerUserID));
         System.out.println("Visibility: " + (this.isVisible ? "Visible" : "Not Visible"));
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
-        System.out.println("Managing Officer IDs: " + (this.managingOfficerUserID.isEmpty() ? "None" : this.managingOfficerUserID));
+        System.out.println("Managing Officers: " + 
+            String.join(", ", managingOfficerUsers.stream()
+            .map(User::getName)
+            .toList()));
         System.out.println("---------------------");
     }
 }

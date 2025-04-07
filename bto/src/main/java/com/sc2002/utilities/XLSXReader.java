@@ -290,16 +290,19 @@ public class XLSXReader {
             }
             projectData.add(officerSlot);
 
-            // Officer (String)
+            // Officer (String) (can be null)
             cell = row.getCell(12);
-            if (cell == null || cell.getCellType() != CellType.STRING) {
-                System.err.println("Invalid Officer at row " + row.getRowNum());
+            if (cell == null || cell.getCellType() == CellType.BLANK) {
+                projectData.add(""); // Add null if the cell is empty
+            } else if (cell.getCellType() == CellType.STRING) {
+                projectData.add(cell.getStringCellValue()); // Add the string value if present
+            } else {
+                System.err.println("Invalid Officer data at row " + row.getRowNum());
                 System.exit(1);
             }
-            projectData.add(cell.getStringCellValue());
-
             projectList.add(projectData);
             }
+
         } catch (IOException e) {
             System.err.println("Error reading file: " + e.getMessage());
             System.exit(1);

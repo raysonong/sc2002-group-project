@@ -248,6 +248,7 @@ public class ProjectManagementService {
                 if (project == null) {
                     throw new RuntimeException("Project with the given ID does not exist.");
                 }
+                if(project.getManagerUserID()!=appContext.getCurrentUser().getUserID()) throw new RuntimeException("User does not own this project.");
                 boolean currentVisibility = project.isVisible();
                 System.out.println("Current visibility: " + (currentVisibility ? "Visible" : "Hidden"));
                 project.setVisible(!currentVisibility);

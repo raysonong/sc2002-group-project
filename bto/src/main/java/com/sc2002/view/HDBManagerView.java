@@ -65,7 +65,7 @@ public class HDBManagerView {
             }
             case "9" -> {
                 // Option 9: Approve officer registration
-                
+
             }
             case "10" -> {
                 // Option 10: Reject officer registration
@@ -166,13 +166,16 @@ public class HDBManagerView {
     }
 
     private void toggleProjectVisibilityMenu(AppContext appContext) {
-        Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
+        
+        Map<Integer, String> listOfProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        // In case they allow any manager to toggle any project visiblity
+        // Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
         System.out.println("-- All BTO Projects --");
-        System.out.println("Index\tProject ID\tProject Name");
+        System.out.println("Project ID\tProject Name");
         System.out.println("-----------------------------------");
         int index = 1;
         for (Map.Entry<Integer, String> entry : listOfProjects.entrySet()) {
-            System.out.printf("%d\t%d\t\t%s%n", index++, entry.getKey(), entry.getValue());
+            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
         }
         System.out.print("Enter the Project ID to toggle visiblity: ");
         try {
@@ -186,17 +189,15 @@ public class HDBManagerView {
         } catch (NumberFormatException e) {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
         }
-        projectManagementService.toggleProjectVisibility(appContext, null);
     }
 
     private void getAllBTOProjectMenu(AppContext appContext) {
         Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
         System.out.println("-- All BTO Projects --");
-        System.out.println("Index\tProject ID\tProject Name");
+        System.out.println("Project ID\tProject Name");
         System.out.println("-----------------------------------");
-        int index = 1;
         for (Map.Entry<Integer, String> entry : listOfProjects.entrySet()) {
-            System.out.printf("%d\t%d\t\t%s%n", index++, entry.getKey(), entry.getValue());
+            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
         }
         System.out.print("Enter the Project ID to view details: ");
         try {
@@ -217,11 +218,11 @@ public class HDBManagerView {
     private void getBTOProjectByUserIDMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         System.out.println("-- Projects Managed by You --");
-        System.out.println("Index\tProject ID\tProject Name");
+        System.out.println("Project ID\tProject Name");
         System.out.println("-----------------------------------");
-        int index = 1;
+
         for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
-            System.out.printf("%d\t%d\t\t%s%n", index++, entry.getKey(), entry.getValue());
+            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
         }
         System.out.print("Enter the Project ID to view details: ");
         try {
