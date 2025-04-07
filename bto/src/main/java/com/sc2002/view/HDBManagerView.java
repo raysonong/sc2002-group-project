@@ -30,7 +30,7 @@ public class HDBManagerView {
         System.out.print("Please select an option: ");
         userInput = appContext.getScanner().nextLine();
 
-        switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
+        switch (userInput) { 
             case "1" -> {
                 // Option 1: Create a new BTO project
                 appContext.getProjectRepo().save(projectManagementService.createProject(appContext));
@@ -61,7 +61,7 @@ public class HDBManagerView {
             }
             case "8" -> {
                 // Option 8: Reply Enquiries
-
+                editEnquiryMenu(appContext);
             }
             case "9" -> {
                 // Option 9: Approve officer registration
@@ -254,4 +254,38 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
+    private void editEnquiryMenu(AppContext appContext){
+        List<Enquiry> enquiries = enquiryService.getAllEnquiries(appContext);
+        if (enquiries.isEmpty()) {
+            System.out.println("No enquiries found.");
+        } else {
+            System.out.println("-- All Enquiries --");
+            for (int i = 0; i < enquiries.size(); i++) {
+                System.out.printf("Index: %d, Subject: %s, Status: %s%n",
+                        i, enquiries.get(i).getEnquiryText(), enquiries.get(i).getStatus());
+            }
+            System.out.print("Enter the index of the enquiry you wish to view: ");
+            try {
+                int index = Integer.parseInt(appContext.getScanner().nextLine());
+                if (index >= 0 && index < enquiries.size()) {
+                    // View the selected enquiry to print, returns if no project found
+                    if(!enquiryService.viewEnquiry(appContext, index)){
+                        return;
+                    };
+                    // Gather new response
+                    System.out.print("Enter your response to the enquiry: ");
+                    String response = appContext.getScanner().nextLine();
+
+                    // Edit the enquiry with the new response
+                    enquiryService.editEnquiryResponse(appContext, index, response);
+                } else {
+                    System.out.println("Invalid index. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Please enter a valid integer for the index.");
+            }
+        }
+        System.out.print("Press enter to continue...");
+        appContext.getScanner().nextLine();
+    }
 }

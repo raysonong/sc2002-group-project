@@ -23,9 +23,9 @@ public class EnquiryRepo {
      * @param id The ID of the enquiry to find
      * @return Optional containing the enquiry if found, empty otherwise
      */
-    public Optional<Enquiry> findById(String id) {
+    public Optional<Enquiry> findById(int enquiryID) {
         return enquiries.stream()
-                .filter(enquiry -> String.valueOf(enquiry.getId()).equals(id))
+                .filter(enquiry -> enquiry.getId() == enquiryID)
                 .findFirst();
     }
     
@@ -37,7 +37,7 @@ public class EnquiryRepo {
      */
     public Enquiry saveEnquiry(Enquiry enquiry) {
         // Check if the enquiry already exists
-        Optional<Enquiry> existingEnquiry = findById(String.valueOf(enquiry.getId()));
+        Optional<Enquiry> existingEnquiry = findById(enquiry.getId());
         
         if(existingEnquiry.isPresent()) {
             // Remove the existing enquiry

@@ -4,25 +4,80 @@ import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.Enquiry;
 import com.sc2002.enums.UserRole;
 import java.util.List;
+import java.util.Optional;
 
 public class EnquiryService {
     // submitEnquiry for Applicant and Officer(Who have a project they BTOed)
 
-    // viewAllEnquiry for Managers 
+    // viewAllEnquiry for Managers & Officer (Mostly for printing menu related tasks)
     public List<Enquiry> getAllEnquiries(AppContext appContext) {
         // Check if the current user is authenticated and has the correct role
         try{
             if (appContext.getCurrentUser() != null && appContext.getAuthService().isManager(appContext.getCurrentUser())) {
                 return appContext.getEnquiryRepo().findAll();
-            }
-            throw new RuntimeException("User is not authorized to perform this action.");
+            }else if (appContext.getCurrentUser() != null && appContext.getAuthService().isOfficer(appContext.getCurrentUser())) {
+                // @rayson, was thinking you put your getAllEnquiries here, (this is for printing your menus)
+                // Then sort to only return those which officer by right can view (you can code the sorting either in repo or here)
+                throw new RuntimeException("Not implemented");
+
+            }else throw new RuntimeException("User is not authorized to perform this action.");
         } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
             return null;
         }
     }
 
-    // viewManagingEnquiry for HDBOfficer
+    public boolean viewEnquiry(AppContext appContext,int enquiryID){
+        try{
+            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
+                Optional<Enquiry> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
+                if (enquiry.isPresent()) {
+                    enquiry.get().getFormattedEnquiry();
+                    return true;
+                } else {
+                    throw new RuntimeException("Project not found.");
+                }
+            }else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())){
+                // @ Rayson, this views the exact enquiry,
+                // idea for flow of enquiry editing
+                // 1) print menu using getAllEnquiry
+                // 2) viewEnquiry(index) to view the exact enquiry
+                // 3) editEnquiry(index) to edit that exact enquiry
+                throw new RuntimeException("Not implemented");
+            }else{
+                throw new RuntimeException("User is not authorized to perform this action.");
+            }
+        }catch(RuntimeException e){
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
 
+    public boolean editEnquiryResponse(AppContext appContext, int enquiryID, String response){
+        try{
+            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
+                // Manager can reply any so no need to do extra checking
+                Optional<Enquiry> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
+                if (enquiry.isPresent()) {
+                    enquiry.get().replyEnquiry(response, appContext.getCurrentUser().getUserID());
+                    return true;
+                } else {
+                    throw new RuntimeException("Project not found.");
+                }
+            }else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())){
+                // @ Rayson, this views the exact enquiry,
+                // idea for flow of enquiry editing
+                // 1) print menu using getAllEnquiry
+                // 2) viewEnquiry(index) to view the exact enquiry
+                // 3) editEnquiry(index) to edit that exact enquiry
+                throw new RuntimeException("Not implemented");
+            }else{
+                throw new RuntimeException("User is not authorized to perform this action.");
+            }
+        }catch(RuntimeException e){
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
     // viewEnquiryByUserID for HDBOfficer and Applicant (make sure to do your checks)
 }

@@ -3,31 +3,31 @@ package com.sc2002.model;
 import java.util.Date;
 public class Enquiry {
     private static int nextEnquiryId = 0; // Static counter for auto-incrementing IDs
-    private int enquiryId;
+    private int enquiryID;
     private String submittedByApplicantNRIC;
-    private int projectId;
+    private int projectID;
     private String enquiryText;
     private Date submissionDate;
     private EnquiryResponse enquiryResponse;
 
-    public Enquiry(String applicantNRIC, int projectId, String enquiryText){
-        this.enquiryId = nextEnquiryId++; // Assign current ID and increment for next use
+    public Enquiry(String applicantNRIC, int projectID, String enquiryText){
+        this.enquiryID = nextEnquiryId++; // Assign current ID and increment for next use
         this.submittedByApplicantNRIC=applicantNRIC;
-        this.projectId=projectId;
+        this.projectID=projectID;
         this.enquiryText=enquiryText;
         this.submissionDate = new Date(); // Initialize submission date
         this.enquiryResponse = null; // Initialize enquiry response
     }
 
     public int getId(){
-        return this.enquiryId;
+        return this.enquiryID;
     }
     public String getApplicantNRIC(){
         return this.submittedByApplicantNRIC;
     }
 
     public int getProjectId() {
-        return this.projectId;
+        return this.projectID;
     }
 
     public boolean getStatus(){ // return true if replied, else false
@@ -40,7 +40,7 @@ public class Enquiry {
 
     public void replyEnquiry(String officerResponse, int officerUserID) {
         // Create a new EnquiryResponse with the provided details
-        EnquiryResponse response = new EnquiryResponse(officerResponse,this.enquiryId,officerUserID);
+        EnquiryResponse response = new EnquiryResponse(officerResponse,this.enquiryID,officerUserID);
         // Set the response for this enquiry
         this.enquiryResponse = response;
     }
@@ -56,9 +56,9 @@ public class Enquiry {
     
     public String getFormattedEnquiry() {
         StringBuilder strToReturn = new StringBuilder();
-        strToReturn.append("Enquiry ID: ").append(this.enquiryId).append("\n");
+        strToReturn.append("Enquiry ID: ").append(this.enquiryID).append("\n");
         strToReturn.append("Submitted by: ").append(this.submittedByApplicantNRIC).append("\n");
-        strToReturn.append("Project ID: ").append(this.projectId).append("\n");
+        strToReturn.append("Project ID: ").append(this.projectID).append("\n");
         strToReturn.append("Submission Date: ").append(this.submissionDate).append("\n");
         strToReturn.append("Enquiry: ").append(this.enquiryText).append("\n");
         
