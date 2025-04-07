@@ -149,7 +149,7 @@ public class InitializationService {
 
                     User officer = userList.getUserByName(officerName.trim());
                     if (officer != null && authService.isOfficer(officer)) {
-                        newProject.addManagingOfficerUserID(officer);;
+                        newProject.addManagingOfficerUser(officer);;
                         addedOfficers++;
                     }
                 }
