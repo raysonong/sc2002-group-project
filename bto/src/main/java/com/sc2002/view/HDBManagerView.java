@@ -18,6 +18,7 @@ public class HDBManagerView {
     private final EnquiryService enquiryService = new EnquiryService();
     private final ProjectService projectService = new ProjectService();
     private final OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
+
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         String userInput = "";
@@ -75,15 +76,15 @@ public class HDBManagerView {
             }
             case "11" -> {
                 // Option 11: Approve an application
-
+                approveBTOApplicationMenu(appContext);
             }
             case "12" -> {
                 // Option 12: Reject an application
-
+                rejectBTOApplicationMenu(appContext);
             }
             case "13" -> {
                 // Option 13: Approve a withdrawal request
-
+                
             }
             case "14" -> {
                 // Option 14: Reject a withdrawal request
@@ -105,6 +106,15 @@ public class HDBManagerView {
         }
     }// End of HDBManagerMenu
 
+    private void printProjectsManagedByUser(Map<Integer, String> managerProjects) {
+        System.out.println("-- Projects Managed by You --");
+        System.out.println("Project ID\tProject Name");
+        System.out.println("-----------------------------------");
+        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
+            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
+        }
+    }
+    
     private void editBTOProjectMenu(AppContext appContext) {
         System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
@@ -219,13 +229,7 @@ public class HDBManagerView {
 
     private void getBTOProjectByUserIDMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
-        System.out.println("-- Projects Managed by You --");
-        System.out.println("Project ID\tProject Name");
-        System.out.println("-----------------------------------");
-
-        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
-            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
-        }
+        printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to view details: ");
         try {
             String projectIDString = appContext.getScanner().nextLine();
@@ -294,13 +298,7 @@ public class HDBManagerView {
 
     private void approveOfficerRegistrationMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
-        System.out.println("-- Projects Managed by You --");
-        System.out.println("Project ID\tProject Name");
-        System.out.println("-----------------------------------");
-
-        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
-            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
-        }
+        printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage officer registration: ");
         List<OfficerRegistrationModel> listOfRegistration;
         try {
@@ -346,13 +344,7 @@ public class HDBManagerView {
 
     private void rejectOfficerRegistrationMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
-        System.out.println("-- Projects Managed by You --");
-        System.out.println("Project ID\tProject Name");
-        System.out.println("-----------------------------------");
-
-        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
-            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
-        }
+        printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage officer registration: ");
         List<OfficerRegistrationModel> listOfRegistration;
         try {
@@ -394,4 +386,13 @@ public class HDBManagerView {
         System.out.print("Press enter to continue...");
         appContext.getScanner().nextLine();
     }
+
+    private void approveBTOApplicationMenu(AppContext appContext){
+        
+    }
+    private void rejectBTOApplicationMenu(AppContext appContext){
+        
+    }
+
+
 }
