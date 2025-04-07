@@ -1,12 +1,12 @@
 package com.sc2002.utilities;
 
-import com.sc2002.model.BTOApplication;
+import com.sc2002.model.BTOApplicationModel;
 
 public class Receipt {
-    private BTOApplication application;
+    private BTOApplicationModel application;
 
 
-    public Receipt(BTOApplication application) {
+    public Receipt(BTOApplicationModel application) {
         this.application = application;
     }
 }

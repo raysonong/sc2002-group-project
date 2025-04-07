@@ -1,16 +1,16 @@
 package com.sc2002.model;
 
 import java.util.Date;
-public class Enquiry {
+public class EnquiryModel {
     private static int nextEnquiryId = 0; // Static counter for auto-incrementing IDs
     private int enquiryID;
     private String submittedByApplicantNRIC;
     private int projectID;
     private String enquiryText;
     private Date submissionDate;
-    private EnquiryResponse enquiryResponse;
+    private EnquiryResponseModel enquiryResponse;
 
-    public Enquiry(String applicantNRIC, int projectID, String enquiryText){
+    public EnquiryModel(String applicantNRIC, int projectID, String enquiryText){
         this.enquiryID = nextEnquiryId++; // Assign current ID and increment for next use
         this.submittedByApplicantNRIC=applicantNRIC;
         this.projectID=projectID;
@@ -40,7 +40,7 @@ public class Enquiry {
 
     public void replyEnquiry(String officerResponse, int officerUserID) {
         // Create a new EnquiryResponse with the provided details
-        EnquiryResponse response = new EnquiryResponse(officerResponse,this.enquiryID,officerUserID);
+        EnquiryResponseModel response = new EnquiryResponseModel(officerResponse,this.enquiryID,officerUserID);
         // Set the response for this enquiry
         this.enquiryResponse = response;
     }

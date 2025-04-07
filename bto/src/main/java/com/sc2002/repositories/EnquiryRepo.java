@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.sc2002.model.Enquiry;
+import com.sc2002.model.EnquiryModel;
 // do double check & change if necessary (delete this comment before submission)
 public class EnquiryRepo {
-    private List<Enquiry> enquiries;
+    private List<EnquiryModel> enquiries;
     
     /**
      * Constructor initializes an empty list of enquiries
@@ -23,7 +23,7 @@ public class EnquiryRepo {
      * @param id The ID of the enquiry to find
      * @return Optional containing the enquiry if found, empty otherwise
      */
-    public Optional<Enquiry> findById(int enquiryID) {
+    public Optional<EnquiryModel> findById(int enquiryID) {
         return enquiries.stream()
                 .filter(enquiry -> enquiry.getId() == enquiryID)
                 .findFirst();
@@ -35,9 +35,9 @@ public class EnquiryRepo {
      * @param enquiry The enquiry to save
      * @return The saved enquiry
      */
-    public Enquiry saveEnquiry(Enquiry enquiry) {
+    public EnquiryModel saveEnquiry(EnquiryModel enquiry) {
         // Check if the enquiry already exists
-        Optional<Enquiry> existingEnquiry = findById(enquiry.getId());
+        Optional<EnquiryModel> existingEnquiry = findById(enquiry.getId());
         
         if(existingEnquiry.isPresent()) {
             // Remove the existing enquiry
@@ -55,7 +55,7 @@ public class EnquiryRepo {
      * @param nric The NRIC of the applicant
      * @return List of enquiries associated with the applicant
      */
-    public List<Enquiry> findByApplicantNRIC(String nric) {
+    public List<EnquiryModel> findByApplicantNRIC(String nric) {
         return enquiries.stream()
                 .filter(enquiry -> enquiry.getApplicantNRIC().equals(nric))
                 .collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class EnquiryRepo {
      * @param projectId The ID of the project
      * @return List of enquiries associated with the project
      */
-    public List<Enquiry> findByProjectId(String projectId) {
+    public List<EnquiryModel> findByProjectId(String projectId) {
         return enquiries.stream()
                 .filter(enquiry -> String.valueOf(enquiry.getProjectId()).equals(projectId))
                 .collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class EnquiryRepo {
      * 
      * @return List of all enquiries
      */
-    public List<Enquiry> findAll() {
+    public List<EnquiryModel> findAll() {
         return new ArrayList<>(enquiries);
     }
 }

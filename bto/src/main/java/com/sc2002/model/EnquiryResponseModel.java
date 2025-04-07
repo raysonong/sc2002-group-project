@@ -2,14 +2,14 @@ package com.sc2002.model;
 
 import java.util.Date;
 
-public class EnquiryResponse {
+public class EnquiryResponseModel {
     private static int nextResponseId = 0; // Static counter for auto-incrementing IDs
     private int responseId;
     private int respondingOfficerUserID;
     private int enquiryId;
     private String responseText;
     private Date responseDate;
-    EnquiryResponse(String officerResponse,int enquiryIds,int officerUserID){
+    EnquiryResponseModel(String officerResponse,int enquiryIds,int officerUserID){
         responseId = nextResponseId++; // Assign current ID and increment for next use
         enquiryId=enquiryIds;
         responseText=officerResponse;

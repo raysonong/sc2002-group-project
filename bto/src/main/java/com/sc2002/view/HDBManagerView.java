@@ -7,7 +7,7 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
-import com.sc2002.model.Enquiry;
+import com.sc2002.model.EnquiryModel;
 
 public class HDBManagerView {
 
@@ -85,7 +85,7 @@ public class HDBManagerView {
             }
             case "14" -> {
                 // Option 14: Reject a withdrawal request
-
+                
             }
             case "15" -> {
                 // Option 15: Generate reports
@@ -240,12 +240,12 @@ public class HDBManagerView {
     }
 
     private void getAllEnquiryMenu(AppContext appContext) {
-        List<Enquiry> enquiries = enquiryService.getAllEnquiries(appContext);
+        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries(appContext);
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {
             System.out.println("-- All Enquiries --");
-            for (Enquiry enquiry : enquiries) {
+            for (EnquiryModel enquiry : enquiries) {
                 System.out.printf("ID: %d, Subject: %s, Status: %s%n",
                         enquiry.getId(), enquiry.getEnquiryText(), enquiry.getStatus());
             }
@@ -255,7 +255,7 @@ public class HDBManagerView {
     }
 
     private void editEnquiryMenu(AppContext appContext){
-        List<Enquiry> enquiries = enquiryService.getAllEnquiries(appContext);
+        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries(appContext);
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {

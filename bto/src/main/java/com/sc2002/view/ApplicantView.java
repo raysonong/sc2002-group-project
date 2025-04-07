@@ -9,8 +9,8 @@ import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectService;
 import com.sc2002.enums.FlatType;
-import com.sc2002.model.BTOApplication;
-import com.sc2002.model.Enquiry;
+import com.sc2002.model.BTOApplicationModel;
+import com.sc2002.model.EnquiryModel;
 import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {

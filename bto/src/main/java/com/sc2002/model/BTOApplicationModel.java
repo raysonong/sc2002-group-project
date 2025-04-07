@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.sc2002.enums.ApplicationStatus;
 
-public class BTOApplication {
+public class BTOApplicationModel {
     private static int nextApplicationId = 1; // Static counter for auto-incrementing IDs
 
     private int applicationId;
@@ -14,7 +14,7 @@ public class BTOApplication {
     private ApplicationStatus status;
     private Date submissionDate;
 
-    public BTOApplication(String applicantNRIC, int applicantUserID, int projectID) {
+    public BTOApplicationModel(String applicantNRIC, int applicantUserID, int projectID) {
         this.applicationId = nextApplicationId++;
         this.applicantNRIC = applicantNRIC;
         this.applicantUserID = applicantUserID;

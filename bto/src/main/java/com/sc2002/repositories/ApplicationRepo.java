@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.sc2002.model.BTOApplication;
+import com.sc2002.model.BTOApplicationModel;
 
 
 public class ApplicationRepo {
-    private List<BTOApplication> applications;
+    private List<BTOApplicationModel> applications;
     
     /**
      * Constructor initializes an empty list of applications
@@ -18,8 +18,8 @@ public class ApplicationRepo {
         this.applications = new ArrayList<>();
     }
 
-    public Optional<BTOApplication> findbyUserID(long userId) {
-        for (BTOApplication application : this.applications) {
+    public Optional<BTOApplicationModel> findbyUserID(long userId) {
+        for (BTOApplicationModel application : this.applications) {
             if (application.getApplicantUserID() == userId) {
                 return Optional.of(application);
             }
@@ -27,9 +27,9 @@ public class ApplicationRepo {
         return Optional.empty();
     }
 
-    public void save(BTOApplication application) {
+    public void save(BTOApplicationModel application) {
         // Check if the application already exists
-        Optional<BTOApplication> existingApplication = findbyUserID(application.getApplicantUserID());
+        Optional<BTOApplicationModel> existingApplication = findbyUserID(application.getApplicantUserID());
         
         if(existingApplication.isPresent()) {
             // Remove the existing application
@@ -40,13 +40,13 @@ public class ApplicationRepo {
         applications.add(application);
     }
 
-    public Optional<BTOApplication> findActiveByApplicantID(String userID) {
+    public Optional<BTOApplicationModel> findActiveByApplicantID(String userID) {
         return applications.stream()
                 .filter(application -> String.valueOf(application.getApplicantUserID()).equals(userID))
                 .findFirst();
     }
 
-    public List<BTOApplication> findByProjectID(String projectID) {
+    public List<BTOApplicationModel> findByProjectID(String projectID) {
         return applications.stream()
         .filter(application -> String.valueOf(application.getProjectID()).equals(projectID))
         .collect(Collectors.toList());

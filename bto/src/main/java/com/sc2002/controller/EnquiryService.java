@@ -1,7 +1,7 @@
 package com.sc2002.controller;
 
 import com.sc2002.model.BTOProjectModel;
-import com.sc2002.model.Enquiry;
+import com.sc2002.model.EnquiryModel;
 import com.sc2002.enums.UserRole;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,7 @@ public class EnquiryService {
     // submitEnquiry for Applicant and Officer(Who have a project they BTOed)
 
     // viewAllEnquiry for Managers & Officer (Mostly for printing menu related tasks)
-    public List<Enquiry> getAllEnquiries(AppContext appContext) {
+    public List<EnquiryModel> getAllEnquiries(AppContext appContext) {
         // Check if the current user is authenticated and has the correct role
         try{
             if (appContext.getCurrentUser() != null && appContext.getAuthService().isManager(appContext.getCurrentUser())) {
@@ -30,7 +30,7 @@ public class EnquiryService {
     public boolean viewEnquiry(AppContext appContext,int enquiryID){
         try{
             if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
-                Optional<Enquiry> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
+                Optional<EnquiryModel> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
                 if (enquiry.isPresent()) {
                     enquiry.get().getFormattedEnquiry();
                     return true;
@@ -57,7 +57,7 @@ public class EnquiryService {
         try{
             if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
                 // Manager can reply any so no need to do extra checking
-                Optional<Enquiry> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
+                Optional<EnquiryModel> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
                 if (enquiry.isPresent()) {
                     enquiry.get().replyEnquiry(response, appContext.getCurrentUser().getUserID());
                     return true;

@@ -3,7 +3,7 @@ package com.sc2002.controller;
 import java.util.Scanner;
 
 import com.sc2002.enums.UserRole;
-import com.sc2002.model.BTOApplication;
+import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.utilities.Receipt;
@@ -13,7 +13,7 @@ public class ApplicationService {
     // PS: ruba pls refer to my code, think i have accidentally did ur part :,) - rayson
     //
 
-    public BTOApplication applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
+    public BTOApplicationModel applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
         // Check role
         if(currentUser.getUsersRole() != UserRole.APPLICANT) {
             System.out.println("You do not have permission to apply an application to join a project.");
@@ -47,10 +47,10 @@ public class ApplicationService {
         }
 
         System.out.println("Your application has been created and submitted successfully!");
-        return new BTOApplication(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
+        return new BTOApplicationModel(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
     }
 
-    public Receipt generateReceipt(BTOApplication application) {
+    public Receipt generateReceipt(BTOApplicationModel application) {
         return new Receipt(application);
     }
 }
