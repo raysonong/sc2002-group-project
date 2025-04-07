@@ -1,13 +1,16 @@
 package com.sc2002.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.ApplicantModel;
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 import com.sc2002.model.HDBOfficerModel;
 import com.sc2002.model.User;
+import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.XLSXReader;
 // THIS FILE CONTROLS UserService such as adding
@@ -78,6 +81,80 @@ public class InitializationService {
             } catch (Exception e) {
                 System.out.println("Error creating user: " + e.getMessage());
                 continue; // Skip to the next user if there's an error
+            }
+        }
+    }
+
+    public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthService authService) {
+        String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
+        ArrayList<List<Object>> projectData = XLSXReader.readProjectList(projectDir + "/ProjectList.xlsx");
+        addProjectByArrayList(projectData, projectList, userList, authService);
+    }
+
+    private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, AuthService authService) {
+        for (List<Object> project : projectData) { // Loop the ArrayList for the lists
+            try {
+                // Extract project details for XLSX file
+                String projectName = (String) project.get(0);
+                String neighborhood = (String) project.get(1);
+                String type1 = (String) project.get(2);
+                int unitsType1 = (int) project.get(3);
+                int priceType1 = (int) project.get(4);
+                String type2 = (String) project.get(5);
+                int unitsType2 = (int) project.get(6);
+                int priceType2 = (int) project.get(7);
+                LocalDate openingDate = (LocalDate) project.get(8);
+                LocalDate closingDate = (LocalDate) project.get(9);
+                String managerName = (String) project.get(10);
+                int officerSlots = (int) project.get(11);
+                String officerNames = (String) project.get(12); // comma separated list of Officer names
+                // Retrieve manager's User Object with name
+                User manager = userList.getUserByName(managerName);
+                if (manager == null) {
+                    System.err.println("Manager with name '" + managerName + "' not found. Skipping project.");
+                    continue;
+                }
+
+                // Determine flat types and counts
+                int twoRoomCount = 0, twoRoomPrice = 0, threeRoomCount = 0, threeRoomPrice = 0;
+                if (type1.equalsIgnoreCase("2-Room")) {
+                    twoRoomCount = unitsType1;
+                    twoRoomPrice = priceType1;
+                } else if (type1.equalsIgnoreCase("3-Room")) {
+                    threeRoomCount = unitsType1;
+                    threeRoomPrice = priceType1;
+                }
+                if (type2.equalsIgnoreCase("2-Room")) {
+                    twoRoomCount = unitsType2;
+                    twoRoomPrice = priceType2;
+                } else if (type2.equalsIgnoreCase("3-Room")) {
+                    threeRoomCount = unitsType2;
+                    threeRoomPrice = priceType2;
+                }
+
+                // Create and save the project
+                BTOProjectModel newProject = new BTOProjectModel(
+                    projectName, neighborhood, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice,
+                    openingDate, closingDate, officerSlots, manager.getUserID()
+                );
+                projectList.save(newProject);
+                // Check for additional officers starting from index 12 of the arrayList
+                String[] officerNameArray = officerNames.split(",");
+                int addedOfficers = 0;
+
+                for (String officerName : officerNameArray) {
+                    if (addedOfficers >= officerSlots) {
+                        break; // Stop adding officers if the maximum slots are filled
+                    }
+
+                    User officer = userList.getUserByName(officerName.trim());
+                    if (officer != null && authService.isOfficer(officer)) {
+                        newProject.addManagingOfficerUserID(officer.getUserID());;
+                        addedOfficers++;
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error processing project: " + e.getMessage());
             }
         }
     }

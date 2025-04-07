@@ -34,12 +34,20 @@ public class BTOProjectModel {
      * The number of 2-room flats available.
      */
     private int twoRoomCount;
+    /**
+     * The price of 2-room flat.
+     */
+    private int twoRoomPrice;
 
     /**
      * The number of 3-room flats available.
      */
     private int threeRoomCount;
 
+    /**
+     * The price of 3-room flat.
+     */
+    private int threeRoomPrice;
     /**
      * The application opening date.
      */
@@ -68,7 +76,7 @@ public class BTOProjectModel {
     /**
      * The list of managing officer UserIDs assigned to the project.
      */
-    private ArrayList<String> managingOfficerUserID;
+    private ArrayList<Integer> managingOfficerUserID;
 
     /**
      * Constructs a new BTOProjectModel with the specified details.
@@ -77,12 +85,14 @@ public class BTOProjectModel {
      * @param projectName        The name of the project.
      * @param neighborhood       The neighborhood where the project is located.
      * @param twoRoomCount       The number of 2-room flats available.
+     * @param twoRoomPrice       The price for 1 2-room flat.
      * @param threeRoomCount     The number of 3-room flats available.
+     * @param threeRoomPrice     The price for 1 3-room flat.
      * @param openingDate        The application opening date.
      * @param closingDate        The application closing date.
      * @param maxManagingOfficer The maximum number of managing officers allowed.
      */
-    public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount, int threeRoomCount, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
+    public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount,int twoRoomPrice, int threeRoomCount,int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
         managingOfficerUserID = new ArrayList<>();
         this.projectID = this.nextprojectID;
@@ -90,7 +100,9 @@ public class BTOProjectModel {
         this.projectName = projectName;
         this.neighborhood = neighborhood;
         this.twoRoomCount = twoRoomCount;
+        this.twoRoomPrice = twoRoomPrice;
         this.threeRoomCount = threeRoomCount;
+        this.threeRoomPrice = threeRoomPrice;
         this.openingDate = openingDate;
         this.closingDate = closingDate;
         this.maxManagingOfficer = maxManagingOfficer;
@@ -275,7 +287,7 @@ public class BTOProjectModel {
      *
      * @return The list of managing officer UserIDs.
      */
-    public ArrayList<String> getManagingOfficerUserID() {
+    public ArrayList<Integer> getManagingOfficerUserID() {
         return this.managingOfficerUserID;
     }
 
@@ -284,7 +296,7 @@ public class BTOProjectModel {
      *
      * @param managingOfficerUserID The UserID of the managing officer to add.
      */
-    public void addManagingOfficerUserID(String managingOfficerUserID) {
+    public void addManagingOfficerUserID(int managingOfficerUserID) {
         this.managingOfficerUserID.add(managingOfficerUserID);
     }
 
@@ -294,7 +306,7 @@ public class BTOProjectModel {
      * @param managingOfficerUserID The ID of the managing officer to remove.
      * @throws NoSuchElementException If the ID is not found in the list.
      */
-    public void removeManagingOfficerUserID(String managingOfficerUserID) {
+    public void removeManagingOfficerUserID(Integer managingOfficerUserID) {
         if (this.managingOfficerUserID.remove(managingOfficerUserID)) {
         } else {
             throw new NoSuchElementException("Managing Officer ID '" + managingOfficerUserID + "' not found.");
@@ -310,7 +322,9 @@ public class BTOProjectModel {
         System.out.println("Project Name: " + this.projectName);
         System.out.println("Neighborhood: " + this.neighborhood);
         System.out.println("2-Room Flats Count: " + this.twoRoomCount);
+        System.out.println("2-Room Flat Price: $" + this.twoRoomPrice);
         System.out.println("3-Room Flats Count: " + this.threeRoomCount);
+        System.out.println("3-Room Flat Price: $" + this.threeRoomPrice);
         System.out.println("Opening Date: " + this.openingDate);
         System.out.println("Closing Date: " + this.closingDate);
         System.out.println("Manager ID: " + (this.managerUserID));

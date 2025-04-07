@@ -65,7 +65,7 @@ public class HDBManagerView {
             }
             case "9" -> {
                 // Option 9: Approve officer registration
-
+                
             }
             case "10" -> {
                 // Option 10: Reject officer registration

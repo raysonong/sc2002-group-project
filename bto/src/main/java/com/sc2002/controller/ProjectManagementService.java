@@ -23,7 +23,7 @@ public class ProjectManagementService {
         }
 
         String projectName, neighborhood;
-        int twoRoomCount = 0, threeRoomCount = 0, maxOfficer = 0;
+        int twoRoomCount = 0,twoRoomPrice = 0,threeRoomCount = 0,threeRoomPrice = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
         String tempDate;
         boolean isValidDate = false;
@@ -61,7 +61,20 @@ public class ProjectManagementService {
                 appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (twoRoomCount < 0);
-
+        // Validate two-room flat price
+        do {
+            System.out.printf("Enter the price of 2-room flats: ");
+            if (appContext.getScanner().hasNextInt()) {
+            twoRoomPrice = appContext.getScanner().nextInt();
+            appContext.getScanner().nextLine(); // Consume the leftover newline
+            if (twoRoomPrice < 0) {
+                System.out.println("The price of 2-room flats cannot be negative. Please try again.");
+            }
+            } else {
+            System.out.println("Invalid input. Please enter a valid integer.");
+            appContext.getScanner().nextLine(); // Consume invalid input
+            }
+        } while (twoRoomPrice < 0);
         // Validate three-room flat count
         do {
             System.out.printf("Enter the numbers of 3-room flats: ");
@@ -76,7 +89,20 @@ public class ProjectManagementService {
                 appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (threeRoomCount < 0);
-
+        // Validate three-room flat price
+        do {
+            System.out.printf("Enter the price of 3-room flats: ");
+            if (appContext.getScanner().hasNextInt()) {
+                threeRoomPrice = appContext.getScanner().nextInt();
+                appContext.getScanner().nextLine(); // Consume the leftover newline
+                if (threeRoomPrice < 0) {
+                    System.out.println("The price of 3-room flats cannot be negative. Please try again.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.");
+                appContext.getScanner().nextLine(); // Consume invalid input
+            }
+        } while (threeRoomPrice < 0);
         // Validate opening date
         while (!isValidDate) {
             System.out.printf("Enter the application opening date in DD-MM-YYYY format (e.g. 31-12-2025): ");
@@ -123,7 +149,7 @@ public class ProjectManagementService {
             }
         } while (maxOfficer < 0 || maxOfficer > 10);
 
-        return new BTOProjectModel(projectName, neighborhood, twoRoomCount, threeRoomCount, openingDate, closingDate, maxOfficer, appContext.getCurrentUser().getUserID());
+        return new BTOProjectModel(projectName, neighborhood, twoRoomCount,twoRoomPrice, threeRoomCount,threeRoomPrice, openingDate, closingDate, maxOfficer, appContext.getCurrentUser().getUserID());
     }
 
     public void editProject(AppContext appContext, String userOption, String valueToChange) {

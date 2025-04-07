@@ -22,10 +22,31 @@ public class UserRepo {
         }
         return null;
     }
+
+    public User getUserByName(String name) {
+        for (User user : users) {
+            if (user.getName().equals(name)) {
+                return user;
+            }
+        }
+        return null;
+    }
+    public User getUserByUserID(int UserID){
+        for (User user : users) {
+            if (user.getUserID() == UserID) {
+                return user;
+            }
+        }
+        return null;
+    }
     public void addUser(User user) throws IllegalArgumentException {
         // Check if the user already exists
         if(getUserByNRIC(user.getNRIC())==null){
-            users.add(user);
+            if(getUserByUserID(user.getUserID())==null){
+                users.add(user);
+            }else{
+                throw new IllegalArgumentException("A User with ID: " + user.getUserID() + " already exists.");
+            }
         }else{
             throw new IllegalArgumentException("User with NRIC " + user.getNRIC() + " already exists.");
         }
