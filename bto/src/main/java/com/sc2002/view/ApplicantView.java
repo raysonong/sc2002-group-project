@@ -139,8 +139,37 @@ public class ApplicantView {
 }
 
     private void submitEnquiryMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
-    }
+    // Display eligible projects for the applicant
+       System.out.println("Eligible Projects for Enquiry: ");
+       applicationService.viewEligibleProjectsForApplicant(appContext); 
+
+    // ask applicant to select project
+      System.out.print("Enter Project ID to submit an enquiry: ");
+      int selectedProjectId = appContext.getScanner().nextInt();
+      appContext.getScanner().nextLine(); 
+
+    // check project exists
+      BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
+      if (selectedProject == null) {
+         System.out.println("Invalid Project ID. Please try again.");
+         return;
+     }
+
+   
+      System.out.print("Enter your enquiry: ");
+      String enquiryText = appContext.getScanner().nextLine();
+
+    // submit using EnquiryService
+      String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
+      boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+
+      if (isSubmitted) {
+        System.out.println("Your enquiry has been submitted successfully");
+      } else {
+        System.out.println("There was an issue submitting your enquiry. Please try again");
+      }
+}
+
 
     private void viewMyEnquiriesMenu(AppContext appContext) {
         throw new RuntimeException("Not implemented");
