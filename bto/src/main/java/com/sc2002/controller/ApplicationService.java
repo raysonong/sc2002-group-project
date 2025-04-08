@@ -15,12 +15,6 @@ public class ApplicationService {
    public void viewAvailableProjectsForApplicant(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
 
-        // check if the applicants visibility is on
-        if (!applicant.isVisibility()) {
-            System.out.println("Your visibility is turned off. You cannot view projects.");
-            return;
-        }
-
         // get the list of available projects from the project repository
         List<BTOProjectModel> allProjects = appContext.getProjectRepo().getAllProjects();
         
