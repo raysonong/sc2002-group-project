@@ -59,5 +59,8 @@ public class BTOApplicationModel {
     public ApplicationStatus getStatus() {
         return this.status;
     }
-
+    
+    public Date getSubmissionDate() {
+        return this.submissionDate;
+    }
 }
