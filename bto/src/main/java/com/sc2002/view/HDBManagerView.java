@@ -86,11 +86,11 @@ public class HDBManagerView {
             }
             case "13" -> {
                 // Option 13: Approve a withdrawal request
-                
+                approveApplicationWithdrawalMenu(appContext);
             }
             case "14" -> {
                 // Option 14: Reject a withdrawal request
-                
+                rejectApplicationWithdrawalMenu(appContext);
             }
             case "15" -> {
                 // Option 15: Generate reports
@@ -395,7 +395,12 @@ public class HDBManagerView {
     private void rejectBTOApplicationMenu(AppContext appContext){
         
     }
+    private void approveApplicationWithdrawalMenu(AppContext appContext){
 
+    }
+    private void rejectApplicationWithdrawalMenu(AppContext appContext){
+        
+    }
     private void generateReportMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
