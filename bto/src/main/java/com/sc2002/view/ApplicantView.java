@@ -13,7 +13,8 @@ import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.BTOProjectModel; 
 import com.sc2002.model.ApplicantModel;   
-import com.sc2002.repositories.ApplicationRepo; 
+import com.sc2002.repositories.ApplicationRepo;
+import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {
@@ -171,7 +172,81 @@ public class ApplicantView {
 }
 
 
-    private void viewMyEnquiriesMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
+   private void viewMyEnquiriesMenu(AppContext appContext) {
+    String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
+
+    //get enquiries of applicant 
+    List<EnquiryModel> applicantEnquiries = appContext.getEnquiryRepo().findByApplicantNRIC(applicantNRIC);
+
+    //check if no enquiries
+    if (applicantEnquiries.isEmpty()) {
+        System.out.println("You have not submitted any enquiries.");
+        return;
     }
+
+    //disply enquiries
+    System.out.println("Your Enquiries:");
+    for (int i = 0; i < applicantEnquiries.size(); i++) {
+        EnquiryModel enquiry = applicantEnquiries.get(i);
+        System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getProjectId() + " | Enquiry: " + enquiry.getEnquiryText());
+    }
+
+    //ask user to select enquiry
+    System.out.println("Enter the number of the enquiry you want to view/edit/delete or enter 0 to return to the menu: ");
+    int selectedEnquiryIndex = appContext.getScanner().nextInt();
+    appContext.getScanner().nextLine();
+
+    if (selectedEnquiryIndex == 0) {
+        System.out.println("Returning to the menu...");
+        return;
+    }
+
+    if (selectedEnquiryIndex < 1 || selectedEnquiryIndex > applicantEnquiries.size()) {
+        System.out.println("Invalid selection. Returning to the menu...");
+        return;
+    }
+
+    EnquiryModel selectedEnquiry = applicantEnquiries.get(selectedEnquiryIndex - 1);
+
+    //ask user for action
+    System.out.println("You selected Enquiry: " + selectedEnquiry.getEnquiryText());
+    System.out.println("What would you like to do?");
+    System.out.println("1. View Enquiry");
+    System.out.println("2. Edit Enquiry");
+    System.out.println("3. Delete Enquiry");
+    System.out.print("Enter your choice: ");
+    String actionChoice = appContext.getScanner().nextLine();
+
+    switch (actionChoice) {
+        case "1":
+            //view
+            System.out.println("Enquiry Details:");
+            System.out.println(selectedEnquiry.getFormattedEnquiry());
+            break;
+        case "2":
+            //edit
+            System.out.print("Enter the new enquiry text: ");
+            String newEnquiryText = appContext.getScanner().nextLine();
+            boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
+            if (isEdited) {
+                System.out.println("Your enquiry has been updated.");
+            } else {
+                System.out.println("There was an issue updating your enquiry.");
+            }
+            break;
+        case "3":
+           //delete
+            boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getId());
+            if (isDeleted) {
+                System.out.println("Your enquiry has been deleted.");
+            } else {
+                System.out.println("There was an issue deleting your enquiry.");
+            }
+            break;
+        default:
+            System.out.println("Invalid choice. Returning to the menu...");
+            break;
+    }
+ }
+
 }
