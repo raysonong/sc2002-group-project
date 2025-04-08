@@ -81,4 +81,12 @@ public class EnquiryRepo {
     public List<EnquiryModel> findAll() {
         return new ArrayList<>(enquiries);
     }
+
+    public boolean deleteById(int enquiryId) {
+        Optional<EnquiryModel> enquiryToDelete = findById(enquiryId);
+        if (enquiryToDelete.isPresent()) {
+            enquiries.remove(enquiryToDelete.get());
+            return true;
+        }
+        return false;
 }
