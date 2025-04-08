@@ -1,12 +1,18 @@
 package com.sc2002.controller;
 
+import java.util.List;
 import java.util.Scanner;
 
-import com.sc2002.enums.UserRole;
+import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
-import com.sc2002.model.User;
+import com.sc2002.model.BTOProjectModel;
+import com.sc2002.model.BTOApplication;
+import com.sc2002.model.ApplicationStatus;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.utilities.Receipt;
+import com.sc2002.enums.FlatType;
+import com.sc2002.enums.UserRole;
+import com.sc2002.model.User;
 
 public class ApplicationService {
     //
