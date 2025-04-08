@@ -12,6 +12,45 @@ public class ApplicationService {
     //
     // PS: ruba pls refer to my code, think i have accidentally did ur part :,) - rayson
     //
+   public void viewAvailableProjectsForApplicant(AppContext appContext) {
+        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+
+        // check if the applicants visibility is on
+        if (!applicant.isVisibility()) {
+            System.out.println("Your visibility is turned off. You cannot view projects.");
+            return;
+        }
+
+        // get the list of available projects from the project repository
+        List<BTOProjectModel> allProjects = appContext.getProjectRepo().getAllProjects();
+        
+        for (BTOProjectModel project : allProjects) {
+            if (isProjectVisibleForApplicant(applicant, project)) {
+                project.printAll();
+            }
+        }
+    }
+
+    private boolean isProjectVisibleForApplicant(ApplicantModel applicant, BTOProjectModel project) {
+        if (!project.isVisible()) {
+            return false;
+        }
+
+        // criteria for single 35 years old and above can only apply for 2-Room flats
+        if (applicant.getMaritalStatus().equals("SINGLE") && applicant.getAge() >= 35) {
+            if (project.getFlatType() != FlatType.TWO_ROOM) {
+                return false;
+            }
+        }
+
+        // criteria for married applicants 21 years old and above can apply for both 2-Room or 3-Room
+        if (applicant.getMaritalStatus().equals("MARRIED") && applicant.getAge() >= 21) {
+            if (project.getFlatType() != FlatType.TWO_ROOM && project.getFlatType() != FlatType.THREE_ROOM) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public BTOApplicationModel applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
         // Check role
