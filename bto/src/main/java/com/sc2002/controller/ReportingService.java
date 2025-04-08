@@ -17,22 +17,25 @@ public class ReportingService {
             if(project.getManagerUserID()!=currentUser.getUserID()) throw new RuntimeException("User not authorized.");
             List<BTOApplicationModel> projectBookings = applicationRepo.findBookedByProjectID(project.getProjectID());
             switch(generateType){
-                case 1 -> { // Filter by Married
+                case 1 -> { // No Filter
+                    // Do nothing
+                }
+                case 2 -> { // Filter by Married
                     projectBookings = projectBookings.stream()
                         .filter(booking -> booking.getApplicantMaritialStatus())
                         .toList();
                 }
-                case 2 -> { // Filter by Single
+                case 3 -> { // Filter by Single
                     projectBookings = projectBookings.stream()
                         .filter(booking -> !booking.getApplicantMaritialStatus())
                         .toList();
                 }
-                case 3 -> { // Filter by TWO_ROOM
+                case 4 -> { // Filter by TWO_ROOM
                     projectBookings = projectBookings.stream()
                         .filter(booking -> booking.getFlatType() == FlatType.TWO_ROOM)
                         .toList();
                 }
-                case 4 -> { // Filter by THREE_ROOM
+                case 5 -> { // Filter by THREE_ROOM
                     projectBookings = projectBookings.stream()
                         .filter(booking -> booking.getFlatType() == FlatType.THREE_ROOM)
                         .toList();

@@ -429,12 +429,13 @@ public class HDBManagerView {
         System.out.println("(1) All Applications");
         System.out.println("(2) Married Applicants Only");
         System.out.println("(3) Single Applicants Only");
-        System.out.println("(4) By Room Type (2-Room or 3-Room)");
-        System.out.print("Please select a report type (1-4): ");
+        System.out.println("(4) By 2-Room ");
+        System.out.println("(5) By 3-Room");
+        System.out.print("Please select a report type (1-5): ");
         int generateType;
         try {
             generateType = Integer.parseInt(appContext.getScanner().nextLine());
-            if (generateType < 1 || generateType > 4) {
+            if (generateType < 1 || generateType > 5) {
                 System.out.println("Invalid option.");
                 return;
             }
