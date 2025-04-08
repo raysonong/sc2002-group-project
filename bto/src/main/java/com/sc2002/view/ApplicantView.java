@@ -124,8 +124,19 @@ public class ApplicantView {
     }
 
     private void generateReceiptMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
+        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+    Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
+    
+    if (applicationOpt.isPresent()) {
+        BTOApplicationModel application = applicationOpt.get();
+        // Create a receipt for the application
+        Receipt receipt = new Receipt(application);
+        // print the receipt
+        receipt.printReceipt();
+    } else {
+        System.out.println("You have not applied to any projects");
     }
+}
 
     private void submitEnquiryMenu(AppContext appContext) {
         throw new RuntimeException("Not implemented");
