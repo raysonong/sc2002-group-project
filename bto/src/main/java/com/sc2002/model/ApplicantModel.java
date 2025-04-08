@@ -44,11 +44,11 @@ public class ApplicantModel extends User {
         return this.bookedFlatType;
     }
 
-    public boolean isVisible() {
+    public boolean isVisibility() {
         return isVisibility;
     }
 
-    public void setVisible(boolean isVisible) {
+    public void setVisibilty(boolean isVisibility) {
         this.isVisibility = isVisibility;
     }
 }
