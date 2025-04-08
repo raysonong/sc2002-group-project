@@ -9,4 +9,18 @@ public class Receipt {
     public Receipt(BTOApplicationModel application) {
         this.application = application;
     }
+
+    public void printReceipt() {
+        System.out.println("--Flat Selection Receipt--");
+        System.out.println("Application ID: " + application.getApplicationId());
+        System.out.println("Applicant: " + application.getApplicantName());
+        System.out.println("Age: " + application.getApplicantAge());
+        System.out.println("Marital Status: " + (application.getApplicantMaritialStatus() ? "Married" : "Single"));
+        System.out.println("Flat Type: " + application.getFlatType());
+        System.out.println("Project ID: " + application.getProjectID());
+        System.out.println("Application Status: " + application.getStatus());
+        System.out.println("Submission Date: " + application.getSubmissionDate());
+        System.out.println("--------------------------");
+        System.out.println("Receipt Generated Successfully!");
+    }
 }
