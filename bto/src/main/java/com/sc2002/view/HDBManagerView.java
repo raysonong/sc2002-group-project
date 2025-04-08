@@ -419,7 +419,25 @@ public class HDBManagerView {
             return;
         }
         // By right there should be filters
-        reportingService.generateProjectReport(appContext.getCurrentUser(), project, appContext.getApplicationRepo());
+        // generate report by ONLY MARRIED, ONLY SINGLE, TWO_ROOM only and THREE_ROOM only
+        System.out.println("-- Generate Report --");
+        System.out.println("(1) All Applications");
+        System.out.println("(2) Married Applicants Only");
+        System.out.println("(3) Single Applicants Only");
+        System.out.println("(4) By Room Type (2-Room or 3-Room)");
+        System.out.print("Please select a report type (1-4): ");
+        int generateType;
+        try {
+            generateType = Integer.parseInt(appContext.getScanner().nextLine());
+            if (generateType < 1 || generateType > 4) {
+                System.out.println("Invalid option.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the report type.");
+            return;
+        }
+        reportingService.generateProjectReport(appContext.getCurrentUser(), project, appContext.getApplicationRepo(),generateType);
         
     }
 

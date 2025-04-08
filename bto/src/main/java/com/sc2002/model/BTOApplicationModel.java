@@ -36,7 +36,18 @@ public class BTOApplicationModel {
         this.submissionDate = new Date();
 
     }
-
+    public boolean getApplicantMaritialStatus(){
+        return this.applicantUser.getMaritialStatus();
+    }
+    public FlatType getFlatType(){
+        return this.applicationFlatType;
+    }
+    public String getApplicantName(){
+        return this.applicantUser.getName();
+    }
+    public int getApplicantAge(){
+        return this.applicantUser.getAge();
+    }
     public long getApplicantUserID() {
         return this.applicantUser.getUserID();
     }

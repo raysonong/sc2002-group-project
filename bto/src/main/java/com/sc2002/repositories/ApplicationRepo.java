@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.BTOApplicationModel;
 
 
@@ -46,9 +47,16 @@ public class ApplicationRepo {
                 .findFirst();
     }
 
-    public List<BTOApplicationModel> findByProjectID(String projectID) {
+    public List<BTOApplicationModel> findByProjectID(int projectID) {
         return applications.stream()
-        .filter(application -> String.valueOf(application.getProjectID()).equals(projectID))
+        .filter(application -> application.getProjectID() == projectID)
+        .collect(Collectors.toList());
+    }
+
+    public List<BTOApplicationModel> findBookedByProjectID(int projectID) {
+        return applications.stream()
+        .filter(application -> application.getProjectID() == projectID // projectID filter
+                && application.getStatus() == ApplicationStatus.BOOKED) // Also check if BOOKED
         .collect(Collectors.toList());
     }
 }
