@@ -390,16 +390,100 @@ public class HDBManagerView {
     }
 
     private void approveBTOApplicationMenu(AppContext appContext){
-        
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        printProjectsManagedByUser(managerProjects);
+        System.out.print("Enter the Project ID to manage withdrawal(approve): ");
+        String projectIDString = appContext.getScanner().nextLine();
+        BTOProjectModel project;
+        try {
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+                project = appContext.getProjectRepo().getProjectByID(projectID);
+                if (project == null) {
+                    System.out.println("Error: Project not found.");
+                    return;
+                }
+            } else {
+                System.out.println("Error: Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
     }
     private void rejectBTOApplicationMenu(AppContext appContext){
-        
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        printProjectsManagedByUser(managerProjects);
+        System.out.print("Enter the Project ID to manage withdrawal(reject): ");
+        String projectIDString = appContext.getScanner().nextLine();
+        BTOProjectModel project;
+        try {
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+                project = appContext.getProjectRepo().getProjectByID(projectID);
+                if (project == null) {
+                    System.out.println("Error: Project not found.");
+                    return;
+                }
+            } else {
+                System.out.println("Error: Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
     }
     private void approveApplicationWithdrawalMenu(AppContext appContext){
-
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        printProjectsManagedByUser(managerProjects);
+        System.out.print("Enter the Project ID to manage withdrawal(approve): ");
+        String projectIDString = appContext.getScanner().nextLine();
+        BTOProjectModel project;
+        try {
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+                project = appContext.getProjectRepo().getProjectByID(projectID);
+                if (project == null) {
+                    System.out.println("Error: Project not found.");
+                    return;
+                }
+            } else {
+                System.out.println("Error: Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
     }
     private void rejectApplicationWithdrawalMenu(AppContext appContext){
-        
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        printProjectsManagedByUser(managerProjects);
+        System.out.print("Enter the Project ID to manage withdrawal(reject): ");
+        String projectIDString = appContext.getScanner().nextLine();
+        BTOProjectModel project;
+        try {
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+                project = appContext.getProjectRepo().getProjectByID(projectID);
+                if (project == null) {
+                    System.out.println("Error: Project not found.");
+                    return;
+                }
+            } else {
+                System.out.println("Error: Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
     }
     private void generateReportMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
