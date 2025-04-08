@@ -1,6 +1,7 @@
 package com.sc2002.controller;
 
 import com.sc2002.model.BTOProjectModel;
+import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.enums.UserRole;
 import java.util.List;
@@ -8,6 +9,21 @@ import java.util.Optional;
 
 public class EnquiryService {
     // submitEnquiry for Applicant and Officer(Who have a project they BTOed)
+    // didnt see any other submitEnquiry methods so i put here
+    private EnquiryRepo enquiryRepo;
+
+    public EnquiryService(EnquiryRepo enquiryRepo) {
+        this.enquiryRepo = enquiryRepo;
+    }
+    public boolean submitEnquiry(String applicantNRIC, int projectId, String enquiryText) {
+    // create a new enquiry
+    EnquiryModel newEnquiry = new EnquiryModel(applicantNRIC, projectId, enquiryText);
+
+    // save the new enquiry
+    enquiryRepo.saveEnquiry(newEnquiry);
+    System.out.println("Your enquiry has been submitted successfully!");
+    return true;
+}
 
     // viewAllEnquiry for Managers & Officer (Mostly for printing menu related tasks)
     public List<EnquiryModel> getAllEnquiries(AppContext appContext) {
