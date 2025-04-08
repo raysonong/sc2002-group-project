@@ -17,6 +17,8 @@ public class ApplicantModel extends User {
     // Contains Project booked(NOT SURE HOW WE GONNA HANDLE BTOPROJECT OBJECT)
     private BTOProjectModel bookedProject;
 
+    private boolean isVisiblity;
+
     public ApplicantModel(String name, String nric, int age, String isMarried, String password){
         super(nric, name, age, isMarried, password,UserRole.APPLICANT);
     }
@@ -40,6 +42,14 @@ public class ApplicantModel extends User {
 
     public FlatType getFlatType(){ // may not be needed
         return this.bookedFlatType;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
     }
 }
 
