@@ -68,8 +68,36 @@ public class ApplicantView {
     }
 
     private void applyForProjectMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
+    // display eligible projects 
+    System.out.println("Available Projects: ");
+    applicationService.viewAvailableProjectsForApplicant(appContext);
+
+
+    System.out.print("Enter Project ID to apply for: ");
+    int selectedProjectId = appContext.getScanner().nextInt();
+    appContext.getScanner().nextLine(); 
+    //get  project
+    BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
+
+    // Check if the selected project exists
+    if (selectedProject != null) {
+        // Apply to the project using the correct parameters
+        BTOApplicationModel application = applicationService.applyToProject(
+            appContext.getProjectRepo(),
+            appContext.getScanner(),
+            appContext.getCurrentUser()
+        );
+
+        // check application
+        if (application != null) {
+            System.out.println("You have successfully applied for project ID: " + selectedProjectId);
+        } else {
+            System.out.println("Application failed. Please try again.");
+        }
+    } else {
+        System.out.println("Invalid Project ID. Please try again.");
     }
+}
 
     private void viewApplicationStatusMenu(AppContext appContext) {
         throw new RuntimeException("Not implemented");
