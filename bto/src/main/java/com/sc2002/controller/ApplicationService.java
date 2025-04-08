@@ -19,7 +19,7 @@ public class ApplicationService {
             System.out.println("You do not have permission to apply an application to join a project.");
             return null;
         }
-
+        ApplicantModel applicant = (ApplicantModel) currentUser;
         int input_projectId = 0;
 
         while (true) { 
@@ -49,7 +49,21 @@ public class ApplicationService {
         System.out.println("Your application has been created and submitted successfully!");
         return new BTOApplicationModel(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
     }
+    public ApplicationStatus viewApplicationStatus(BTOApplication application){
+        return application.getStatus();
+    }
 
+    public void updateApplicationStatus(BTOApplication application, ApplicationStatus status){
+        application.setStatus(status);    
+    }
+
+    public void approveApplication(BTOApplication application){
+        updateApplicationStatus(application, ApplicationStatus.SUCCESSFUL);
+    }
+
+    public void rejectApplication(BTOApplication application){
+        updateApplicationStatus(application, ApplicationStatus.UNSUCCESSFUL);
+    }
     public Receipt generateReceipt(BTOApplicationModel application) {
         return new Receipt(application);
     }
