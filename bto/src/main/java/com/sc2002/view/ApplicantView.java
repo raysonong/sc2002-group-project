@@ -11,6 +11,9 @@ import com.sc2002.controller.ProjectService;
 import com.sc2002.enums.FlatType;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.EnquiryModel;
+import com.sc2002.model.BTOProjectModel; 
+import com.sc2002.model.ApplicantModel;   
+import com.sc2002.repositories.ApplicationRepo; 
 import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {
@@ -76,12 +79,12 @@ public class ApplicantView {
     System.out.print("Enter Project ID to apply for: ");
     int selectedProjectId = appContext.getScanner().nextInt();
     appContext.getScanner().nextLine(); 
-    //get  project
+    //get project
     BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
 
-    // Check if the selected project exists
+
     if (selectedProject != null) {
-        // Apply to the project using the correct parameters
+        // apply to the project
         BTOApplicationModel application = applicationService.applyToProject(
             appContext.getProjectRepo(),
             appContext.getScanner(),
@@ -100,8 +103,21 @@ public class ApplicantView {
 }
 
     private void viewApplicationStatusMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
+      ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+
+    // retrieve the application 
+      Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
+
+    //check if the application exists
+      if (applicationOpt.isPresent()) {
+        BTOApplicationModel application = applicationOpt.get();
+
+        System.out.println("Your application status is: " + application.getStatus());
+    } else {
+        System.out.println("You have not applied to any projects yet.");
     }
+
+}
 
     private void updateFlatDetailsMenu(AppContext appContext) {
         throw new RuntimeException("Not implemented");
