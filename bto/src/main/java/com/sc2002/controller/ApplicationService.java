@@ -49,6 +49,15 @@ public class ApplicationService {
         System.out.println("Your application has been created and submitted successfully!");
         return new BTOApplicationModel(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
     }
+
+    public void toggleVisibility(AppContext appContext) {
+        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+        boolean currentVisibility = applicant.isVisibility();
+        applicant.setVisibility(!currentVisibility);
+        
+        System.out.println("Your visibility has been " + (applicant.isVisibility() ? "enabled" : "disabled"));
+    }
+    
     public ApplicationStatus viewApplicationStatus(BTOApplication application){
         return application.getStatus();
     }
