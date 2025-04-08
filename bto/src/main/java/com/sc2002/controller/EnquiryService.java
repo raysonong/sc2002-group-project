@@ -96,4 +96,9 @@ public class EnquiryService {
         }
     }
     // viewEnquiryByUserID for HDBOfficer and Applicant (make sure to do your checks)
+
+    //delete enquiry
+    public boolean deleteEnquiry(int enquiryId) {
+        return enquiryRepo.deleteById(enquiryId);
+    }
 }
