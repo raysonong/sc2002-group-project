@@ -45,11 +45,11 @@ public class ApplicantModel extends User {
     }
 
     public boolean isVisible() {
-        return isVisible;
+        return isVisibility;
     }
 
     public void setVisible(boolean isVisible) {
-        this.isVisible = isVisible;
+        this.isVisibility = isVisibility;
     }
 }
 
