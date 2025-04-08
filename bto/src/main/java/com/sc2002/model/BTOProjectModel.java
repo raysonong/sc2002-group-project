@@ -107,7 +107,7 @@ public class BTOProjectModel {
         this.closingDate = closingDate;
         this.maxManagingOfficer = maxManagingOfficer;
         this.managerUserID = managerUserID;
-
+        
         this.isVisible = false;
     }
 

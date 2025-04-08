@@ -141,7 +141,7 @@ public class mainAppView {
             
             // Validate NRIC format
             if (!NRICValidator.isValidNRIC(nric)) {
-                System.out.println("Invalid NRIC format. Please enter a valid Singapore NRIC/FIN.");
+                System.out.println("Invalid NRIC format. Please enter a valid NRIC (Start with T or S).");
                 continue;
             }
             
@@ -169,14 +169,14 @@ public class mainAppView {
             break;
         }
         
-        // Input age
+        // Input age, we check for age atleast 21. Since only age 21 can apply for BTO
         while (true) {
             System.out.print("Enter your age: ");
             try {
                 age = Integer.parseInt(scanner.nextLine().trim());
                 
-                if (age < 18) {
-                    System.out.println("You must be at least 18 years old to register.");
+                if (age < 21) {
+                    System.out.println("You must be at least 21 years old to register.");
                     continue;
                 }
                 
@@ -204,7 +204,7 @@ public class mainAppView {
             break;
         }
         
-        // Input password
+        // Input password, by right Ass. document ask for default password, but thats bad ? right ?
         while (true) {
             System.out.print("Enter your password: ");
             password = scanner.nextLine();
@@ -238,19 +238,5 @@ public class mainAppView {
             return null;
         }
     }
-
-    /**
-     *
-     * Menu Options: "Create BTO Project", "Edit BTO Project", "Delete BTO
-     * Project", "Toggle Project Visibility", "View All Project", "View Project
-     * Details", "Approve Officer Registration", "Reject Officer Registration",
-     * "Approve Application", "Reject Application", "Approve Withdrawal",
-     * "Reject Withdrawal", "Generate Reports", "Logout"
-     */
-
-
-
-
-
 
 }

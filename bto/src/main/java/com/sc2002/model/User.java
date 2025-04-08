@@ -102,7 +102,7 @@ public abstract class User {
      *
      * @return True if the user is married, false otherwise.
      */
-    public Boolean MaritialStatus() {
+    public Boolean getMaritialStatus() {
         return this.isMarried;
     }
 

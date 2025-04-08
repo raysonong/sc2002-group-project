@@ -1,19 +1,19 @@
 package com.sc2002.utilities;
 
 /**
- * Utility class for validating Singapore NRIC/FIN numbers
+ * Utility class for validating NRIC numbers
  */
 public class NRICValidator {
     
     /**
-     * Validates if a string is a valid Singapore NRIC/FIN
+     * Validates if a string is a valid NRIC
      * 
      * Format:
-     * - First character: S, T, F, or G
+     * - First character: S, T
      * - Next 7 digits: numeric characters
-     * - Last character: checksum letter (A-Z)
+     * - Last character: A-Z
      * 
-     * @param nric The NRIC/FIN string to validate
+     * @param nric The NRIC string to validate
      * @return true if valid, false otherwise
      */
     public static boolean isValidNRIC(String nric) {
@@ -24,13 +24,13 @@ public class NRICValidator {
         // Convert to uppercase for checking
         nric = nric.toUpperCase();
         
-        // Check first character
+        // Check first character is S or T,
         char firstChar = nric.charAt(0);
-        if (firstChar != 'S' && firstChar != 'T' && firstChar != 'F' && firstChar != 'G') {
+        if (firstChar != 'S' && firstChar != 'T') {
             return false;
         }
         
-        // Check middle 7 characters are digits
+        // followed by 7 characters are digits
         for (int i = 1; i <= 7; i++) {
             if (!Character.isDigit(nric.charAt(i))) {
                 return false;
@@ -41,8 +41,6 @@ public class NRICValidator {
         char lastChar = nric.charAt(8);
         return Character.isLetter(lastChar);
         
-        // Note: In a real system, we would also validate the checksum
-        // but for simplicity, we're just checking the format
     }
     
     /**

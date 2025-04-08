@@ -8,6 +8,8 @@ import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.controller.ReportingService;
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
 
@@ -18,7 +20,7 @@ public class HDBManagerView {
     private final EnquiryService enquiryService = new EnquiryService();
     private final ProjectService projectService = new ProjectService();
     private final OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
-
+    private final ReportingService reportingService = new ReportingService();
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         String userInput = "";
@@ -92,7 +94,7 @@ public class HDBManagerView {
             }
             case "15" -> {
                 // Option 15: Generate reports
-
+                generateReportMenu(appContext);
             }
             case "16" -> {
                 // Option 16: Logout
@@ -394,5 +396,31 @@ public class HDBManagerView {
         
     }
 
+    private void generateReportMenu(AppContext appContext){
+        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        printProjectsManagedByUser(managerProjects);
+        System.out.print("Enter the Project ID to print report for: ");
+        String projectIDString = appContext.getScanner().nextLine();
+        BTOProjectModel project;
+        try {
+            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+                project = appContext.getProjectRepo().getProjectByID(projectID);
+                if (project == null) {
+                    System.out.println("Error: Project not found.");
+                    return;
+                }
+            } else {
+                System.out.println("Error: Invalid Project ID.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Please enter a valid integer for the Project ID.");
+            return;
+        }
+        // By right there should be filters
+        reportingService.generateProjectReport(appContext.getCurrentUser(), project, appContext.getApplicationRepo());
+        
+    }
 
 }
