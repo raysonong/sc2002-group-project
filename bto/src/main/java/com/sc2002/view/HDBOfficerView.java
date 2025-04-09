@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
+import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectService;
 import com.sc2002.enums.FlatType;
@@ -14,19 +15,22 @@ import com.sc2002.model.OfficerRegistrationModel;
 
 public class HDBOfficerView {
     //Service Declaration
+    private EnquiryService enquiryService = null;
     private ApplicationService applicationService = null;
     private OfficerRegistrationService officerRegistrationService = null;
     private ProjectService projectService = null;
 
+    private ApplicantView applicantView = new ApplicantView();
+
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
+        this.enquiryService = new EnquiryService(appContext);
         this.applicationService=new ApplicationService(appContext);
         this.officerRegistrationService = new OfficerRegistrationService(appContext);
         this.projectService = new ProjectService(appContext);
 
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
-
 
         System.out.println("HDB Officer Menu:");
 
@@ -39,10 +43,10 @@ public class HDBOfficerView {
         userInput = appContext.getScanner().nextLine();
 
         switch (userInput) {
-            // case "1" -> {
-            //     // Option 1: Apply for BTO Project
-            //     applyForProjectMenu(appContext);
-            // }
+            case "1" -> {
+                // Option 1: Apply for BTO Project
+                // applicantView.applyForProjectMenu(appContext);
+            }
             // case "2" -> {
             //     // Option 2: View Application Status
             //     viewApplicationStatusMenu(appContext);

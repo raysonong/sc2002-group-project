@@ -74,7 +74,7 @@ public class InitializationService {
                         break;
                     case APPLICANT:
                     default: // Default to Applicant if no specific type is provided
-                        newUser = new ApplicantModel(name, nric, age, maritalStatus, password);
+                        newUser = new ApplicantModel(name, nric, age, maritalStatus, password, UserRole.APPLICANT);
                         break;
                 }
                 userList.addUser(newUser); // Add the new User to the list

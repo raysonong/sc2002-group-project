@@ -17,8 +17,8 @@ public class ApplicantModel extends User {
     // Contains Project booked(NOT SURE HOW WE GONNA HANDLE BTOPROJECT OBJECT)
     private BTOProjectModel bookedProject;
 
-    public ApplicantModel(String name, String nric, int age, String isMarried, String password){
-        super(nric, name, age, isMarried, password,UserRole.APPLICANT);
+    public ApplicantModel(String name, String nric, int age, String isMarried, String password, UserRole role){
+        super(nric, name, age, isMarried, password, role);
     }
 
     @Override
@@ -34,6 +34,7 @@ public class ApplicantModel extends User {
         ));
         return options;
     }
+
     public int getAppliedProjectID(){ // may not be needed
         return this.appliedProject;
     }

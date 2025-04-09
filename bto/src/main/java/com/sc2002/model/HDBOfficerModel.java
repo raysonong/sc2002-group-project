@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.sc2002.enums.FlatType; // for FlatType enums
-import com.sc2002.enums.UserRole; // for UserRole enums
+import com.sc2002.enums.UserRole;
 
-public class HDBOfficerModel extends User{
+public class HDBOfficerModel extends ApplicantModel {
     private int projectID;
     private boolean registrationStatus;
 
@@ -18,7 +18,7 @@ public class HDBOfficerModel extends User{
     private BTOProjectModel bookedProject;
 
     public HDBOfficerModel(String name, String nric, int age, String isMarried, String password) {
-        super(nric, name, age, isMarried, password, UserRole.HDB_OFFICER);
+        super(name, nric, age, isMarried, password, UserRole.HDB_OFFICER);
     }
 
     public void setProjectID(int projectID) {
@@ -36,14 +36,8 @@ public class HDBOfficerModel extends User{
     @Override
     public List<String> getMenuOptions() {
         List<String> options = new ArrayList<>();
-        //options.addAll(super.getMenuOptions()); // Inherit Applicant's options
+        options.addAll(super.getMenuOptions()); // Inherit Applicant's options
         options.addAll(Arrays.asList(
-    "Apply for BTO Project",
-        "View Application Status",
-        "Update Flat Details",
-        "Generate Flat Selection Receipt",
-        "Submit Enquiry",
-        "View Enquiry",
         "Register for Project Team", 
         "View Registration Status", 
         "Manage Applications",

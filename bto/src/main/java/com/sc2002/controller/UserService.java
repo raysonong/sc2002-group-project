@@ -1,8 +1,5 @@
 package com.sc2002.controller;
 
-import java.util.List;
-import java.util.Scanner;
-
 import javax.naming.AuthenticationException;
 
 import com.sc2002.enums.UserRole;
@@ -28,7 +25,6 @@ public class UserService {
             
             // Find user by NRIC
             User user = userRepo.getUserByNRIC(nric);
-            
             if (user == null) {
                 throw new AuthenticationException("User with this NRIC not found");
             }
@@ -71,7 +67,7 @@ public class UserService {
             }
             
             // Create new applicant
-            User newUser = new ApplicantModel(name, nric, age, maritalStatus, password);
+            User newUser = new ApplicantModel(name, nric, age, maritalStatus, password, UserRole.APPLICANT);
             
             // Add to repository
             userRepo.addUser(newUser);
