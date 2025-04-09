@@ -52,6 +52,10 @@ public class BTOApplicationModel {
         return this.applicantUser.getUserID();
     }
 
+    public String getApplicantNRIC() {
+        return this.applicantUser.getNRIC();
+    }
+
     public int getProjectID() {
         return this.project.getProjectID();
     }

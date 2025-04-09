@@ -37,7 +37,7 @@ public class HDBOfficerModel extends User{
     public List<String> getMenuOptions() {
         List<String> options = new ArrayList<>();
         //options.addAll(super.getMenuOptions()); // Inherit Applicant's options
-        options.addAll(Arrays.asList("Register for Project Team", "View Registration Status", "Update Flat Details",
+        options.addAll(Arrays.asList("Register for Project Team", "View Registration Status", "Manage Applications",
                 "Generate Flat Selection Receipt", "Manage Enquiries", "Logout"));
         return options;
     }
