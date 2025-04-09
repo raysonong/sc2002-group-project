@@ -134,8 +134,8 @@ public class InitializationService {
 
                 // Create and save the project
                 BTOProjectModel newProject = new BTOProjectModel(
-                    projectName, neighborhood, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice,
-                    openingDate, closingDate, officerSlots, manager.getUserID()
+                        projectName, neighborhood, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice,
+                        openingDate, closingDate, officerSlots, manager.getUserID()
                 );
                 projectList.save(newProject);
                 // Check for additional officers starting from index 12 of the arrayList

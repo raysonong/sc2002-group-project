@@ -1,18 +1,22 @@
 package com.sc2002.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.sc2002.enums.FlatType;
+
 /**
- * Represents a BTO (Build-To-Order) project with details such as project name, neighborhood, 
- * flat counts, application dates, and managing officers.
+ * Represents a BTO (Build-To-Order) project with details such as project name,
+ * neighborhood, flat counts, application dates, and managing officers.
  */
 public class BTOProjectModel {
+
     /**
-     * The next ID of the project. Auto increments everytime a project is created.
+     * The next ID of the project. Auto increments everytime a project is
+     * created.
      */
     private static int nextprojectID;
     /**
@@ -81,22 +85,23 @@ public class BTOProjectModel {
     /**
      * Constructs a new BTOProjectModel with the specified details.
      *
-     * @param projectID          The unique ID of the project.
-     * @param projectName        The name of the project.
-     * @param neighborhood       The neighborhood where the project is located.
-     * @param twoRoomCount       The number of 2-room flats available.
-     * @param twoRoomPrice       The price for 1 2-room flat.
-     * @param threeRoomCount     The number of 3-room flats available.
-     * @param threeRoomPrice     The price for 1 3-room flat.
-     * @param openingDate        The application opening date.
-     * @param closingDate        The application closing date.
-     * @param maxManagingOfficer The maximum number of managing officers allowed.
+     * @param projectID The unique ID of the project.
+     * @param projectName The name of the project.
+     * @param neighborhood The neighborhood where the project is located.
+     * @param twoRoomCount The number of 2-room flats available.
+     * @param twoRoomPrice The price for 1 2-room flat.
+     * @param threeRoomCount The number of 3-room flats available.
+     * @param threeRoomPrice The price for 1 3-room flat.
+     * @param openingDate The application opening date.
+     * @param closingDate The application closing date.
+     * @param maxManagingOfficer The maximum number of managing officers
+     * allowed.
      */
-    public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount,int twoRoomPrice, int threeRoomCount,int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
+    public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount, int twoRoomPrice, int threeRoomCount, int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
         this.managingOfficerUsers = new ArrayList<>();
         this.projectID = this.nextprojectID;
-        this.nextprojectID += 1; 
+        this.nextprojectID += 1;
         this.projectName = projectName;
         this.neighborhood = neighborhood;
         this.twoRoomCount = twoRoomCount;
@@ -107,7 +112,7 @@ public class BTOProjectModel {
         this.closingDate = closingDate;
         this.maxManagingOfficer = maxManagingOfficer;
         this.managerUserID = managerUserID;
-        
+
         this.isVisible = false;
     }
 
@@ -292,9 +297,11 @@ public class BTOProjectModel {
     }
 
     /**
-     * Adds a managing officer User to the list. Returns Boolean base on success.
+     * Adds a managing officer User to the list. Returns Boolean base on
+     * success.
      *
-     * @param managingOfficerUser The User object of the managing officer to add.
+     * @param managingOfficerUser The User object of the managing officer to
+     * add.
      */
     public boolean addManagingOfficerUser(User managingOfficerUser) {
         if (this.managingOfficerUsers.size() >= this.maxManagingOfficer) {
@@ -308,7 +315,8 @@ public class BTOProjectModel {
      * Removes a managing officer User object from the list.
      *
      * @param currentUser The User object of the managing officer to remove.
-     * @throws NoSuchElementException If the User object is not found in the list.
+     * @throws NoSuchElementException If the User object is not found in the
+     * list.
      */
     public boolean removeManagingOfficerUser(User currentUser) {
         if (this.managingOfficerUsers.remove(currentUser)) {
@@ -317,6 +325,7 @@ public class BTOProjectModel {
             return false;
         }
     }
+
     /**
      * Checks if a given User is in the list of managing officers.
      *
@@ -326,6 +335,7 @@ public class BTOProjectModel {
     public boolean isManagingOfficer(User currentUser) {
         return this.managingOfficerUsers.contains(currentUser);
     }
+
     /**
      * Prints all details of the BTO project.
      */
@@ -338,27 +348,27 @@ public class BTOProjectModel {
         System.out.println("2-Room Flat Price: $" + this.twoRoomPrice);
         System.out.println("3-Room Flats Count: " + this.threeRoomCount);
         System.out.println("3-Room Flat Price: $" + this.threeRoomPrice);
-        System.out.println("Opening Date: " + this.openingDate);
+        System.out.println("Opening Date: " + this.openingDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
         System.out.println("Closing Date: " + this.closingDate);
         System.out.println("Manager ID: " + (this.managerUserID));
         System.out.println("Visibility: " + (this.isVisible ? "Visible" : "Not Visible"));
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
-        System.out.println("Managing Officers: " + 
-            String.join(", ", managingOfficerUsers.stream()
-            .map(User::getName)
-            .toList()));
+        System.out.println("Managing Officers: "
+                + String.join(", ", managingOfficerUsers.stream()
+                        .map(User::getName)
+                        .toList()));
         System.out.println("---------------------");
     }
 
     public List<FlatType> getAvailableFlatTypes() {
-      List<FlatType> availableFlatTypes = new ArrayList<>();
-      if (this.twoRoomCount > 0) {
-        availableFlatTypes.add(FlatType.TWO_ROOM);
+        List<FlatType> availableFlatTypes = new ArrayList<>();
+        if (this.twoRoomCount > 0) {
+            availableFlatTypes.add(FlatType.TWO_ROOM);
+        }
+        if (this.threeRoomCount > 0) {
+            availableFlatTypes.add(FlatType.THREE_ROOM);
+        }
+        return availableFlatTypes;
     }
-      if (this.threeRoomCount > 0) {
-        availableFlatTypes.add(FlatType.THREE_ROOM);
-    }
-      return availableFlatTypes;
-  }
 
 }

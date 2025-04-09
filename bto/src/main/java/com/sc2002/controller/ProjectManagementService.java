@@ -8,11 +8,13 @@ import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 
 public class ProjectManagementService {
+
     private AppContext appContext;
 
     public ProjectManagementService(AppContext appContext) {
         this.appContext = appContext;
     }
+
     /**
      * Creates a new BTO project with user input.
      *
@@ -21,13 +23,29 @@ public class ProjectManagementService {
      * @return A new BTOProjectModel object with the specified details.
      */
     public BTOProjectModel createProject() {
+        // Check if have the right permission
         if (!this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
             System.out.println("You do not have permission to create a project.");
             return null;
         }
 
+        // check if currently are managing other project
+        for (BTOProjectModel btoProjectModel : appContext.getProjectRepo().getAllProjects()) {
+            if (btoProjectModel.getManagerUserID() == appContext.getCurrentUser().getUserID()) {
+                if (btoProjectModel.getClosingDate().isAfter(LocalDate.now())) {
+                    System.out.println("You are currently managing another project!");
+                    System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
+                    System.out.println("Closing Date: " + btoProjectModel.getClosingDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
+                    System.out.println("Today's Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
+                    System.out.println("------------------------------\nPress enter to continue...");
+                    appContext.getScanner().nextLine();
+                    return null;
+                }
+            }
+        }
+
         String projectName, neighborhood;
-        int twoRoomCount = 0,twoRoomPrice = 0,threeRoomCount = 0,threeRoomPrice = 0, maxOfficer = 0;
+        int twoRoomCount = 0, twoRoomPrice = 0, threeRoomCount = 0, threeRoomPrice = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
         String tempDate;
         boolean isValidDate = false;
@@ -69,14 +87,14 @@ public class ProjectManagementService {
         do {
             System.out.printf("Enter the price of 2-room flats: ");
             if (this.appContext.getScanner().hasNextInt()) {
-            twoRoomPrice = this.appContext.getScanner().nextInt();
-            this.appContext.getScanner().nextLine(); // Consume the leftover newline
-            if (twoRoomPrice < 0) {
-                System.out.println("The price of 2-room flats cannot be negative. Please try again.");
-            }
+                twoRoomPrice = this.appContext.getScanner().nextInt();
+                this.appContext.getScanner().nextLine(); // Consume the leftover newline
+                if (twoRoomPrice < 0) {
+                    System.out.println("The price of 2-room flats cannot be negative. Please try again.");
+                }
             } else {
-            System.out.println("Invalid input. Please enter a valid integer.");
-            this.appContext.getScanner().nextLine(); // Consume invalid input
+                System.out.println("Invalid input. Please enter a valid integer.");
+                this.appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (twoRoomPrice < 0);
         // Validate three-room flat count
@@ -153,7 +171,7 @@ public class ProjectManagementService {
             }
         } while (maxOfficer < 0 || maxOfficer > 10);
 
-        return new BTOProjectModel(projectName, neighborhood, twoRoomCount,twoRoomPrice, threeRoomCount,threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID());
+        return new BTOProjectModel(projectName, neighborhood, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID());
     }
 
     public void editProject(String userOption, String valueToChange) {
@@ -231,9 +249,10 @@ public class ProjectManagementService {
                 if (project.getManagerUserID() == currentUser.getUserID()) {
                     currentUser.deleteProjectID(); // if deleting currently managing project
 
-                                }if (this.appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID())) {
-                    return true; 
-                }else {
+                }
+                if (this.appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID())) {
+                    return true;
+                } else {
                     throw new RuntimeException("Failed to delete project.");
                 }
             } else {
@@ -252,7 +271,9 @@ public class ProjectManagementService {
                 if (project == null) {
                     throw new RuntimeException("Project with the given ID does not exist.");
                 }
-                if(project.getManagerUserID()!=this.appContext.getCurrentUser().getUserID()) throw new RuntimeException("User does not own this project.");
+                if (project.getManagerUserID() != this.appContext.getCurrentUser().getUserID()) {
+                    throw new RuntimeException("User does not own this project.");
+                }
                 boolean currentVisibility = project.isVisible();
                 System.out.println("Current visibility: " + (currentVisibility ? "Visible" : "Hidden"));
                 project.setVisible(!currentVisibility);
