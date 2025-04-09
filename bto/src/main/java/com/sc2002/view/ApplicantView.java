@@ -85,14 +85,14 @@ public class ApplicantView {
 
     if (selectedProject != null) {
         // apply to the project
-        BTOApplicationModel application = applicationService.applyToProject(
+        Boolean application = applicationService.applyToProject(
             appContext.getProjectRepo(),
             appContext.getScanner(),
             appContext.getCurrentUser()
         );
 
         // check application
-        if (application != null) {
+        if (application) {
             System.out.println("You have successfully applied for project ID: " + selectedProjectId);
         } else {
             System.out.println("Application failed. Please try again.");

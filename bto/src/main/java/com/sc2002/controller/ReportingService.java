@@ -30,12 +30,12 @@ public class ReportingService {
                 }
                 case 2 -> { // Filter by Married
                     projectBookings = projectBookings.stream()
-                        .filter(booking -> booking.getApplicantMaritialStatus())
+                        .filter(booking -> booking.getApplicantMaritalStatus())
                         .toList();
                 }
                 case 3 -> { // Filter by Single
                     projectBookings = projectBookings.stream()
-                        .filter(booking -> !booking.getApplicantMaritialStatus())
+                        .filter(booking -> !booking.getApplicantMaritalStatus())
                         .toList();
                 }
                 case 4 -> { // Filter by TWO_ROOM
@@ -66,7 +66,7 @@ public class ReportingService {
                     booking.getApplicantName(),
                     booking.getFlatType(),
                     booking.getApplicantAge(),
-                    booking.getApplicantMaritialStatus() ? "Married" : "Single"
+                    booking.getApplicantMaritalStatus() ? "Married" : "Single"
                 );
             }
         } catch (RuntimeException e) {

@@ -15,7 +15,7 @@ public class Receipt {
         System.out.println("Application ID: " + application.getApplicationID());
         System.out.println("Applicant: " + application.getApplicantName());
         System.out.println("Age: " + application.getApplicantAge());
-        System.out.println("Marital Status: " + (application.getApplicantMaritialStatus() ? "Married" : "Single"));
+        System.out.println("Marital Status: " + (application.getApplicantMaritalStatus() ? "Married" : "Single"));
         System.out.println("Flat Type: " + application.getFlatType());
         System.out.println("Project ID: " + application.getProjectID());
         System.out.println("Application Status: " + application.getStatus());

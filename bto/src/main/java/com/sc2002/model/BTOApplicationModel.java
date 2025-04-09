@@ -36,7 +36,7 @@ public class BTOApplicationModel {
         this.submissionDate = new Date();
 
     }
-    public boolean getApplicantMaritialStatus(){
+    public boolean getApplicantMaritalStatus(){
         return this.applicantUser.getMaritalStatus();
     }
     public FlatType getFlatType(){
