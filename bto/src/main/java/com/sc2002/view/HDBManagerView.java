@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.sc2002.controller.AppContext;
+import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
 import com.sc2002.controller.ReportingService;
+import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
@@ -21,6 +23,7 @@ public class HDBManagerView {
     private ProjectService projectService=null; 
     private OfficerRegistrationService officerRegistrationService=null; 
     private ReportingService reportingService=null; 
+    private ApplicationService applicationService=null;
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         // Initializing variables & services,
@@ -34,7 +37,7 @@ public class HDBManagerView {
         this.projectService = new ProjectService(appContext);
         this.officerRegistrationService = new OfficerRegistrationService(appContext);
         this.reportingService = new ReportingService(appContext);
-
+        this.applicationService = new ApplicationService(appContext);
         System.out.println("--HDB Manager Menu--");
         // Loop variable `i` is used to generate menu numbers starting from 1
         for (int i = 0; i < menus.size(); i++) {
@@ -400,17 +403,14 @@ public class HDBManagerView {
     private void approveBTOApplicationMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
-        System.out.print("Enter the Project ID to manage withdrawal(approve): ");
+        System.out.print("Enter the Project ID to manage Applications(approve): ");
         String projectIDString = appContext.getScanner().nextLine();
         BTOProjectModel project;
+        int projectID;
         try {
-            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
-                project = appContext.getProjectRepo().getProjectByID(projectID);
-                if (project == null) {
-                    System.out.println("Error: Project not found.");
-                    return;
-                }
+                //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
                 return;
@@ -419,22 +419,47 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
+        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingByProjectID(projectID);
+        if (listOfApplications.isEmpty()) {
+            System.out.println("No applications found for this project.");
+        } else {
+            System.out.println("-- Applications --");
+            System.out.println("Index\tApplicant Name\tMarital Status\tAge\tRoom Type");
+            System.out.println("-----------------------------------------------------------");
+            int index = 1;
+            for (BTOApplicationModel application : listOfApplications) {
+                System.out.printf("%d\t%s\t\t%s\t\t%d\t%s%n",
+                        index++,
+                        application.getApplicantName(),
+                        application.getApplicantMaritalStatus(),
+                        application.getApplicantAge(),
+                        application.getFlatType());
+            }
+        }
+        System.out.print("Enter the index of the application you wish to approve: ");
+        try {
+            int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
+            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
+                applicationService.approveApplicantApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+                System.out.println("Application approved successfully.");
+            } else {
+                System.out.println("Invalid index.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid integer for the index.");
+        }
     }
     private void rejectBTOApplicationMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
-        System.out.print("Enter the Project ID to manage withdrawal(reject): ");
+        System.out.print("Enter the Project ID to manage Applications(reject): ");
         String projectIDString = appContext.getScanner().nextLine();
         BTOProjectModel project;
+        int projectID;
         try {
-            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
-                project = appContext.getProjectRepo().getProjectByID(projectID);
-                if (project == null) {
-                    System.out.println("Error: Project not found.");
-                    return;
-                }
+                //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
                 return;
@@ -443,7 +468,35 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
+        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingByProjectID(projectID);
+        if (listOfApplications.isEmpty()) {
+            System.out.println("No applications found for this project.");
+        } else {
+            System.out.println("-- Applications --");
+            System.out.println("Index\tApplicant Name\tMarital Status\tAge\tRoom Type");
+            System.out.println("-----------------------------------------------------------");
+            int index = 1;
+            for (BTOApplicationModel application : listOfApplications) {
+                System.out.printf("%d\t%s\t\t%s\t\t%d\t%s%n",
+                        index++,
+                        application.getApplicantName(),
+                        application.getApplicantMaritalStatus(),
+                        application.getApplicantAge(),
+                        application.getFlatType());
+            }
+        }
+        System.out.print("Enter the index of the application you wish to reject: ");
+        try {
+            int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
+            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
+                applicationService.rejectApplicantApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+                System.out.println("Application rejected successfully.");
+            } else {
+                System.out.println("Invalid index.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid integer for the index.");
+        }
     }
     private void approveApplicationWithdrawalMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());

@@ -108,6 +108,7 @@ public class ApplicationService {
                 // no need check married people since user can only register if >=21
                 if(!currentUser.getMaritalStatus() && currentUser.getAge()<35){ // if is single and younger then 35
                     System.out.println(currentUser.getMaritalStatus());
+                    System.out.println("WTF?");
                     return false;
                 }
                 inputFlatType = FlatType.TWO_ROOM;
@@ -116,7 +117,7 @@ public class ApplicationService {
             }else if(userInput2.equals("3-room")) {
                 if(!currentUser.getMaritalStatus()){ // if is single 
                     System.out.println("User can only apply 2-room.");
-                    break; // reloop him
+                    continue; // reloop him
                 }
                 inputFlatType = FlatType.THREE_ROOM;
                 break;

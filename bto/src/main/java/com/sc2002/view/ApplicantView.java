@@ -35,40 +35,45 @@ public class ApplicantView {
         System.out.println("Option " + (menus.size() + 1) + ": Logout");
         System.out.print("Please select an option: ");
         userInput = appContext.getScanner().nextLine();
-        switch (userInput) {
-            case "1" -> {
-                // Option 1: Apply for BTO Project
-                applyForProjectMenu(appContext);
+        try{
+            switch (userInput) {
+                case "1" -> {
+                    // Option 1: Apply for BTO Project
+                    applyForProjectMenu(appContext);
+                }
+                case "2" -> {
+                    // Option 2: View Application Status
+                    viewApplicationStatusMenu(appContext);
+                }
+                case "3" -> {
+                    // Option 3: Update Flat Details
+                    updateFlatDetailsMenu(appContext);
+                }
+                case "4" -> {
+                    // Option 4: Generate Flat Selection Receipt
+                    generateReceiptMenu(appContext);
+                }
+                case "5" -> {
+                    // Option 5: Submit Enquiry
+                    submitEnquiryMenu(appContext);
+                }
+                case "6" -> {
+                    // Option 6: View My Enquiries
+                    viewMyEnquiriesMenu(appContext);
+                }
+                case "7" -> {
+                    // Option 7: Logout
+                    System.out.println("Logging out...");
+                    appContext.setCurrentUser(null);
+                }
+                default -> {
+                    System.out.println("Please select a valid option!");
+                }
             }
-            case "2" -> {
-                // Option 2: View Application Status
-                viewApplicationStatusMenu(appContext);
-            }
-            case "3" -> {
-                // Option 3: Update Flat Details
-                updateFlatDetailsMenu(appContext);
-            }
-            case "4" -> {
-                // Option 4: Generate Flat Selection Receipt
-                generateReceiptMenu(appContext);
-            }
-            case "5" -> {
-                // Option 5: Submit Enquiry
-                submitEnquiryMenu(appContext);
-            }
-            case "6" -> {
-                // Option 6: View My Enquiries
-                viewMyEnquiriesMenu(appContext);
-            }
-            case "7" -> {
-                // Option 7: Logout
-                System.out.println("Logging out...");
-                appContext.setCurrentUser(null);
-            }
-            default -> {
-                System.out.println("Please select a valid option!");
-            }
+        }catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
+
     }
 
     private void applyForProjectMenu(AppContext appContext) {
