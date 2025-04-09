@@ -29,8 +29,8 @@ public class ApplicantModel extends User {
         "View Application Status",
         "Update Flat Details",
         "Generate Flat Selection Receipt",
-        "Placeholder 1",
-        "Placeholder 2(open ApplicantModel.getMenuOptions to edit)"
+        "Submit Enquiry",
+        "View Enquiry"
         ));
         return options;
     }
