@@ -1,20 +1,16 @@
 package com.sc2002.view;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectService;
-import com.sc2002.enums.FlatType;
+import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
-import com.sc2002.model.BTOProjectModel; 
-import com.sc2002.model.ApplicantModel;   
-import com.sc2002.repositories.ApplicationRepo;
-import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {

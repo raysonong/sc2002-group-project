@@ -34,16 +34,15 @@ public class ApplicationService {
         }
     }
 
-    private boolean isProjectVisibleForApplicant(User currentUser, BTOProjectModel project) {
-        if (!project.isVisible()) { // if not visible, we check if user applied for project
-            List<BTOApplicationModel> listOfApplicationByUser=this.appContext.getApplicationRepo().findApplicationByApplicantID(currentUser.getUserID());
-            for (BTOApplicationModel application : listOfApplicationByUser) {
-                if (application.getProjectID() != project.getProjectID()) { // if he didn't apply for the project,
-                    return false; // we return false to kick him away
-                }
-                if (application.getStatus() == ApplicationStatus.WITHDRAWN || application.getStatus() == ApplicationStatus.UNSUCCESSFUL) {
-                    return false; // if the application is withdrawn or rejected, don't show the project
-                }
+    private boolean isProjectVisibleForApplicant(ApplicantModel applicant, BTOProjectModel project) {
+        if (!project.isVisible()) {
+            return false;
+        }
+
+        // criteria for single 35 years old and above can only apply for 2-Room flats
+        if (applicant.getMaritalStatus().equals("SINGLE") && applicant.getAge() >= 35) {
+            if (project.getFlatType() != FlatType.TWO_ROOM) {
+                return false;
             }
         }
 
@@ -122,7 +121,7 @@ public class ApplicationService {
 
         System.out.println("Your application has been created and submitted successfully!");
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
-        return new BTOApplicationModel(currentUser, selectedProject, inputFlatType);
+        return new BTOApplicationModel(currentUser, selectedProject, flatType);
     }
 
     

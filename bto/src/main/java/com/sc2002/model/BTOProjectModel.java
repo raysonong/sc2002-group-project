@@ -2,10 +2,10 @@ package com.sc2002.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
-import com.sc2002.enums.FlatType; // for FlatType enums
-import com.sc2002.enums.UserRole; // for UserRole enums
-import com.sc2002.model.User;
+
+import com.sc2002.enums.FlatType;
 /**
  * Represents a BTO (Build-To-Order) project with details such as project name, neighborhood, 
  * flat counts, application dates, and managing officers.
@@ -341,4 +341,16 @@ public class BTOProjectModel {
             .toList()));
         System.out.println("---------------------");
     }
+
+    public List<FlatType> getAvailableFlatTypes() {
+      List<FlatType> availableFlatTypes = new ArrayList<>();
+      if (this.twoRoomCount > 0) {
+        availableFlatTypes.add(FlatType.TWO_ROOM);
+    }
+      if (this.threeRoomCount > 0) {
+        availableFlatTypes.add(FlatType.THREE_ROOM);
+    }
+      return availableFlatTypes;
+  }
+
 }

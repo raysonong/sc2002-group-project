@@ -1,22 +1,12 @@
 package com.sc2002.view;
 
-import java.util.List;
 import java.util.Scanner;
 
 import com.sc2002.controller.AppContext;
-import com.sc2002.controller.ApplicationService;
-import com.sc2002.controller.OfficerRegistrationService;
-import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.UserService;
-import com.sc2002.enums.UserRole;
-import com.sc2002.model.ApplicantModel;
-import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.model.User;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.NRICValidator;
-import com.sc2002.view.ApplicantView;
-import com.sc2002.view.HDBOfficerView;
-import com.sc2002.view.HDBManagerView;
 
 public class mainAppView {
     private final UserService userService = new UserService();
@@ -24,7 +14,7 @@ public class mainAppView {
     public void startMenu(AppContext appContext){
         System.out.println("Welcome to the BTO Project Management System!");
         String userInput=null;
-        ApplicantView applicantView = new ApplicantView();
+        ApplicantView applicantView = new ApplicantView(appContext);
         HDBOfficerView officerView = new HDBOfficerView();
         HDBManagerView managerView = new HDBManagerView();
         while (true) {
