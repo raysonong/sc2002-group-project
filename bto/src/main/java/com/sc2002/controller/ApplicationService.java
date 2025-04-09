@@ -148,4 +148,53 @@ public class ApplicationService {
     public Receipt generateReceipt(BTOApplicationModel application) {
         return new Receipt(application);
     }
+    public Boolean approveApplicantApplication(BTOApplicationModel application){
+        try{ // for both Managers and Officer @Rayson
+            // Do initial authentication checking to see if currentUser can actually change values
+            User currentUser = appContext.getCurrentUser();
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
+            if(currentUser.getUserID()!=project.getManagerUserID()){// If manager of project
+                if(!project.isManagingOfficer(currentUser)){
+                    throw new RuntimeException("User is not authorized to perform this action.");
+                }
+            }
+            //Able  to  approve  or  reject  Applicant’s  BTO  application  –  approval  is  
+            // limited to the supply of the flats (number of units for the respective flat 
+            // types)
+            // we will immediately deduct from total count once the user's booking is approved.
+            if(application.getFlatType()==FlatType.TWO_ROOM){
+                if(project.getTwoRoomCount()==0) throw new RuntimeException("Not enough rooms.");// check at least 1
+                application.setStatus(ApplicationStatus.SUCCESSFUL);
+                project.setTwoRoomCount(project.getTwoRoomCount() - 1);
+            }else if(application.getFlatType()==FlatType.THREE_ROOM){
+                if(project.getThreeRoomCount()==0) throw new RuntimeException("Not enough rooms.");// check at least 1
+                application.setStatus(ApplicationStatus.SUCCESSFUL);
+                project.setThreeRoomCount(project.getThreeRoomCount() - 1);
+            }else{
+                throw new RuntimeException("RoomType not implemented.");
+            }
+            return true;
+        }catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
+    public Boolean rejectApplicantApplication(BTOApplicationModel application){
+        try{ // for both Managers and Officer @Rayson
+            // Do initial authentication checking to see if currentUser can actually change values
+            User currentUser = appContext.getCurrentUser();
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
+            if(currentUser.getUserID()!=project.getManagerUserID()){// If manager of project
+                if(!project.isManagingOfficer(currentUser)){
+                    throw new RuntimeException("User is not authorized to perform this action.");
+                }
+            }
+            // Only need do initial checks, afterwards just change status to unsucessful
+            application.setStatus(ApplicationStatus.UNSUCCESSFUL);
+            return true;
+        }catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
 }
