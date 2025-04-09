@@ -49,6 +49,7 @@ public class EnquiryModel {
         // Update the enquiry text with the new text
         this.enquiryText = newEnquiryText;
         // Assuming garbage collection will handle the old response
+        this.submissionDate= new Date();
         // Reset the response since the enquiry has been edited
         this.enquiryResponse = null;
     }

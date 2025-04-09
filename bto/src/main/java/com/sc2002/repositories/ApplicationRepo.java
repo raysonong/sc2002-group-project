@@ -65,4 +65,16 @@ public class ApplicationRepo {
                 && application.getStatus() == ApplicationStatus.BOOKED) // Also check if BOOKED
         .collect(Collectors.toList());
     }
+    public List<BTOApplicationModel> findPendingByProjectID(int projectID) {
+        return applications.stream()
+        .filter(application -> application.getProjectID() == projectID // projectID filter
+                && application.getStatus() == ApplicationStatus.PENDING) // Also check if BOOKED
+        .collect(Collectors.toList());
+    }
+    public List<BTOApplicationModel> findPendingWithDrawalByProjectID(int projectID) {
+        return applications.stream()
+        .filter(application -> application.getProjectID() == projectID // projectID filter
+                && application.getWithdrawalRequested()) // Also check if withdrawal is requested
+        .collect(Collectors.toList());
+    }
 }

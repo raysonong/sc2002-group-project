@@ -307,17 +307,25 @@ public class BTOProjectModel {
     /**
      * Removes a managing officer User object from the list.
      *
-     * @param managingOfficerUser The User object of the managing officer to remove.
+     * @param currentUser The User object of the managing officer to remove.
      * @throws NoSuchElementException If the User object is not found in the list.
      */
-    public boolean removeManagingOfficerUser(User managingOfficerUser) {
-        if (this.managingOfficerUsers.remove(managingOfficerUser)) {
+    public boolean removeManagingOfficerUser(User currentUser) {
+        if (this.managingOfficerUsers.remove(currentUser)) {
             return true;
         } else {
             return false;
         }
     }
-
+    /**
+     * Checks if a given User is in the list of managing officers.
+     *
+     * @param user The User object to check.
+     * @return True if the User is in the list, false otherwise.
+     */
+    public boolean isManagingOfficer(User currentUser) {
+        return this.managingOfficerUsers.contains(currentUser);
+    }
     /**
      * Prints all details of the BTO project.
      */
