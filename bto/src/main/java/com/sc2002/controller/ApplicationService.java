@@ -65,11 +65,11 @@ public class ApplicationService {
         return true;
     }
 
-    public BTOApplicationModel applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
+    public Boolean applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
         // Check role
         if(currentUser.getUsersRole() != UserRole.APPLICANT) {
             System.out.println("You do not have permission to apply an application to join a project.");
-            return null;
+            return false;
         }
         ApplicantModel applicant = (ApplicantModel) currentUser;
         int input_projectId = 0;
@@ -82,7 +82,7 @@ public class ApplicationService {
 
                 // Return back to menu
                 if (input_projectId == -1) {
-                    return null;
+                    return false;
                 }
 
                 // Validate input
@@ -107,10 +107,11 @@ public class ApplicationService {
             if (userInput2.equals("2-room")){
                 // no need check married people since user can only register if >=21
                 if(!currentUser.getMaritalStatus() && currentUser.getAge()<35){ // if is single and younger then 35
-                    System.out.println("User is too young.");
-                    return null;
+                    System.out.println(currentUser.getMaritalStatus());
+                    return false;
                 }
                 inputFlatType = FlatType.TWO_ROOM;
+                break;
 
             }else if(userInput2.equals("3-room")) {
                 if(!currentUser.getMaritalStatus()){ // if is single 
@@ -118,14 +119,14 @@ public class ApplicationService {
                     break; // reloop him
                 }
                 inputFlatType = FlatType.THREE_ROOM;
+                break;
             } else {
             System.out.println("Invalid flat type. Please enter a valid flat type (2-Room or 3-Room).");
             }
         }
-
-        System.out.println("Your application has been created and submitted successfully!");
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
-        return new BTOApplicationModel(currentUser, selectedProject, inputFlatType);
+        this.appContext.getApplicationRepo().save(new BTOApplicationModel(currentUser, selectedProject, inputFlatType));
+        return true;
     }
 
     

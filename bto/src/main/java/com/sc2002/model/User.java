@@ -57,7 +57,7 @@ public abstract class User {
             System.out.println("User not created");
             return;
         }
-        if (isMarried == "Married") {
+        if (isMarried.equalsIgnoreCase("married")) {
             this.isMarried = true;
         } else {
             this.isMarried = false;
