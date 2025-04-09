@@ -17,6 +17,7 @@ public class ApplicationService {
     //
     // PS: ruba pls refer to my code, think i have accidentally did ur part :,) - rayson
     //
+    
    public void viewAvailableProjectsForApplicant(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
 
@@ -36,17 +37,18 @@ public class ApplicationService {
         }
 
         // criteria for single 35 years old and above can only apply for 2-Room flats
-        if (applicant.getMaritalStatus().equals("SINGLE") && applicant.getAge() >= 35) {
-            if (project.getFlatType() != FlatType.TWO_ROOM) {
-                return false;
-            }
+        if (!applicant.getMaritalStatus() && applicant.getAge() >= 35) {
+            if (!project.getAvailableFlatTypes().contains(FlatType.TWO_ROOM)) {
+                return false; 
         }
+    }
 
         // criteria for married applicants 21 years old and above can apply for both 2-Room or 3-Room
-        if (applicant.getApplicantMaritalStatus().equals("MARRIED") && applicant.getAge() >= 21) {
-            if (project.getFlatType() != FlatType.TWO_ROOM && project.getFlatType() != FlatType.THREE_ROOM) {
-                return false;
-            }
+        if (applicant.getMaritalStatus() && applicant.getAge() >= 21) {
+            if (!(project.getAvailableFlatTypes().contains(FlatType.TWO_ROOM) || 
+              project.getAvailableFlatTypes().contains(FlatType.THREE_ROOM))) {
+            return false;
+         }
         }
         return true;
     }
@@ -86,7 +88,7 @@ public class ApplicationService {
 
         System.out.println("Your application has been created and submitted successfully!");
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
-        return new BTOApplicationModel(currentUser, selectedProject, flatType);
+        return new BTOApplicationModel(currentUser, selectedProject, FlatType); //im not sure...
     }
 
     

@@ -18,13 +18,13 @@ public class BTOApplicationModel {
 
     public BTOApplicationModel(User applicantUser, BTOProjectModel project, FlatType applicationFlatType) {
         //Cond 1, Singles 35 year old and above, can only apply for 2-Room
-        if(applicantUser.getAge()<35 && !applicantUser.getMaritialStatus()){ // Checks for singles less than 35
+        if(applicantUser.getAge()<35 && !applicantUser.getMaritalStatus()){ // Checks for singles less than 35
             throw new RuntimeException("User is Single & age less than 35.");
         } 
         //Cond 2, Married, 21 years old and above, can apply for any flat type
         // No need check 21 lesser since we allow users to register only if they are above 21
         // getMaritalStatus returns true if married.
-        if(!applicantUser.getMaritialStatus() && applicationFlatType.equals(FlatType.THREE_ROOM)){ //  check for singles tryna get 3-room
+        if(!applicantUser.getMaritalStatus() && applicationFlatType.equals(FlatType.THREE_ROOM)){ //  check for singles tryna get 3-room
             throw new RuntimeException("User is Single can't apply 3-Room.");
         }
         // free to apply for married individuals
@@ -37,7 +37,7 @@ public class BTOApplicationModel {
 
     }
     public boolean getApplicantMaritialStatus(){
-        return this.applicantUser.getMaritialStatus();
+        return this.applicantUser.getMaritalStatus();
     }
     public FlatType getFlatType(){
         return this.applicationFlatType;
@@ -58,6 +58,10 @@ public class BTOApplicationModel {
 
     public ApplicationStatus getStatus() {
         return this.status;
+    }
+
+    public void setStatus(ApplicationStatus status) {
+        this.status = status;
     }
     
     public Date getSubmissionDate() {

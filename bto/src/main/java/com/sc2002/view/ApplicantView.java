@@ -1,27 +1,28 @@
 package com.sc2002.view;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectService;
-import com.sc2002.enums.FlatType;
+import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
-import com.sc2002.model.BTOProjectModel; 
-import com.sc2002.model.ApplicantModel;   
-import com.sc2002.repositories.ApplicationRepo;
-import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {
     // declare all the services required by Applicant
-    private final EnquiryService enquiryService = new EnquiryService();
+    private final EnquiryService enquiryService;
     private final ProjectService projectService = new ProjectService();
     private final ApplicationService applicationService = new ApplicationService();
+
+    public ApplicantView(AppContext appContext) {
+        // Pass the EnquiryRepo from appContext to the EnquiryService constructor
+        this.enquiryService = new EnquiryService(appContext.getEnquiryRepo());
+    }
     
     public void ApplicantMenu(AppContext appContext) {
         String userInput = "";
@@ -142,7 +143,7 @@ public class ApplicantView {
     private void submitEnquiryMenu(AppContext appContext) {
     // Display eligible projects for the applicant
        System.out.println("Eligible Projects for Enquiry: ");
-       applicationService.viewEligibleProjectsForApplicant(appContext); 
+       applicationService.viewAvailableProjectsForApplicant(appContext); 
 
     // ask applicant to select project
       System.out.print("Enter Project ID to submit an enquiry: ");
@@ -227,7 +228,7 @@ public class ApplicantView {
             //edit
             System.out.print("Enter the new enquiry text: ");
             String newEnquiryText = appContext.getScanner().nextLine();
-            boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
+            boolean isEdited = enquiryService.editEnquiryResponse(appContext, selectedEnquiry.getId(), newEnquiryText);
             if (isEdited) {
                 System.out.println("Your enquiry has been updated.");
             } else {

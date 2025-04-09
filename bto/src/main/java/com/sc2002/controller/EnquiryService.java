@@ -1,11 +1,11 @@
 package com.sc2002.controller;
 
-import com.sc2002.model.BTOProjectModel;
-import com.sc2002.repositories.EnquiryRepo;
-import com.sc2002.model.EnquiryModel;
-import com.sc2002.enums.UserRole;
+
 import java.util.List;
 import java.util.Optional;
+
+import com.sc2002.model.EnquiryModel;
+import com.sc2002.repositories.EnquiryRepo;
 
 public class EnquiryService {
     // submitEnquiry for Applicant and Officer(Who have a project they BTOed)
