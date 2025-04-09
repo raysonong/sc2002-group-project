@@ -14,7 +14,7 @@ public class mainAppView {
     public void startMenu(AppContext appContext){
         System.out.println("Welcome to the BTO Project Management System!");
         String userInput=null;
-        ApplicantView applicantView = new ApplicantView(appContext);
+        ApplicantView applicantView = new ApplicantView();
         HDBOfficerView officerView = new HDBOfficerView();
         HDBManagerView managerView = new HDBManagerView();
         while (true) {

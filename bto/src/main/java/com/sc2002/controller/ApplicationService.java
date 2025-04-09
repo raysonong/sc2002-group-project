@@ -34,21 +34,25 @@ public class ApplicationService {
         }
     }
 
-    private boolean isProjectVisibleForApplicant(ApplicantModel applicant, BTOProjectModel project) {
+    private boolean isProjectVisibleForApplicant(User currentUser, BTOProjectModel project) {
         if (!project.isVisible()) {
-            return false;
-        }
-
-        // criteria for single 35 years old and above can only apply for 2-Room flats
-        if (applicant.getMaritalStatus().equals("SINGLE") && applicant.getAge() >= 35) {
-            if (project.getFlatType() != FlatType.TWO_ROOM) {
-                return false;
+            List<BTOApplicationModel> listOfUsersApplication=appContext.getApplicationRepo().findApplicationByApplicantID(currentUser.getUserID());
+            for (BTOApplicationModel application : listOfUsersApplication) {
+                if (application.getProjectID() == project.getProjectID()) { // If the user applied for the project before
+                    if (application.getStatus() == ApplicationStatus.WITHDRAWN || application.getStatus() == ApplicationStatus.UNSUCCESSFUL) { // If the user was already rejected or unsuccessful
+                        return false; // dont let him see it
+                    }
+                    // if its in progress then just continue
+                }else{ // If user did not apply for project before & project is not visible
+                    return false;
+                }
             }
+            
         }
 
         // criteria for single 35 years old and above can only apply for 2-Room flats, hence we only allow viewing if
         // tworoom count > 0,
-        if (!currentUser.getMaritialStatus() && currentUser.getAge() >= 35) {
+        if (!currentUser.getMaritalStatus() && currentUser.getAge() >= 35) {
             if (project.getTwoRoomCount() <=0) {
                 return false;
             }
@@ -102,14 +106,14 @@ public class ApplicationService {
             // Validate input
             if (userInput2.equals("2-room")){
                 // no need check married people since user can only register if >=21
-                if(!currentUser.getMaritialStatus() && currentUser.getAge()<35){ // if is single and younger then 35
+                if(!currentUser.getMaritalStatus() && currentUser.getAge()<35){ // if is single and younger then 35
                     System.out.println("User is too young.");
                     return null;
                 }
                 inputFlatType = FlatType.TWO_ROOM;
 
             }else if(userInput2.equals("3-room")) {
-                if(!currentUser.getMaritialStatus()){ // if is single 
+                if(!currentUser.getMaritalStatus()){ // if is single 
                     System.out.println("User can only apply 2-room.");
                     break; // reloop him
                 }
@@ -121,7 +125,7 @@ public class ApplicationService {
 
         System.out.println("Your application has been created and submitted successfully!");
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
-        return new BTOApplicationModel(currentUser, selectedProject, flatType);
+        return new BTOApplicationModel(currentUser, selectedProject, inputFlatType);
     }
 
     
