@@ -8,6 +8,7 @@ import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.utilities.Receipt;
+import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.User;
@@ -42,7 +43,7 @@ public class ApplicationService {
         }
 
         // criteria for married applicants 21 years old and above can apply for both 2-Room or 3-Room
-        if (applicant.getMaritalStatus().equals("MARRIED") && applicant.getAge() >= 21) {
+        if (applicant.getApplicantMaritalStatus().equals("MARRIED") && applicant.getAge() >= 21) {
             if (project.getFlatType() != FlatType.TWO_ROOM && project.getFlatType() != FlatType.THREE_ROOM) {
                 return false;
             }
@@ -84,23 +85,24 @@ public class ApplicationService {
         }
 
         System.out.println("Your application has been created and submitted successfully!");
-        return new BTOApplicationModel(currentUser.getNRIC(), currentUser.getUserID(), input_projectId);
+        BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
+        return new BTOApplicationModel(currentUser, selectedProject, flatType);
     }
 
     
-    public ApplicationStatus viewApplicationStatus(BTOApplication application){
+    public ApplicationStatus viewApplicationStatus(BTOApplicationModel application){
         return application.getStatus();
     }
 
-    public void updateApplicationStatus(BTOApplication application, ApplicationStatus status){
+    public void updateApplicationStatus(BTOApplicationModel application, ApplicationStatus status){
         application.setStatus(status);    
     }
 
-    public void approveApplication(BTOApplication application){
+    public void approveApplication(BTOApplicationModel application){
         updateApplicationStatus(application, ApplicationStatus.SUCCESSFUL);
     }
 
-    public void rejectApplication(BTOApplication application){
+    public void rejectApplication(BTOApplicationModel application){
         updateApplicationStatus(application, ApplicationStatus.UNSUCCESSFUL);
     }
     public Receipt generateReceipt(BTOApplicationModel application) {

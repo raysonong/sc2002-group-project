@@ -11,8 +11,7 @@ public class Receipt {
     }
 
     public void printReceipt() {
-        System.out.println("--Flat Selection Receipt--");
-        System.out.println("Application ID: " + application.getApplicationId());
+        System.out.println("--BTO Application Receipt--");
         System.out.println("Applicant: " + application.getApplicantName());
         System.out.println("Age: " + application.getApplicantAge());
         System.out.println("Marital Status: " + (application.getApplicantMaritialStatus() ? "Married" : "Single"));

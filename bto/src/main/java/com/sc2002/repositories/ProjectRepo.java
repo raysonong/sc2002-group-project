@@ -1,10 +1,9 @@
 package com.sc2002.repositories;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.sc2002.enums.FlatType;
@@ -44,6 +43,10 @@ public class ProjectRepo {
             }
         }
         return toReturn;
+    }
+
+    public List<BTOProjectModel> getAllProjects() {
+        return new ArrayList<>(projects);
     }
 
     public void save(BTOProjectModel project) {
