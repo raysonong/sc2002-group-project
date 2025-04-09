@@ -8,7 +8,11 @@ import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 
 public class ProjectManagementService {
+    private AppContext appContext;
 
+    public ProjectManagementService(AppContext appContext) {
+        this.appContext = appContext;
+    }
     /**
      * Creates a new BTO project with user input.
      *
@@ -16,8 +20,8 @@ public class ProjectManagementService {
      * @param scanner The Scanner object for user input.
      * @return A new BTOProjectModel object with the specified details.
      */
-    public BTOProjectModel createProject(AppContext appContext) {
-        if (!appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+    public BTOProjectModel createProject() {
+        if (!this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
             System.out.println("You do not have permission to create a project.");
             return null;
         }
@@ -41,7 +45,7 @@ public class ProjectManagementService {
         // Validate neighborhood
         do {
             System.out.printf("Enter the Neighborhood (e.g. Yishun, Boon Lay, etc.): ");
-            neighborhood = appContext.getScanner().nextLine().trim();
+            neighborhood = this.appContext.getScanner().nextLine().trim();
             if (neighborhood.isEmpty()) {
                 System.out.println("Neighborhood cannot be empty. Please try again.");
             }
@@ -50,51 +54,51 @@ public class ProjectManagementService {
         // Validate two-room flat count
         do {
             System.out.printf("Enter the numbers of 2-room flats: ");
-            if (appContext.getScanner().hasNextInt()) {
-                twoRoomCount = appContext.getScanner().nextInt();
+            if (this.appContext.getScanner().hasNextInt()) {
+                twoRoomCount = this.appContext.getScanner().nextInt();
                 appContext.getScanner().nextLine(); // Consume the leftover newline
                 if (twoRoomCount < 0) {
                     System.out.println("The number of 2-room flats cannot be negative. Please try again.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid integer.");
-                appContext.getScanner().nextLine(); // Consume invalid input
+                this.appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (twoRoomCount < 0);
         // Validate two-room flat price
         do {
             System.out.printf("Enter the price of 2-room flats: ");
-            if (appContext.getScanner().hasNextInt()) {
-            twoRoomPrice = appContext.getScanner().nextInt();
-            appContext.getScanner().nextLine(); // Consume the leftover newline
+            if (this.appContext.getScanner().hasNextInt()) {
+            twoRoomPrice = this.appContext.getScanner().nextInt();
+            this.appContext.getScanner().nextLine(); // Consume the leftover newline
             if (twoRoomPrice < 0) {
                 System.out.println("The price of 2-room flats cannot be negative. Please try again.");
             }
             } else {
             System.out.println("Invalid input. Please enter a valid integer.");
-            appContext.getScanner().nextLine(); // Consume invalid input
+            this.appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (twoRoomPrice < 0);
         // Validate three-room flat count
         do {
             System.out.printf("Enter the numbers of 3-room flats: ");
-            if (appContext.getScanner().hasNextInt()) {
-                threeRoomCount = appContext.getScanner().nextInt();
-                appContext.getScanner().nextLine(); // Consume the leftover newline
+            if (this.appContext.getScanner().hasNextInt()) {
+                threeRoomCount = this.appContext.getScanner().nextInt();
+                this.appContext.getScanner().nextLine(); // Consume the leftover newline
                 if (threeRoomCount < 0) {
                     System.out.println("The number of 3-room flats cannot be negative. Please try again.");
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid integer.");
-                appContext.getScanner().nextLine(); // Consume invalid input
+                this.appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (threeRoomCount < 0);
         // Validate three-room flat price
         do {
             System.out.printf("Enter the price of 3-room flats: ");
-            if (appContext.getScanner().hasNextInt()) {
-                threeRoomPrice = appContext.getScanner().nextInt();
-                appContext.getScanner().nextLine(); // Consume the leftover newline
+            if (this.appContext.getScanner().hasNextInt()) {
+                threeRoomPrice = this.appContext.getScanner().nextInt();
+                this.appContext.getScanner().nextLine(); // Consume the leftover newline
                 if (threeRoomPrice < 0) {
                     System.out.println("The price of 3-room flats cannot be negative. Please try again.");
                 }
@@ -106,7 +110,7 @@ public class ProjectManagementService {
         // Validate opening date
         while (!isValidDate) {
             System.out.printf("Enter the application opening date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-            tempDate = appContext.getScanner().nextLine();
+            tempDate = this.appContext.getScanner().nextLine();
             try {
                 openingDate = LocalDate.parse(tempDate, formatter);
                 isValidDate = true;
@@ -119,7 +123,7 @@ public class ProjectManagementService {
         isValidDate = false;
         while (!isValidDate) {
             System.out.printf("Enter the application closing date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-            tempDate = appContext.getScanner().nextLine();
+            tempDate = this.appContext.getScanner().nextLine();
             try {
                 closingDate = LocalDate.parse(tempDate, formatter);
                 if (!closingDate.isAfter(openingDate)) {
@@ -135,9 +139,9 @@ public class ProjectManagementService {
         // Validate max Officer
         do {
             System.out.printf("Enter the maximum amount of HDB Officer Slots (max 10): ");
-            if (appContext.getScanner().hasNextInt()) {
-                maxOfficer = appContext.getScanner().nextInt();
-                appContext.getScanner().nextLine(); // Consume the leftover newline
+            if (this.appContext.getScanner().hasNextInt()) {
+                maxOfficer = this.appContext.getScanner().nextInt();
+                this.appContext.getScanner().nextLine(); // Consume the leftover newline
                 if (maxOfficer < 0) {
                     System.out.println("The number of maximum HDB Officer Slots cannot be negative. Please try again.");
                 } else if (maxOfficer > 10) {
@@ -145,18 +149,18 @@ public class ProjectManagementService {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid integer.");
-                appContext.getScanner().nextLine(); // Consume invalid input
+                this.appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (maxOfficer < 0 || maxOfficer > 10);
 
-        return new BTOProjectModel(projectName, neighborhood, twoRoomCount,twoRoomPrice, threeRoomCount,threeRoomPrice, openingDate, closingDate, maxOfficer, appContext.getCurrentUser().getUserID());
+        return new BTOProjectModel(projectName, neighborhood, twoRoomCount,twoRoomPrice, threeRoomCount,threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID());
     }
 
-    public void editProject(AppContext appContext, String userOption, String valueToChange) {
+    public void editProject(String userOption, String valueToChange) {
         try {
-            if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                int projectID = ((HDBManagerModel) appContext.getCurrentUser()).getProjectID();
-                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(projectID);
+            if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+                int projectID = ((HDBManagerModel) this.appContext.getCurrentUser()).getProjectID();
+                BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
@@ -219,15 +223,15 @@ public class ProjectManagementService {
         }
     }
 
-    public boolean deleteProject(AppContext appContext) {
+    public boolean deleteProject() {
         try {
-            if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                HDBManagerModel currentUser = (HDBManagerModel) appContext.getCurrentUser();
-                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(currentUser.getProjectID());
+            if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+                HDBManagerModel currentUser = (HDBManagerModel) this.appContext.getCurrentUser();
+                BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(currentUser.getProjectID());
                 if (project.getManagerUserID() == currentUser.getUserID()) {
                     currentUser.deleteProjectID(); // if deleting currently managing project
 
-                                }if (appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID())) {
+                                }if (this.appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID())) {
                     return true; 
                 }else {
                     throw new RuntimeException("Failed to delete project.");
@@ -241,14 +245,14 @@ public class ProjectManagementService {
         return false;
     }
 
-    public void toggleProjectVisibility(AppContext appContext, Integer projectID) {
+    public void toggleProjectVisibility(Integer projectID) {
         try {
-            if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                BTOProjectModel project = appContext.getProjectRepo().getProjectByID(projectID);
+            if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+                BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Project with the given ID does not exist.");
                 }
-                if(project.getManagerUserID()!=appContext.getCurrentUser().getUserID()) throw new RuntimeException("User does not own this project.");
+                if(project.getManagerUserID()!=this.appContext.getCurrentUser().getUserID()) throw new RuntimeException("User does not own this project.");
                 boolean currentVisibility = project.isVisible();
                 System.out.println("Current visibility: " + (currentVisibility ? "Visible" : "Hidden"));
                 project.setVisible(!currentVisibility);

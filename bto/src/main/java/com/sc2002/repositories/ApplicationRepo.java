@@ -41,10 +41,16 @@ public class ApplicationRepo {
         applications.add(application);
     }
 
-    public Optional<BTOApplicationModel> findActiveByApplicantID(String userID) {
+    public Optional<BTOApplicationModel> findActiveByApplicantID(String userID) { // returns a Optional, to tell whether the user has an active Application
         return applications.stream()
                 .filter(application -> String.valueOf(application.getApplicantUserID()).equals(userID))
                 .findFirst();
+    }
+    // Finds all application by a specific userid
+    public List<BTOApplicationModel> findApplicationByApplicantID(int UserID){
+        return applications.stream()
+        .filter(application -> application.getApplicantUserID() == UserID)
+        .collect(Collectors.toList());
     }
 
     public List<BTOApplicationModel> findByProjectID(int projectID) {

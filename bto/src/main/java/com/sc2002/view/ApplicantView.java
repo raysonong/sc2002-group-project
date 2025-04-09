@@ -19,11 +19,15 @@ import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {
     // declare all the services required by Applicant
-    private final EnquiryService enquiryService = new EnquiryService();
-    private final ProjectService projectService = new ProjectService();
-    private final ApplicationService applicationService = new ApplicationService();
+    private EnquiryService enquiryService = null;
+    private ProjectService projectService = null;
+    private ApplicationService applicationService = null;
     
     public void ApplicantMenu(AppContext appContext) {
+        // Initialize Services with context
+        enquiryService = new EnquiryService(appContext);
+        projectService = new ProjectService(appContext);
+        applicationService = new ApplicationService(appContext);
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
 
@@ -74,8 +78,7 @@ public class ApplicantView {
     private void applyForProjectMenu(AppContext appContext) {
     // display eligible projects 
     System.out.println("Available Projects: ");
-    applicationService.viewAvailableProjectsForApplicant(appContext);
-
+    applicationService.viewAvailableProjectsForApplicant(); // CAUSING ERROR IMPLEMENT FIRST
 
     System.out.print("Enter Project ID to apply for: ");
     int selectedProjectId = appContext.getScanner().nextInt();
@@ -142,7 +145,7 @@ public class ApplicantView {
     private void submitEnquiryMenu(AppContext appContext) {
     // Display eligible projects for the applicant
        System.out.println("Eligible Projects for Enquiry: ");
-       applicationService.viewEligibleProjectsForApplicant(appContext); 
+       applicationService.viewAvailableProjectsForApplicant();
 
     // ask applicant to select project
       System.out.print("Enter Project ID to submit an enquiry: ");

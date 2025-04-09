@@ -6,8 +6,8 @@ import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 
 public class BTOApplicationModel {
-    private static int nextApplicationId = 1; // Static counter for auto-incrementing IDs
-    private int applicationId;
+    private static int nextApplicationID = 1; // Static counter for auto-incrementing IDs
+    private int applicationID;
 
     private User applicantUser;
     private BTOProjectModel project;
@@ -28,7 +28,7 @@ public class BTOApplicationModel {
             throw new RuntimeException("User is Single can't apply 3-Room.");
         }
         // free to apply for married individuals
-        this.applicationId = nextApplicationId++;
+        this.applicationID = nextApplicationID++;
         this.applicantUser=applicantUser;
         this.project=project;
         this.applicationFlatType=applicationFlatType;
@@ -58,6 +58,15 @@ public class BTOApplicationModel {
 
     public ApplicationStatus getStatus() {
         return this.status;
+    }
+    public boolean setStatus(ApplicationStatus applicationStatus){
+        // implement logic?
+        this.status=applicationStatus;
+        return true;
+    }
+
+    public int getApplicationID(){
+        return this.applicationID;
     }
     
     public Date getSubmissionDate() {

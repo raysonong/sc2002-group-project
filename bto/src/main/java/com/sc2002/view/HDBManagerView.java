@@ -16,15 +16,24 @@ import com.sc2002.model.OfficerRegistrationModel;
 public class HDBManagerView {
 
     // declare all the services required by Manager
-    private final ProjectManagementService projectManagementService = new ProjectManagementService();
-    private final EnquiryService enquiryService = new EnquiryService();
-    private final ProjectService projectService = new ProjectService();
-    private final OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
-    private final ReportingService reportingService = new ReportingService();
+    private ProjectManagementService projectManagementService=null; 
+    private EnquiryService enquiryService=null; 
+    private ProjectService projectService=null; 
+    private OfficerRegistrationService officerRegistrationService=null; 
+    private ReportingService reportingService=null; 
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
+        // Initializing variables & services,
+        // we did services 2 ways, 1 where we have repo as attribute.
+        // the other where we parse repo as parameters.
+        // *Only enquiryService uses repo as attribute. Part of learning process
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
+        this.projectManagementService = new ProjectManagementService(appContext);
+        this.enquiryService=new EnquiryService(appContext); // Only enquiryRepo, we parse repo as parameter to make it attribute
+        this.projectService = new ProjectService(appContext);
+        this.officerRegistrationService = new OfficerRegistrationService(appContext);
+        this.reportingService = new ReportingService(appContext);
 
         System.out.println("--HDB Manager Menu--");
         // Loop variable `i` is used to generate menu numbers starting from 1
@@ -38,7 +47,7 @@ public class HDBManagerView {
         switch (userInput) { 
             case "1" -> {
                 // Option 1: Create a new BTO project
-                appContext.getProjectRepo().save(projectManagementService.createProject(appContext));
+                appContext.getProjectRepo().save(projectManagementService.createProject());
             }
             case "2" -> {
                 // Option 2: Edit an existing BTO project
@@ -125,37 +134,37 @@ public class HDBManagerView {
                 // Project Name
                 System.out.println("Enter new Project Name: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(appContext, userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange);
             }
             case "2" -> {
                 // Neighborhood
                 System.out.println("Enter new Neighborhood Name: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(appContext, userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange);
             }
             case "3" -> {
                 // 2 Room Count
                 System.out.println("Enter new 2 Room Count: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(appContext, userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange);
             }
             case "4" -> {
                 // 3 Room Count
                 System.out.println("Enter new 3 Room Count: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(appContext, userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange);
             }
             case "5" -> {
                 // Opening Date
                 System.out.println("Enter new Opening Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(appContext, userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange);
             }
             case "6" -> {
                 // Closing Date
                 System.out.println("Enter new Closing Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(appContext, userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange);
             }
             default -> {
                 System.out.println("Invalid option selected!");
@@ -163,17 +172,16 @@ public class HDBManagerView {
         }
     }
 
-    private void deleteBTOProjectMenu(AppContext appContext) {
+    private void deleteBTOProjectMenu(AppContext appContext) { // REDO THIS PART< THE LOGIC IS WRONG #TODO
         System.out.println("--deleteBTOProjectMenu--\n(yes) To Confirm Deletion: ");
         String userOption = appContext.getScanner().nextLine().toLowerCase();
         switch (userOption) {
             case "yes" -> {
-                // Confirm Deletion
-                if (projectManagementService.deleteProject(appContext)) {
+                // Confirm Deletion (REDO THIS PART!!)
+                if (projectManagementService.deleteProject()) {
                     System.out.println("Deletion Successful.");
                 }
-            }
-            default -> {
+            }default -> {
                 System.out.println("Deletion process cancelled.");
             }
         }
@@ -196,7 +204,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (listOfProjects.containsKey(projectID)) {
-                projectManagementService.toggleProjectVisibility(appContext, projectID);
+                projectManagementService.toggleProjectVisibility( projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -218,7 +226,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (listOfProjects.containsKey(projectID)) {
-                projectService.viewProjectByID(appContext, projectID);
+                projectService.viewProjectByID( projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -237,7 +245,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) {
-                projectService.viewProjectByID(appContext, projectID);
+                projectService.viewProjectByID(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -249,7 +257,7 @@ public class HDBManagerView {
     }
 
     private void getAllEnquiryMenu(AppContext appContext) {
-        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries(appContext);
+        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {
@@ -264,7 +272,7 @@ public class HDBManagerView {
     }
 
     private void editEnquiryMenu(AppContext appContext){
-        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries(appContext);
+        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {
@@ -278,7 +286,7 @@ public class HDBManagerView {
                 int index = Integer.parseInt(appContext.getScanner().nextLine());
                 if (index >= 0 && index < enquiries.size()) {
                     // View the selected enquiry to print, returns if no project found
-                    if(!enquiryService.viewEnquiry(appContext, index)){
+                    if(!enquiryService.viewEnquiry(index)){
                         return;
                     };
                     // Gather new response
@@ -286,7 +294,7 @@ public class HDBManagerView {
                     String response = appContext.getScanner().nextLine();
 
                     // Edit the enquiry with the new response
-                    enquiryService.editEnquiryResponse(appContext, index, response);
+                    enquiryService.editEnquiryResponse(index, response);
                 } else {
                     System.out.println("Invalid index. Please try again.");
                 }
@@ -331,7 +339,7 @@ public class HDBManagerView {
                 if(index<=listOfRegistration.size() && index>=0){
                     // approve registration
                     OfficerRegistrationModel registration=listOfRegistration.get(index);
-                    if(officerRegistrationService.approveRegistration(appContext, registration)){
+                    if(officerRegistrationService.approveRegistration(registration)){
                         System.out.println("Officer added.");
                     }
                 }
@@ -377,7 +385,7 @@ public class HDBManagerView {
                 if(index<=listOfRegistration.size() && index>=0){
                     // reject registration
                     OfficerRegistrationModel registration=listOfRegistration.get(index);
-                    if(officerRegistrationService.rejectRegistration(appContext, registration)){
+                    if(officerRegistrationService.rejectRegistration(registration)){
                         System.out.println("Officer removed successfully.");
                     }
                 }
@@ -527,7 +535,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the report type.");
             return;
         }
-        reportingService.generateProjectReport(appContext.getCurrentUser(), project, appContext.getApplicationRepo(),generateType);
+        reportingService.generateProjectReport(project,generateType);
         
     }
 

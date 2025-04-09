@@ -17,37 +17,48 @@ public class ApplicationService {
     //
     // PS: ruba pls refer to my code, think i have accidentally did ur part :,) - rayson
     //
-   public void viewAvailableProjectsForApplicant(AppContext appContext) {
-        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+   private AppContext appContext;
+   public ApplicationService(AppContext appContext){
+       this.appContext=appContext;
+   }
+   public void viewAvailableProjectsForApplicant() {
+        User currentUser = this.appContext.getCurrentUser();
 
         // get the list of available projects from the project repository
-        List<BTOProjectModel> allProjects = appContext.getProjectRepo().getAllProjects();
+        List<BTOProjectModel> allProjects = this.appContext.getProjectRepo().getAllProjects();
         
         for (BTOProjectModel project : allProjects) {
-            if (isProjectVisibleForApplicant(applicant, project)) {
+            if (isProjectVisibleForApplicant(currentUser, project)) {
                 project.printAll();
             }
         }
     }
 
-    private boolean isProjectVisibleForApplicant(ApplicantModel applicant, BTOProjectModel project) {
-        if (!project.isVisible()) {
+    private boolean isProjectVisibleForApplicant(User currentUser, BTOProjectModel project) {
+        if (!project.isVisible()) { // if not visible, we check if user applied for project
+            List<BTOApplicationModel> listOfApplicationByUser=this.appContext.getApplicationRepo().findApplicationByApplicantID(currentUser.getUserID());
+            for (BTOApplicationModel application : listOfApplicationByUser) {
+                if (application.getProjectID() != project.getProjectID()) { // if he didn't apply for the project,
+                    return false; // we return false to kick him away
+                }
+                if (application.getStatus() == ApplicationStatus.WITHDRAWN || application.getStatus() == ApplicationStatus.UNSUCCESSFUL) {
+                    return false; // if the application is withdrawn or rejected, don't show the project
+                }
+            }
+        }
+
+        // criteria for single 35 years old and above can only apply for 2-Room flats, hence we only allow viewing if
+        // tworoom count > 0,
+        if (!currentUser.getMaritialStatus() && currentUser.getAge() >= 35) {
+            if (project.getTwoRoomCount() <=0) {
+                return false;
+            }
+        }
+        // For married individualds just check age
+        if(currentUser.getAge()<21){ // this will remove married under 21, technically not needed since we only allow 21 above to register
             return false;
         }
 
-        // criteria for single 35 years old and above can only apply for 2-Room flats
-        if (applicant.getMaritalStatus().equals("SINGLE") && applicant.getAge() >= 35) {
-            if (project.getFlatType() != FlatType.TWO_ROOM) {
-                return false;
-            }
-        }
-
-        // criteria for married applicants 21 years old and above can apply for both 2-Room or 3-Room
-        if (applicant.getApplicantMaritalStatus().equals("MARRIED") && applicant.getAge() >= 21) {
-            if (project.getFlatType() != FlatType.TWO_ROOM && project.getFlatType() != FlatType.THREE_ROOM) {
-                return false;
-            }
-        }
         return true;
     }
 
@@ -83,10 +94,35 @@ public class ApplicationService {
                 scanner.nextLine(); // Consume invalid input
             }
         }
+        String userInput2;
+        FlatType inputFlatType=null;
+        while (true) { 
+            System.out.printf("Enter Flat Type (2-Room or 3-Room): ");
+            userInput2 = scanner.nextLine().trim().toLowerCase();
+            
+            // Validate input
+            if (userInput2.equals("2-room")){
+                // no need check married people since user can only register if >=21
+                if(!currentUser.getMaritialStatus() && currentUser.getAge()<35){ // if is single and younger then 35
+                    System.out.println("User is too young.");
+                    return null;
+                }
+                inputFlatType = FlatType.TWO_ROOM;
+
+            }else if(userInput2.equals("3-room")) {
+                if(!currentUser.getMaritialStatus()){ // if is single 
+                    System.out.println("User can only apply 2-room.");
+                    break; // reloop him
+                }
+                inputFlatType = FlatType.THREE_ROOM;
+            } else {
+            System.out.println("Invalid flat type. Please enter a valid flat type (2-Room or 3-Room).");
+            }
+        }
 
         System.out.println("Your application has been created and submitted successfully!");
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
-        return new BTOApplicationModel(currentUser, selectedProject, flatType);
+        return new BTOApplicationModel(currentUser, selectedProject, inputFlatType);
     }
 
     

@@ -10,28 +10,29 @@ import java.util.Optional;
 public class EnquiryService {
     // submitEnquiry for Applicant and Officer(Who have a project they BTOed)
     // didnt see any other submitEnquiry methods so i put here
-    private EnquiryRepo enquiryRepo;
+    private AppContext appContext;
 
-    public EnquiryService(EnquiryRepo enquiryRepo) {
-        this.enquiryRepo = enquiryRepo;
+    public EnquiryService(AppContext appContext) {
+        this.appContext = appContext;
     }
+
     public boolean submitEnquiry(String applicantNRIC, int projectId, String enquiryText) {
     // create a new enquiry
     EnquiryModel newEnquiry = new EnquiryModel(applicantNRIC, projectId, enquiryText);
 
     // save the new enquiry
-    enquiryRepo.saveEnquiry(newEnquiry);
+    appContext.getEnquiryRepo().saveEnquiry(newEnquiry);
     System.out.println("Your enquiry has been submitted successfully!");
     return true;
 }
 
     // viewAllEnquiry for Managers & Officer (Mostly for printing menu related tasks)
-    public List<EnquiryModel> getAllEnquiries(AppContext appContext) {
+    public List<EnquiryModel> getAllEnquiries() {
         // Check if the current user is authenticated and has the correct role
         try{
-            if (appContext.getCurrentUser() != null && appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                return appContext.getEnquiryRepo().findAll();
-            }else if (appContext.getCurrentUser() != null && appContext.getAuthService().isOfficer(appContext.getCurrentUser())) {
+            if (this.appContext.getCurrentUser() != null && this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+                return this.appContext.getEnquiryRepo().findAll();
+            }else if (this.appContext.getCurrentUser() != null && this.appContext.getAuthService().isOfficer(this.appContext.getCurrentUser())) {
                 // @rayson, was thinking you put your getAllEnquiries here, (this is for printing your menus)
                 // Then sort to only return those which officer by right can view (you can code the sorting either in repo or here)
                 throw new RuntimeException("Not implemented");
@@ -43,17 +44,17 @@ public class EnquiryService {
         }
     }
 
-    public boolean viewEnquiry(AppContext appContext,int enquiryID){
+    public boolean viewEnquiry(int enquiryID){
         try{
-            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
-                Optional<EnquiryModel> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
+            if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
+                Optional<EnquiryModel> enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
                 if (enquiry.isPresent()) {
                     enquiry.get().getFormattedEnquiry();
                     return true;
                 } else {
                     throw new RuntimeException("Project not found.");
                 }
-            }else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())){
+            }else if (this.appContext.getAuthService().isOfficer(this.appContext.getCurrentUser())){
                 // @ Rayson, this views the exact enquiry,
                 // idea for flow of enquiry editing
                 // 1) print menu using getAllEnquiry
@@ -69,18 +70,18 @@ public class EnquiryService {
         }
     }
 
-    public boolean editEnquiryResponse(AppContext appContext, int enquiryID, String response){
+    public boolean editEnquiryResponse( int enquiryID, String response){
         try{
-            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
+            if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
                 // Manager can reply any so no need to do extra checking
-                Optional<EnquiryModel> enquiry = appContext.getEnquiryRepo().findById(enquiryID);
+                Optional<EnquiryModel> enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
                 if (enquiry.isPresent()) {
-                    enquiry.get().replyEnquiry(response, appContext.getCurrentUser().getUserID());
+                    enquiry.get().replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
                     return true;
                 } else {
                     throw new RuntimeException("Project not found.");
                 }
-            }else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())){
+            }else if (this.appContext.getAuthService().isOfficer(this.appContext.getCurrentUser())){
                 // @ Rayson, this views the exact enquiry,
                 // idea for flow of enquiry editing
                 // 1) print menu using getAllEnquiry
@@ -99,6 +100,6 @@ public class EnquiryService {
 
     //delete enquiry
     public boolean deleteEnquiry(int enquiryId) {
-        return enquiryRepo.deleteById(enquiryId);
+        return appContext.getEnquiryRepo().deleteById(enquiryId);
     }
 }

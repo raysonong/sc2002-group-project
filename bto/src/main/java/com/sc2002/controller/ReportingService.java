@@ -9,10 +9,18 @@ import com.sc2002.model.User;
 import com.sc2002.repositories.ApplicationRepo;
 
 public class ReportingService {
-    public void generateProjectReport(User currentUser, BTOProjectModel project, ApplicationRepo applicationRepo,int generateType){
+    private AppContext appContext;
+
+    public ReportingService(AppContext appContext) {
+        this.appContext = appContext;
+    }
+    public void generateProjectReport(BTOProjectModel project,int generateType){
         // 1) List of Applicants and their respective flat booking - flat type, project name , age marital status.
         // 2) There should be filters to generate a list based on various categories,
         //      e.g. report of married applicants' choice of flat type
+        User currentUser = this.appContext.getCurrentUser();
+        ApplicationRepo applicationRepo=this.appContext.getApplicationRepo();
+
         try{
             if(project.getManagerUserID()!=currentUser.getUserID()) throw new RuntimeException("User not authorized.");
             List<BTOApplicationModel> projectBookings = applicationRepo.findBookedByProjectID(project.getProjectID());

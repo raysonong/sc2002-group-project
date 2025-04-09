@@ -9,10 +9,13 @@ import com.sc2002.model.OfficerRegistrationModel;
 
 public class HDBOfficerView {
     //Service Declaration
-    private final ApplicationService applicationService = new ApplicationService();
-    private final OfficerRegistrationService officerRegistrationService = new OfficerRegistrationService();
+    private ApplicationService applicationService = null;
+    private OfficerRegistrationService officerRegistrationService = null;
     public void HDBOfficerMenu(AppContext appContext) {
         // TODO: Menu for HDB Officer
+        // Initialize services
+        this.applicationService=new ApplicationService(appContext);
+        this.officerRegistrationService = new OfficerRegistrationService(appContext);
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
 
@@ -30,7 +33,7 @@ public class HDBOfficerView {
         switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
             case "1" -> {
                 // Option 1: Register for Project Team
-                OfficerRegistrationModel registration = officerRegistrationService.registerForProject(appContext.getProjectRepo(), appContext.getScanner(), appContext.getCurrentUser());
+                OfficerRegistrationModel registration = officerRegistrationService.registerForProject();
                 if (registration != null) {
                     appContext.getOfficerRegistrationRepo().save(registration);
                 }
