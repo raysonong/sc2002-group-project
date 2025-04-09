@@ -198,4 +198,51 @@ public class ApplicationService {
             return false;
         }
     }
+
+    public boolean approveApplicantWithdrawalApplication(BTOApplicationModel application){
+        try {
+            User currentUser = appContext.getCurrentUser();
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
+            if (currentUser.getUserID() != project.getManagerUserID()) { // If manager of project
+                if (!project.isManagingOfficer(currentUser)) {
+                    throw new RuntimeException("User is not authorized to perform this action.");
+                }
+            }
+            // Handle adding back the room to total count
+            if (application.getFlatType() == FlatType.TWO_ROOM) {
+                project.setTwoRoomCount(project.getTwoRoomCount() + 1);
+            } else if (application.getFlatType() == FlatType.THREE_ROOM) {
+                project.setThreeRoomCount(project.getThreeRoomCount() + 1);
+            } else {
+                throw new RuntimeException("RoomType not implemented.");
+            }
+
+            // Change statuses and variables to withdrawn
+            application.setStatus(ApplicationStatus.WITHDRAWN);
+            application.setWithdrawalRequested(false);
+            application.clearBookedUnit();
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean rejectApplicantWithdrawalApplication(BTOApplicationModel application){
+        try {
+            User currentUser = appContext.getCurrentUser();
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
+            if (currentUser.getUserID() != project.getManagerUserID()) { // If manager of project
+                if (!project.isManagingOfficer(currentUser)) {
+                    throw new RuntimeException("User is not authorized to perform this action.");
+                }
+            }
+            // Change status to withdrawn
+            application.setWithdrawalRequested(false);
+            return true;
+        } catch (RuntimeException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            return false;
+        }
+    }
 }

@@ -501,17 +501,13 @@ public class HDBManagerView {
     private void approveApplicationWithdrawalMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
-        System.out.print("Enter the Project ID to manage withdrawal(approve): ");
+        System.out.print("Enter the Project ID to manage Applications Withdrawal (approve): ");
         String projectIDString = appContext.getScanner().nextLine();
-        BTOProjectModel project;
+        int projectID;
         try {
-            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
-                project = appContext.getProjectRepo().getProjectByID(projectID);
-                if (project == null) {
-                    System.out.println("Error: Project not found.");
-                    return;
-                }
+                //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
                 return;
@@ -520,22 +516,46 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
+        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
+        if (listOfApplications.isEmpty()) {
+            System.out.println("No applications found for this project.");
+        } else {
+            System.out.println("-- Withdrawal Applications --");
+            System.out.println("Index\tApplicant Name\tMarital Status\tAge\tRoom Type");
+            System.out.println("-----------------------------------------------------------");
+            int index = 1;
+            for (BTOApplicationModel application : listOfApplications) {
+                System.out.printf("%d\t%s\t\t%s\t\t%d\t%s%n",
+                        index++,
+                        application.getApplicantName(),
+                        application.getApplicantMaritalStatus(),
+                        application.getApplicantAge(),
+                        application.getFlatType());
+            }
+        }
+        System.out.print("Enter the index of the application you wish to approve withdrawal: ");
+        try {
+            int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
+            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
+                applicationService.approveApplicantWithdrawalApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+                System.out.println("BTO Application successfully withdrawn.");
+            } else {
+                System.out.println("Invalid index.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid integer for the index.");
+        }
     }
     private void rejectApplicationWithdrawalMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
-        System.out.print("Enter the Project ID to manage withdrawal(reject): ");
+        System.out.print("Enter the Project ID to manage Applications Withdrawal (approve): ");
         String projectIDString = appContext.getScanner().nextLine();
-        BTOProjectModel project;
+        int projectID;
         try {
-            int projectID = Integer.parseInt(projectIDString); // Convert to Integer
+            projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
-                project = appContext.getProjectRepo().getProjectByID(projectID);
-                if (project == null) {
-                    System.out.println("Error: Project not found.");
-                    return;
-                }
+                //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
                 return;
@@ -544,7 +564,35 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        throw new RuntimeException("Not implemented."); // code the withdrwal here (using applicatonService)
+        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
+        if (listOfApplications.isEmpty()) {
+            System.out.println("No applications found for this project.");
+        } else {
+            System.out.println("-- Withdrawal Applications --");
+            System.out.println("Index\tApplicant Name\tMarital Status\tAge\tRoom Type");
+            System.out.println("-----------------------------------------------------------");
+            int index = 1;
+            for (BTOApplicationModel application : listOfApplications) {
+                System.out.printf("%d\t%s\t\t%s\t\t%d\t%s%n",
+                        index++,
+                        application.getApplicantName(),
+                        application.getApplicantMaritalStatus(),
+                        application.getApplicantAge(),
+                        application.getFlatType());
+            }
+        }
+        System.out.print("Enter the index of the application you wish to reject withdrawal: ");
+        try {
+            int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
+            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
+                applicationService.rejectApplicantWithdrawalApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+                System.out.println("BTO Application to withdraw rejected successfully.");
+            } else {
+                System.out.println("Invalid index.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Invalid integer for the index.");
+        }
     }
     private void generateReportMenu(AppContext appContext){
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());

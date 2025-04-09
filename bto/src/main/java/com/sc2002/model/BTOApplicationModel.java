@@ -15,6 +15,7 @@ public class BTOApplicationModel {
     private FlatType applicationFlatType;
     private BookingDetailModel BookedUnit;
     private Date submissionDate;
+    private Boolean withdrawalRequested;
 
     public BTOApplicationModel(User applicantUser, BTOProjectModel project, FlatType applicationFlatType) {
         //Cond 1, Singles 35 year old and above, can only apply for 2-Room
@@ -34,6 +35,7 @@ public class BTOApplicationModel {
         this.applicationFlatType=applicationFlatType;
         this.status = ApplicationStatus.PENDING;
         this.submissionDate = new Date();
+        this.withdrawalRequested=false; //default false
 
     }
     public boolean getApplicantMaritalStatus(){
@@ -41,6 +43,10 @@ public class BTOApplicationModel {
     }
     public FlatType getFlatType(){
         return this.applicationFlatType;
+    }
+    public boolean clearBookedUnit() {
+        this.BookedUnit = null;
+        return true;
     }
     public String getApplicantName(){
         return this.applicantUser.getName();
@@ -72,4 +78,14 @@ public class BTOApplicationModel {
     public Date getSubmissionDate() {
         return this.submissionDate;
     }
+    // True=requested withdrawwal
+    public boolean getWithdrawalRequested(){
+        return this.withdrawalRequested;
+    }
+    // Manually set withdrawal status to True/False.
+    public boolean setWithdrawalRequested(boolean isWithdrawing){
+        this.withdrawalRequested=isWithdrawing;
+        return true;
+    }
+    
 }
