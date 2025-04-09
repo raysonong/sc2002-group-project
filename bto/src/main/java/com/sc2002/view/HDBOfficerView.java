@@ -7,6 +7,7 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.enums.FlatType;
 import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.OfficerRegistrationModel;
@@ -37,8 +38,32 @@ public class HDBOfficerView {
         System.out.print("Please select an option: ");
         userInput = appContext.getScanner().nextLine();
 
-        switch (userInput) { // violates s-SRP for (SOLID), could be implemented better later-on
-            case "1" -> {
+        switch (userInput) {
+            // case "1" -> {
+            //     // Option 1: Apply for BTO Project
+            //     applyForProjectMenu(appContext);
+            // }
+            // case "2" -> {
+            //     // Option 2: View Application Status
+            //     viewApplicationStatusMenu(appContext);
+            // }
+            // case "3" -> {
+            //     // Option 3: Update Flat Details
+            //     updateFlatDetailsMenu(appContext);
+            // }
+            // case "4" -> {
+            //     // Option 4: Generate Flat Selection Receipt
+            //     generateReceiptMenu(appContext);
+            // }
+            // case "5" -> {
+            //     // Option 5: Submit Enquiry
+            //     submitEnquiryMenu(appContext);
+            // }
+            // case "6" -> {
+            //     // Option 6: View My Enquiries
+            //     viewMyEnquiriesMenu(appContext);
+            // }
+            case "7" -> {
                 // Option 1: Register for Project Team
                 OfficerRegistrationStatus application_status = appContext.getOfficerRegistrationRepo()
                                                         .findbyUserID(appContext.getCurrentUser().getUserID())
@@ -55,7 +80,7 @@ public class HDBOfficerView {
                     appContext.getOfficerRegistrationRepo().save(registration);
                 }
             }
-            case "2" -> {
+            case "8" -> {
                 // Option 2: View Registration Status
                 Optional<OfficerRegistrationModel> registrationOpt = appContext.getOfficerRegistrationRepo()
                     .findbyUserID(appContext.getCurrentUser().getUserID());
@@ -73,7 +98,7 @@ public class HDBOfficerView {
                     System.out.println("Application Status: " + reg.getStatus());
                 }
             }
-            case "3" -> {
+            case "9" -> {
                 // Option 3: View and updating bookings
                 Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
                         .findbyUserID(appContext.getCurrentUser().getUserID());
@@ -82,63 +107,78 @@ public class HDBOfficerView {
                     System.out.println("You are not an approved officer. Access denied.");
                     break;
                 }
+
+                System.out.println("Enter applicant's NRIC:");
+                String input_nric = appContext.getScanner().nextLine();
             
                 int officerProjectID = officerRegOpt.get().getProjectID();
 
-                System.out.println("1. View all applications");
-                System.out.println("2. Book application");
-                System.out.println("3. Update applicant's flat type");
-                System.out.print("Select an option: ");
+                BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
+                boolean found = applicationService.viewApplicationByNRIC(officerProjectID, input_nric, outputApplication);
 
-                String subOption = appContext.getScanner().nextLine();
+                if (found) {
+                    BTOApplicationModel application = outputApplication[0];
+                    int applicationID = application.getApplicationID();
 
-                switch (subOption) {
-                    case "1" -> {
-                        // Fetch all applications for the officer's project with status "SUCCESSFUL"
-                        List<BTOApplicationModel> applications = appContext.getApplicationRepo()
-                                .findByProjectID(officerProjectID);
-                    
-                        if (applications.isEmpty()) {
-                            System.out.println("No applications found for your project.");
-                        } else {
-                            System.out.println("Applications:");
-                            System.out.println("----------------------------------------------");
-                            for (BTOApplicationModel application : applications) {
-                                System.out.println("Application ID: " + application.getApplicationID());
-                                System.out.println("Applicant NRIC / Name: " + application.getApplicantNRIC() + " / " + application.getApplicantName());
-                                System.out.println("Flat Type: " + application.getFlatType());
-                                System.out.println("Status: " + application.getStatus());
-                                System.out.println("Submission Date: " + application.getSubmissionDate());
-                                System.out.println("----------------------------------------------");
+                    System.out.println("");
+                    System.out.println("Application Details:");
+                    System.out.println("----------------------------------------------");
+                    System.out.println("Application ID: " + application.getApplicationID());
+                    System.out.println("Applicant NRIC / Name: " + application.getApplicantNRIC() + " / " + application.getApplicantName());
+                    System.out.println("Flat Type: " + application.getFlatType());
+                    System.out.println("Status: " + application.getStatus());
+                    System.out.println("Submission Date: " + application.getSubmissionDate());
+                    System.out.println("----------------------------------------------");
+                    System.out.println("1. Book application");
+                    System.out.println("2. Update applicant's flat type");
+                    System.out.print("Select an option: ");
+
+                    String subOption = appContext.getScanner().nextLine();
+
+                    switch (subOption) {
+                        case "1" -> {
+                            // Option 1: Update Booking Status
+                            boolean updated = applicationService.updateApplicationStatusToBooked(applicationID);
+
+                            if (updated) {
+                                System.out.println("Booking status updated successfully to 'BOOKED'.");
+                            } else {
+                                System.out.println("Failed to update booking status. Only applications with status 'SUCCESSFUL' can be updated.");
                             }
                         }
+                        case "2" -> {
+                            // Option 2: Update applicant's flat type
+                            System.out.println("Available Flat Types:");
+                            for (FlatType flatType : FlatType.values()) {
+                                System.out.println("- " + flatType);
+                            }
+                            
+                            System.out.print("Enter new flat type: ");
+                            String newFlatTypeInput = appContext.getScanner().nextLine();
+                        
+                            try {
+                                // Convert the input to a FlatType enum
+                                FlatType newFlatType = FlatType.valueOf(newFlatTypeInput.toUpperCase());
+                            
+                                // Call the service to update the flat type
+                                boolean updated = applicationService.updateApplicationFlatType(applicationID, newFlatType);
+                            
+                                if (updated) {
+                                    System.out.println("Flat type updated successfully.");
+                                } else {
+                                    System.out.println("Failed to update flat type. Please check the Application ID.");
+                                }
+                            } catch (IllegalArgumentException e) {
+                                System.out.println("Invalid flat type entered. Please try again.");
+                            }
+                        
+                        }
+                        default -> System.out.println("Invalid option selected.");
                     }
-                    case "2" -> {
-                                // Option 2: Update Booking Status
-                                // System.out.print("Enter Application ID to update status: ");
-                                // String applicationID = appContext.getScanner().nextLine();
-                    
-                                // // boolean updated = applicationService.updateBookingStatus(applicationID, ApplicationStatus.BOOKED);
-                                // if (updated) {
-                                //     System.out.println("Booking status updated successfully.");
-                                // } else {
-                                //     System.out.println("Failed to update booking status. Please check the Application ID.");
-                                // }
-                            }
-                            case "3" -> {
-                                // Option 3: Cancel Booking
-                                // System.out.print("Enter Application ID to cancel booking: ");
-                                // String applicationID = appContext.getScanner().nextLine();
-                    
-                                // boolean canceled = applicationService.cancelBooking(applicationID);
-                                // if (canceled) {
-                                //     System.out.println("Booking canceled successfully.");
-                                // } else {
-                                //     System.out.println("Failed to cancel booking. Please check the Application ID.");
-                                // }
-                            }
-                            default -> System.out.println("Invalid option selected.");
-                        }
+                } else {
+                    System.out.println("No application found or you are not authorized to view this application.");
+                    break;
+                }
             }
             case "10" -> {
                 // Option 5: Logout
@@ -150,7 +190,5 @@ public class HDBOfficerView {
                 System.out.println("Please select a valid option!");
             }
         }
-        System.out.println("Press enter to continue...");
-        appContext.getScanner().nextLine();
     }
 }

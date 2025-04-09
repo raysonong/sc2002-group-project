@@ -92,4 +92,7 @@ public class BTOApplicationModel {
         return true;
     }
     
+    public void setFlatType(FlatType flatType) {
+        this.applicationFlatType = flatType;
+    }
 }

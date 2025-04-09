@@ -1,6 +1,7 @@
 package com.sc2002.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.sc2002.enums.ApplicationStatus;
@@ -243,5 +244,55 @@ public class ApplicationService {
             System.out.println("An error occurred: " + e.getMessage());
             return false;
         }
+    }
+
+    public boolean updateApplicationStatusToBooked(int applicationID) {
+        // Fetch the application by its ID
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findByApplicationID(applicationID);
+    
+        if (applicationOpt.isPresent()) {
+            BTOApplicationModel application = applicationOpt.get();
+    
+            // Check if the current status is 'SUCCESSFUL'
+            if (application.getStatus() == ApplicationStatus.SUCCESSFUL) {
+                // Update the status to 'BOOKED'
+                application.setStatus(ApplicationStatus.BOOKED);
+                appContext.getApplicationRepo().save(application);
+                return true;
+            }
+        }
+        return false; // Return false if the application is not found or the status is not 'SUCCESSFUL'
+    }
+
+    public boolean updateApplicationFlatType(int applicationID, FlatType newFlatType) {
+        // Fetch the application by its ID
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findByApplicationID(applicationID);
+    
+        if (applicationOpt.isPresent()) {
+            BTOApplicationModel application = applicationOpt.get();
+    
+            // Update the flat type
+            application.setFlatType(newFlatType);
+            appContext.getApplicationRepo().save(application);
+            return true;
+        }
+        return false; // Return false if the application is not found
+    }
+
+    public boolean viewApplicationByNRIC(int projectID, String nric, BTOApplicationModel[] outputApplication) {
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findByNRIC(nric);
+    
+        if (applicationOpt.isEmpty()) {
+            return false; // No application found for the provided NRIC
+        }
+    
+        BTOApplicationModel application = applicationOpt.get();
+        if (application.getProjectID() != projectID) {
+            return false; // Officer is not authorized to view applications for this project
+        }
+    
+        // Store the application in the output parameter
+        outputApplication[0] = application;
+        return true; // Application found and authorized
     }
 }

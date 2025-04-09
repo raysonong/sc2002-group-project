@@ -77,4 +77,16 @@ public class ApplicationRepo {
                 && application.getWithdrawalRequested()) // Also check if withdrawal is requested
         .collect(Collectors.toList());
     }
+
+    public Optional<BTOApplicationModel> findByApplicationID(int applicationID) {
+        return applications.stream()
+                .filter(app -> app.getApplicationID() == applicationID)
+                .findFirst();
+    }
+
+    public Optional<BTOApplicationModel> findByNRIC(String nric) {
+        return applications.stream()
+                .filter(app -> app.getApplicantNRIC().equals(nric))
+                .findFirst();
+    }
 }
