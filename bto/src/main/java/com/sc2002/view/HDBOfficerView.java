@@ -216,7 +216,61 @@ public class HDBOfficerView {
                 }
             }
             case "11" -> {
-                replyToEnquiry(appContext);
+                // Retrieve all enquiries
+                List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
+            
+                if (enquiries.isEmpty()) {
+                    System.out.println("No enquiries found.");
+                    return;
+                }
+            
+                // Display all enquiries
+                System.out.println("Enquiries:");
+                for (int i = 0; i < enquiries.size(); i++) {
+                    EnquiryModel enquiry = enquiries.get(i);
+                    System.out.println((i + 1) + ". Enquiry ID: " + enquiry.getId() +
+                                    ", Applicant NRIC: " + enquiry.getApplicantNRIC() +
+                                    ", Response: " + enquiry.getEnquiryText() +
+                                    ", Status: " + (enquiry.getStatus() ? "Replied" : "Pending"));
+                }
+            
+                // Prompt officer to select an enquiry to reply to
+                System.out.print("Enter the number of the enquiry you want to reply to: ");
+                String input = appContext.getScanner().nextLine();
+            
+                try {
+                    int enquiryIndex = Integer.parseInt(input) - 1;
+            
+                    if (enquiryIndex < 0 || enquiryIndex >= enquiries.size()) {
+                        System.out.println("Invalid selection. Please try again.");
+                        return;
+                    }
+            
+                    EnquiryModel selectedEnquiry = enquiries.get(enquiryIndex);
+            
+                    // Display the selected enquiry details
+                    System.out.println("Selected Enquiry:");
+                    System.out.println("Enquiry ID: " + selectedEnquiry.getId());
+                    System.out.println("Applicant NRIC: " + selectedEnquiry.getApplicantNRIC());
+                    System.out.println("Message: " + selectedEnquiry.getEnquiryText());
+            
+                    // Check if the enquiry has already been replied to
+                    if (selectedEnquiry.getStatus()) {
+                        System.out.println("This enquiry has already been replied to.");
+                        return;
+                    }
+            
+                    // Prompt officer to enter a reply
+                    System.out.print("Enter your reply: ");
+                    String reply = appContext.getScanner().nextLine();
+            
+                    // Reply to the enquiry
+                    selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
+            
+                    System.out.println("Reply sent successfully.");
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                }
             }
             case "12" -> {
                 // Option 11: Logout
@@ -231,60 +285,6 @@ public class HDBOfficerView {
     }
 
     public void replyToEnquiry(AppContext appContext) {
-        // Retrieve all enquiries
-        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
-    
-        if (enquiries.isEmpty()) {
-            System.out.println("No enquiries found.");
-            return;
-        }
-    
-        // Display all enquiries
-        System.out.println("Enquiries:");
-        for (int i = 0; i < enquiries.size(); i++) {
-            EnquiryModel enquiry = enquiries.get(i);
-            System.out.println((i + 1) + ". Enquiry ID: " + enquiry.getId() +
-                               ", Applicant NRIC: " + enquiry.getApplicantNRIC() +
-                               ", Response: " + enquiry.getEnquiryText() +
-                               ", Status: " + (enquiry.getStatus() ? "Replied" : "Pending"));
-        }
-    
-        // Prompt officer to select an enquiry to reply to
-        System.out.print("Enter the number of the enquiry you want to reply to: ");
-        String input = appContext.getScanner().nextLine();
-    
-        try {
-            int enquiryIndex = Integer.parseInt(input) - 1;
-    
-            if (enquiryIndex < 0 || enquiryIndex >= enquiries.size()) {
-                System.out.println("Invalid selection. Please try again.");
-                return;
-            }
-    
-            EnquiryModel selectedEnquiry = enquiries.get(enquiryIndex);
-    
-            // Display the selected enquiry details
-            System.out.println("Selected Enquiry:");
-            System.out.println("Enquiry ID: " + selectedEnquiry.getId());
-            System.out.println("Applicant NRIC: " + selectedEnquiry.getApplicantNRIC());
-            System.out.println("Message: " + selectedEnquiry.getEnquiryText());
-    
-            // Check if the enquiry has already been replied to
-            if (selectedEnquiry.getStatus()) {
-                System.out.println("This enquiry has already been replied to.");
-                return;
-            }
-    
-            // Prompt officer to enter a reply
-            System.out.print("Enter your reply: ");
-            String reply = appContext.getScanner().nextLine();
-    
-            // Reply to the enquiry
-            selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
-    
-            System.out.println("Reply sent successfully.");
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid number.");
-        }
+        
     }
 }
