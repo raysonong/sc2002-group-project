@@ -11,7 +11,9 @@ import com.sc2002.controller.ProjectService;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.model.BTOApplicationModel;
+import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
+import com.sc2002.utilities.Receipt;
 
 public class HDBOfficerView {
     //Service Declaration
@@ -68,7 +70,7 @@ public class HDBOfficerView {
             //     viewMyEnquiriesMenu(appContext);
             // }
             case "7" -> {
-                // Option 1: Register for Project Team
+                // Option 7: Register for Project Team
                 OfficerRegistrationStatus application_status = appContext.getOfficerRegistrationRepo()
                                                         .findbyUserID(appContext.getCurrentUser().getUserID())
                                                         .map(OfficerRegistrationModel::getStatus)
@@ -85,7 +87,7 @@ public class HDBOfficerView {
                 }
             }
             case "8" -> {
-                // Option 2: View Registration Status
+                // Option 8: View Registration Status
                 Optional<OfficerRegistrationModel> registrationOpt = appContext.getOfficerRegistrationRepo()
                     .findbyUserID(appContext.getCurrentUser().getUserID());
 
@@ -103,7 +105,7 @@ public class HDBOfficerView {
                 }
             }
             case "9" -> {
-                // Option 3: View and updating bookings
+                // Option 9: View and updating bookings
                 Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
                         .findbyUserID(appContext.getCurrentUser().getUserID());
             
@@ -185,7 +187,39 @@ public class HDBOfficerView {
                 }
             }
             case "10" -> {
-                // Option 5: Logout
+                Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
+                .findbyUserID(appContext.getCurrentUser().getUserID());
+
+                if (officerRegOpt.isEmpty() || officerRegOpt.get().getStatus() != OfficerRegistrationStatus.APPROVED) {
+                    System.out.println("You are not an approved officer. Access denied.");
+                    break;
+                }
+
+                System.out.println("Enter applicant's NRIC:");
+                String inputNric = appContext.getScanner().nextLine();
+
+                int officerProjectID = officerRegOpt.get().getProjectID();
+
+                BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
+                boolean found = applicationService.viewApplicationByNRIC(officerProjectID, inputNric, outputApplication);
+
+                if (found) {
+                    BTOApplicationModel application = outputApplication[0];
+
+                    // Create a Receipt object
+                    Receipt receipt = new Receipt(application);
+
+                    // Print the receipt
+                    receipt.printReceipt();
+                } else {
+                    System.out.println("No application found for the provided NRIC.");
+                }
+            }
+            case "11" -> {
+                replyToEnquiry(appContext);
+            }
+            case "12" -> {
+                // Option 11: Logout
                 System.out.println("Logging out...");
                 appContext.setCurrentUser(null); // set the CurrentUser null
             }
@@ -193,6 +227,64 @@ public class HDBOfficerView {
                 // Invalid option selected
                 System.out.println("Please select a valid option!");
             }
+        }
+    }
+
+    public void replyToEnquiry(AppContext appContext) {
+        // Retrieve all enquiries
+        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
+    
+        if (enquiries.isEmpty()) {
+            System.out.println("No enquiries found.");
+            return;
+        }
+    
+        // Display all enquiries
+        System.out.println("Enquiries:");
+        for (int i = 0; i < enquiries.size(); i++) {
+            EnquiryModel enquiry = enquiries.get(i);
+            System.out.println((i + 1) + ". Enquiry ID: " + enquiry.getId() +
+                               ", Applicant NRIC: " + enquiry.getApplicantNRIC() +
+                               ", Response: " + enquiry.getEnquiryText() +
+                               ", Status: " + (enquiry.getStatus() ? "Replied" : "Pending"));
+        }
+    
+        // Prompt officer to select an enquiry to reply to
+        System.out.print("Enter the number of the enquiry you want to reply to: ");
+        String input = appContext.getScanner().nextLine();
+    
+        try {
+            int enquiryIndex = Integer.parseInt(input) - 1;
+    
+            if (enquiryIndex < 0 || enquiryIndex >= enquiries.size()) {
+                System.out.println("Invalid selection. Please try again.");
+                return;
+            }
+    
+            EnquiryModel selectedEnquiry = enquiries.get(enquiryIndex);
+    
+            // Display the selected enquiry details
+            System.out.println("Selected Enquiry:");
+            System.out.println("Enquiry ID: " + selectedEnquiry.getId());
+            System.out.println("Applicant NRIC: " + selectedEnquiry.getApplicantNRIC());
+            System.out.println("Message: " + selectedEnquiry.getEnquiryText());
+    
+            // Check if the enquiry has already been replied to
+            if (selectedEnquiry.getStatus()) {
+                System.out.println("This enquiry has already been replied to.");
+                return;
+            }
+    
+            // Prompt officer to enter a reply
+            System.out.print("Enter your reply: ");
+            String reply = appContext.getScanner().nextLine();
+    
+            // Reply to the enquiry
+            selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
+    
+            System.out.println("Reply sent successfully.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
         }
     }
 }
