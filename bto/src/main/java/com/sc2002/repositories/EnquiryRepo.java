@@ -23,10 +23,11 @@ public class EnquiryRepo {
      * @param id The ID of the enquiry to find
      * @return Optional containing the enquiry if found, empty otherwise
      */
-    public Optional<EnquiryModel> findById(int enquiryID) {
-        return enquiries.stream()
-                .filter(enquiry -> enquiry.getId() == enquiryID)
-                .findFirst();
+    public EnquiryModel findById(int enquiryID) {
+        return this.enquiries.stream()
+            .filter(enquiry -> enquiry.getId() == enquiryID)
+            .findFirst()
+            .orElse(null);
     }
     
     /**
@@ -37,11 +38,11 @@ public class EnquiryRepo {
      */
     public EnquiryModel saveEnquiry(EnquiryModel enquiry) {
         // Check if the enquiry already exists
-        Optional<EnquiryModel> existingEnquiry = findById(enquiry.getId());
+        EnquiryModel existingEnquiry = findById(enquiry.getId());
         
-        if(existingEnquiry.isPresent()) {
+        if(existingEnquiry!=null) {
             // Remove the existing enquiry
-            enquiries.remove(existingEnquiry.get());
+            enquiries.remove(existingEnquiry);
         }
         
         // Add the new or updated enquiry
@@ -67,7 +68,7 @@ public class EnquiryRepo {
      * @param projectId The ID of the project
      * @return List of enquiries associated with the project
      */
-    public List<EnquiryModel> findByProjectId(String projectId) {
+    public List<EnquiryModel> findByProjectId(int projectId) {
         return enquiries.stream()
                 .filter(enquiry -> String.valueOf(enquiry.getProjectId()).equals(projectId))
                 .collect(Collectors.toList());
@@ -83,12 +84,13 @@ public class EnquiryRepo {
     }
 
     public boolean deleteById(int enquiryId) {
-        Optional<EnquiryModel> enquiryToDelete = findById(enquiryId);
-        if (enquiryToDelete.isPresent()) {
-            enquiries.remove(enquiryToDelete.get());
+        EnquiryModel enquiryToDelete = findById(enquiryId);
+        if (enquiryToDelete!=null) {
+            enquiries.remove(enquiryToDelete);
             return true;
         }
         return false;
- }
+    }
+
 
 }

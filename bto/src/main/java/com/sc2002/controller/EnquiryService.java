@@ -1,9 +1,12 @@
 package com.sc2002.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.repositories.EnquiryRepo;
 
@@ -35,7 +38,14 @@ public class EnquiryService {
             }else if (this.appContext.getCurrentUser() != null && this.appContext.getAuthService().isOfficer(this.appContext.getCurrentUser())) {
                 // @rayson, was thinking you put your getAllEnquiries here, (this is for printing your menus)
                 // Then sort to only return those which officer by right can view (you can code the sorting either in repo or here)
-                throw new RuntimeException("Not implemented");
+                List<EnquiryModel> toReturn=new ArrayList<>();
+                List<BTOProjectModel> projects=this.appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser()); // [projectID,projectname]
+                for (BTOProjectModel project : projects) {
+                    int projectId = project.getProjectID();
+                    List<EnquiryModel> enquiries=this.appContext.getEnquiryRepo().findByProjectId(projectId);
+                    toReturn.addAll(enquiries);
+                } // NOT TESTED
+                return toReturn;
 
             }else throw new RuntimeException("User is not authorized to perform this action.");
         } catch (RuntimeException e) {
@@ -46,21 +56,35 @@ public class EnquiryService {
 
     public boolean viewEnquiry(int enquiryID){
         try{
+            EnquiryModel enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
-                Optional<EnquiryModel> enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
-                if (enquiry.isPresent()) {
-                    enquiry.get().getFormattedEnquiry();
+                // for managers, can reply all
+                if (enquiry!=null) {
+                    enquiry.getFormattedEnquiry(); // we print it in the service
                     return true;
                 } else {
                     throw new RuntimeException("Project not found.");
                 }
             }else if (this.appContext.getAuthService().isOfficer(this.appContext.getCurrentUser())){
+                // for officer only managing projects can reply
                 // @ Rayson, this views the exact enquiry,
                 // idea for flow of enquiry editing
                 // 1) print menu using getAllEnquiry
                 // 2) viewEnquiry(index) to view the exact enquiry
                 // 3) editEnquiry(index) to edit that exact enquiry
-                throw new RuntimeException("Not implemented");
+                
+                if (enquiry!=null) {
+                    if(appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())){
+                        enquiry.getFormattedEnquiry(); // we print it in the service
+                        return true;
+                    }else{
+                        throw new RuntimeException("User is not an officer for project.");
+                    }
+                } else {
+                    throw new RuntimeException("Project not found.");
+                }
+                
+                // Check if officer can viewEnquiry
             }else{
                 throw new RuntimeException("User is not authorized to perform this action.");
             }
@@ -72,11 +96,11 @@ public class EnquiryService {
 
     public boolean editEnquiryResponse( int enquiryID, String response){
         try{
+            EnquiryModel enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
                 // Manager can reply any so no need to do extra checking
-                Optional<EnquiryModel> enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
-                if (enquiry.isPresent()) {
-                    enquiry.get().replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
+                if (enquiry!=null) {
+                    enquiry.replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
                     return true;
                 } else {
                     throw new RuntimeException("Project not found.");
@@ -87,7 +111,16 @@ public class EnquiryService {
                 // 1) print menu using getAllEnquiry
                 // 2) viewEnquiry(index) to view the exact enquiry
                 // 3) editEnquiry(index) to edit that exact enquiry
-                throw new RuntimeException("Not implemented");
+                if (enquiry!=null) {
+                    if(appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())){
+                        enquiry.replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
+                        return true;
+                    }else{
+                        throw new RuntimeException("User is not an officer for project.");
+                    }
+                } else {
+                    throw new RuntimeException("Project not found.");
+                }
             }else{
                 throw new RuntimeException("User is not authorized to perform this action.");
             }

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.sc2002.enums.FlatType;
 import com.sc2002.model.BTOProjectModel;
+import com.sc2002.model.User;
 import com.sc2002.utilities.ProjectFilterCriteria;
 
 public class ProjectRepo {
@@ -44,7 +45,15 @@ public class ProjectRepo {
         }
         return toReturn;
     }
-
+    public List<BTOProjectModel> getProjectsByOfficerID(User currentUser) {
+        List<BTOProjectModel> toReturn = new ArrayList<>();
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i).isManagingOfficer(currentUser)) {
+                toReturn.add(projects.get(i));
+            }
+        }
+        return toReturn;
+    }
     public List<BTOProjectModel> getAllProjects() {
         return new ArrayList<>(projects);
     }
