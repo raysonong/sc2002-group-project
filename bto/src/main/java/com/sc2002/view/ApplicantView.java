@@ -46,23 +46,19 @@ public class ApplicantView {
                     // Option 2: View Application Status
                     viewApplicationStatusMenu(appContext);
                 }
-                case "3" -> {
-                    // Option 3: Update Flat Details
-                    updateFlatDetailsMenu(appContext);
-                }
-                case "4" -> {
+                case "5" -> {
                     // Option 4: Generate Flat Selection Receipt
                     generateReceiptMenu(appContext);
                 }
-                case "5" -> {
+                case "6" -> {
                     // Option 5: Submit Enquiry
                     submitEnquiryMenu(appContext);
                 }
-                case "6" -> {
+                case "7" -> {
                     // Option 6: View My Enquiries
                     viewMyEnquiriesMenu(appContext);
                 }
-                case "7" -> {
+                case "8" -> {
                     // Option 7: Logout
                     System.out.println("Logging out...");
                     appContext.setCurrentUser(null);
@@ -125,10 +121,6 @@ public class ApplicantView {
             } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
         }
       }
-    }
-
-    private void updateFlatDetailsMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
     }
 
     private void generateReceiptMenu(AppContext appContext) {
