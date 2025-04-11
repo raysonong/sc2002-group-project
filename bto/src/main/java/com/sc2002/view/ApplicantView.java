@@ -7,6 +7,7 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
@@ -45,23 +46,19 @@ public class ApplicantView {
                     // Option 2: View Application Status
                     viewApplicationStatusMenu(appContext);
                 }
-                case "3" -> {
-                    // Option 3: Update Flat Details
-                    updateFlatDetailsMenu(appContext);
-                }
-                case "4" -> {
+                case "5" -> {
                     // Option 4: Generate Flat Selection Receipt
                     generateReceiptMenu(appContext);
                 }
-                case "5" -> {
+                case "6" -> {
                     // Option 5: Submit Enquiry
                     submitEnquiryMenu(appContext);
                 }
-                case "6" -> {
+                case "7" -> {
                     // Option 6: View My Enquiries
                     viewMyEnquiriesMenu(appContext);
                 }
-                case "7" -> {
+                case "8" -> {
                     // Option 7: Logout
                     System.out.println("Logging out...");
                     appContext.setCurrentUser(null);
@@ -79,32 +76,20 @@ public class ApplicantView {
     private void applyForProjectMenu(AppContext appContext) {
     // display eligible projects 
     System.out.println("Available Projects: ");
-    applicationService.viewAvailableProjectsForApplicant(); // CAUSING ERROR IMPLEMENT FIRST
+    applicationService.viewAvailableProjectsForApplicant(); 
 
-    System.out.print("Enter Project ID to apply for: ");
-    int selectedProjectId = appContext.getScanner().nextInt();
-    appContext.getScanner().nextLine(); 
-    //get project
-    BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
-
-
-    if (selectedProject != null) {
-        // apply to the project
         Boolean application = applicationService.applyToProject(
             appContext.getProjectRepo(),
             appContext.getScanner(),
             appContext.getCurrentUser()
         );
 
-        // check application
         if (application) {
-            System.out.println("You have successfully applied for project ID: " + selectedProjectId);
+           System.out.println("Successfully applied to the project.");
         } else {
-            System.out.println("Application failed. Please try again.");
+           System.out.println("Application was not submitted.");
         }
-    } else {
-        System.out.println("Invalid Project ID. Please try again.");
-    }
+
 }
 
     private void viewApplicationStatusMenu(AppContext appContext) {
@@ -118,14 +103,25 @@ public class ApplicantView {
         BTOApplicationModel application = applicationOpt.get();
 
         System.out.println("Your application status is: " + application.getStatus());
-    } else {
-        System.out.println("You have not applied to any projects yet.");
-    }
 
-}
-
-    private void updateFlatDetailsMenu(AppContext appContext) {
-        throw new RuntimeException("Not implemented");
+        if(application.getStatus() == ApplicationStatus.SUCCESSFUL ||application.getStatus() == ApplicationStatus.BOOKED ||
+           application.getStatus() == ApplicationStatus.PENDING) {
+            String withdrawChoice;
+            do {
+                System.out.println("Would you like to withdraw your application? (yes/no)");
+                withdrawChoice = appContext.getScanner().nextLine().trim().toLowerCase();
+            
+                if (withdrawChoice.equals("yes")) {
+                    application.setWithdrawalRequested(true);
+                    System.out.println("Your application withdrawal has been requested.");
+                } else if (withdrawChoice.equals("no")) {
+                    System.out.println("You chose not to withdraw your application.");
+                } else {
+                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                }
+            } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
+        }
+      }
     }
 
     private void generateReceiptMenu(AppContext appContext) {
