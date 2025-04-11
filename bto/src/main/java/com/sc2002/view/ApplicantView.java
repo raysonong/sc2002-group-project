@@ -7,6 +7,7 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
@@ -79,32 +80,20 @@ public class ApplicantView {
     private void applyForProjectMenu(AppContext appContext) {
     // display eligible projects 
     System.out.println("Available Projects: ");
-    applicationService.viewAvailableProjectsForApplicant(); // CAUSING ERROR IMPLEMENT FIRST
+    applicationService.viewAvailableProjectsForApplicant(); 
 
-    System.out.print("Enter Project ID to apply for: ");
-    int selectedProjectId = appContext.getScanner().nextInt();
-    appContext.getScanner().nextLine(); 
-    //get project
-    BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
-
-
-    if (selectedProject != null) {
-        // apply to the project
         Boolean application = applicationService.applyToProject(
             appContext.getProjectRepo(),
             appContext.getScanner(),
             appContext.getCurrentUser()
         );
 
-        // check application
         if (application) {
-            System.out.println("You have successfully applied for project ID: " + selectedProjectId);
+           System.out.println("Successfully applied to the project.");
         } else {
-            System.out.println("Application failed. Please try again.");
+           System.out.println("Application was not submitted.");
         }
-    } else {
-        System.out.println("Invalid Project ID. Please try again.");
-    }
+
 }
 
     private void viewApplicationStatusMenu(AppContext appContext) {
@@ -118,11 +107,25 @@ public class ApplicantView {
         BTOApplicationModel application = applicationOpt.get();
 
         System.out.println("Your application status is: " + application.getStatus());
-    } else {
-        System.out.println("You have not applied to any projects yet.");
-    }
 
-}
+        if(application.getStatus() == ApplicationStatus.SUCCESSFUL ||application.getStatus() == ApplicationStatus.BOOKED){
+            String withdrawChoice;
+            do {
+                System.out.println("Would you like to withdraw your application? (yes/no)");
+                withdrawChoice = appContext.getScanner().nextLine().trim().toLowerCase();
+            
+                if (withdrawChoice.equals("yes")) {
+                    application.setWithdrawalRequested(true);
+                    System.out.println("Your application withdrawal has been requested.");
+                } else if (withdrawChoice.equals("no")) {
+                    System.out.println("You chose not to withdraw your application.");
+                } else {
+                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                }
+            } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
+        }
+      }
+    }
 
     private void updateFlatDetailsMenu(AppContext appContext) {
         throw new RuntimeException("Not implemented");
