@@ -77,7 +77,7 @@ public class EnquiryService {
                     if(appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())){
                         enquiry.getFormattedEnquiry(); // we print it in the service
                         return true;
-                    }else{
+                    }else{ // might need to check if officer is applicant, will see when we debugging @rayson
                         throw new RuntimeException("User is not an officer for project.");
                     }
                 } else {
