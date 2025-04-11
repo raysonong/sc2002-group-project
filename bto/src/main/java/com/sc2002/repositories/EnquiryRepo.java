@@ -2,7 +2,6 @@ package com.sc2002.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.sc2002.model.EnquiryModel;
@@ -70,7 +69,7 @@ public class EnquiryRepo {
      */
     public List<EnquiryModel> findByProjectId(int projectId) {
         return enquiries.stream()
-                .filter(enquiry -> String.valueOf(enquiry.getProjectId()).equals(projectId))
+                .filter(enquiry -> enquiry.getProjectId() == projectId)
                 .collect(Collectors.toList());
     }
     

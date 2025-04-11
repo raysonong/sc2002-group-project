@@ -3,12 +3,9 @@ package com.sc2002.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
-import com.sc2002.repositories.EnquiryRepo;
 
 public class EnquiryService {
     // submitEnquiry for Applicant and Officer(Who have a project they BTOed)
@@ -43,8 +40,10 @@ public class EnquiryService {
                 for (BTOProjectModel project : projects) {
                     int projectId = project.getProjectID();
                     List<EnquiryModel> enquiries=this.appContext.getEnquiryRepo().findByProjectId(projectId);
+                    System.out.println("Enquiries for project ID " + projectId + ": " + enquiries);
                     toReturn.addAll(enquiries);
                 } // NOT TESTED
+                System.out.println(this.appContext.getEnquiryRepo().findAll());
                 return toReturn;
 
             }else throw new RuntimeException("User is not authorized to perform this action.");
