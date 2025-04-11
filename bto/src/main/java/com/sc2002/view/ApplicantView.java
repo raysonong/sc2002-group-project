@@ -104,7 +104,8 @@ public class ApplicantView {
 
         System.out.println("Your application status is: " + application.getStatus());
 
-        if(application.getStatus() == ApplicationStatus.SUCCESSFUL ||application.getStatus() == ApplicationStatus.BOOKED){
+        if(application.getStatus() == ApplicationStatus.SUCCESSFUL ||application.getStatus() == ApplicationStatus.BOOKED ||
+           application.getStatus() == ApplicationStatus.PENDING) {
             String withdrawChoice;
             do {
                 System.out.println("Would you like to withdraw your application? (yes/no)");
