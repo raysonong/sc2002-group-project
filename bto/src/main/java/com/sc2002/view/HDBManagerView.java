@@ -38,7 +38,7 @@ public class HDBManagerView {
         this.officerRegistrationService = new OfficerRegistrationService(appContext);
         this.reportingService = new ReportingService(appContext);
         this.applicationService = new ApplicationService(appContext);
-        System.out.println("--HDB Manager Menu--");
+        System.out.println("\n--HDB Manager Menu--");
         // Loop variable `i` is used to generate menu numbers starting from 1
         for (int i = 0; i < menus.size(); i++) {
             System.out.println("Option " + (i + 1) + ": " + menus.get(i));

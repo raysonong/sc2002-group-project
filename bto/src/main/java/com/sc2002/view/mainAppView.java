@@ -86,7 +86,7 @@ public class mainAppView {
         User currentUser = null;
         
         while (true) {
-            System.out.println("--Login to your account--");
+            System.out.println("\n--Login to your account--");
             System.out.print("Please enter your NRIC: ");
             nric = scanner.nextLine().trim();
             
@@ -115,7 +115,7 @@ public class mainAppView {
     }
 
     public User RegisterMenu(Scanner scanner, UserRepo userList) {
-        System.out.println("--Register new user--");
+        System.out.println("\n--Register new user--");
         
         String nric;
         String name;

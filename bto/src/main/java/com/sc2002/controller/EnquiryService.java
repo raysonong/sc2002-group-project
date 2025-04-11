@@ -40,10 +40,8 @@ public class EnquiryService {
                 for (BTOProjectModel project : projects) {
                     int projectId = project.getProjectID();
                     List<EnquiryModel> enquiries=this.appContext.getEnquiryRepo().findByProjectId(projectId);
-                    System.out.println("Enquiries for project ID " + projectId + ": " + enquiries);
                     toReturn.addAll(enquiries);
                 } // NOT TESTED
-                System.out.println(this.appContext.getEnquiryRepo().findAll());
                 return toReturn;
 
             }else throw new RuntimeException("User is not authorized to perform this action.");
