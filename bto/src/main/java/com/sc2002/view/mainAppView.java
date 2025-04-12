@@ -106,20 +106,8 @@ public class mainAppView {
                 System.out.println("Login successful!");
 
                 if ("password".equals(password.toLowerCase())) { // check if it is 1st login
-                    String newPassword = "";
-                    do {
-                        System.out.printf("Please change your password: ");
-                        newPassword = scanner.nextLine().trim();
-
-                        if (!PasswordValidator.getValidationMessages(newPassword).isEmpty()) {
-                            for (String message : PasswordValidator.getValidationMessages(newPassword)) {
-                                System.out.println(message);
-                            }
-                        }
-
-                    } while (!PasswordValidator.isValid(newPassword));
-
-                    userService.updatePassword(currentUser, password, newPassword);
+                    System.out.println("Please reset your password");
+                    userService.resetPassword(currentUser, scanner);
                 }
 
                 return currentUser;

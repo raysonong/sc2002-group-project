@@ -10,6 +10,7 @@ import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
 import com.sc2002.controller.ReportingService;
+import com.sc2002.controller.UserService;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
@@ -18,12 +19,14 @@ import com.sc2002.model.OfficerRegistrationModel;
 public class HDBManagerView {
 
     // declare all the services required by Manager
-    private ProjectManagementService projectManagementService=null; 
-    private EnquiryService enquiryService=null; 
-    private ProjectService projectService=null; 
-    private OfficerRegistrationService officerRegistrationService=null; 
-    private ReportingService reportingService=null; 
-    private ApplicationService applicationService=null;
+    private ProjectManagementService projectManagementService = null;
+    private EnquiryService enquiryService = null;
+    private ProjectService projectService = null;
+    private OfficerRegistrationService officerRegistrationService = null;
+    private ReportingService reportingService = null;
+    private ApplicationService applicationService = null;
+    private UserService userService = null;
+
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
         // Initializing variables & services,
@@ -33,11 +36,12 @@ public class HDBManagerView {
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
         this.projectManagementService = new ProjectManagementService(appContext);
-        this.enquiryService=new EnquiryService(appContext); // Only enquiryRepo, we parse repo as parameter to make it attribute
+        this.enquiryService = new EnquiryService(appContext); // Only enquiryRepo, we parse repo as parameter to make it attribute
         this.projectService = new ProjectService(appContext);
         this.officerRegistrationService = new OfficerRegistrationService(appContext);
         this.reportingService = new ReportingService(appContext);
         this.applicationService = new ApplicationService(appContext);
+        this.userService = new UserService();
         System.out.println("\n--HDB Manager Menu--");
         // Loop variable `i` is used to generate menu numbers starting from 1
         for (int i = 0; i < menus.size(); i++) {
@@ -47,7 +51,7 @@ public class HDBManagerView {
         System.out.print("Please select an option: ");
         userInput = appContext.getScanner().nextLine();
 
-        switch (userInput) { 
+        switch (userInput) {
             case "1" -> {
                 // Option 1: Create a new BTO project
                 appContext.getProjectRepo().save(projectManagementService.createProject());
@@ -109,7 +113,11 @@ public class HDBManagerView {
                 generateReportMenu(appContext);
             }
             case "16" -> {
-                // Option 16: Logout
+                // Option 16: Reset Password
+                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+            }
+            case "17" -> {
+                // Option 17: Logout
                 System.out.println("Logging out...");
                 appContext.setCurrentUser(null); // set the CurrentUser null
             }
@@ -128,7 +136,7 @@ public class HDBManagerView {
             System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
         }
     }
-    
+
     private void editBTOProjectMenu(AppContext appContext) {
         System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
@@ -184,14 +192,15 @@ public class HDBManagerView {
                 if (projectManagementService.deleteProject()) {
                     System.out.println("Deletion Successful.");
                 }
-            }default -> {
+            }
+            default -> {
                 System.out.println("Deletion process cancelled.");
             }
         }
     }
 
     private void toggleProjectVisibilityMenu(AppContext appContext) {
-        
+
         Map<Integer, String> listOfProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         // In case they allow any manager to toggle any project visiblity
         // Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
@@ -207,7 +216,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (listOfProjects.containsKey(projectID)) {
-                projectManagementService.toggleProjectVisibility( projectID);
+                projectManagementService.toggleProjectVisibility(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -229,7 +238,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (listOfProjects.containsKey(projectID)) {
-                projectService.viewProjectByID( projectID);
+                projectService.viewProjectByID(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -274,7 +283,7 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
-    private void editEnquiryMenu(AppContext appContext){
+    private void editEnquiryMenu(AppContext appContext) {
         List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
@@ -289,7 +298,7 @@ public class HDBManagerView {
                 int index = Integer.parseInt(appContext.getScanner().nextLine());
                 if (index >= 0 && index < enquiries.size()) {
                     // View the selected enquiry to print, returns if no project found
-                    if(!enquiryService.viewEnquiry(index)){
+                    if (!enquiryService.viewEnquiry(index)) {
                         return;
                     };
                     // Gather new response
@@ -309,7 +318,7 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
-    private void approveOfficerRegistrationMenu(AppContext appContext){
+    private void approveOfficerRegistrationMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage officer registration: ");
@@ -319,7 +328,7 @@ public class HDBManagerView {
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) {
                 // Call a method to handle officer registration for the selected project
-                listOfRegistration=appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
+                listOfRegistration = appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
             } else {
                 System.out.println("Invalid Project ID.");
                 return;
@@ -339,10 +348,10 @@ public class HDBManagerView {
             System.out.print("Enter the index of the officer registration you wish to approve: ");
             try {
                 int index = Integer.parseInt(appContext.getScanner().nextLine());
-                if(index<=listOfRegistration.size() && index>=0){
+                if (index <= listOfRegistration.size() && index >= 0) {
                     // approve registration
-                    OfficerRegistrationModel registration=listOfRegistration.get(index);
-                    if(officerRegistrationService.approveRegistration(registration)){
+                    OfficerRegistrationModel registration = listOfRegistration.get(index);
+                    if (officerRegistrationService.approveRegistration(registration)) {
                         System.out.println("Officer added.");
                     }
                 }
@@ -354,8 +363,7 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
-
-    private void rejectOfficerRegistrationMenu(AppContext appContext){
+    private void rejectOfficerRegistrationMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage officer registration: ");
@@ -365,7 +373,7 @@ public class HDBManagerView {
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) {
                 // Call a method to handle officer registration for the selected project
-                listOfRegistration=appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
+                listOfRegistration = appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
             } else {
                 System.out.println("Invalid Project ID.");
                 return;
@@ -385,10 +393,10 @@ public class HDBManagerView {
             System.out.print("Enter the index of the officer registration you wish to reject: ");
             try {
                 int index = Integer.parseInt(appContext.getScanner().nextLine());
-                if(index<=listOfRegistration.size() && index>=0){
+                if (index <= listOfRegistration.size() && index >= 0) {
                     // reject registration
-                    OfficerRegistrationModel registration=listOfRegistration.get(index);
-                    if(officerRegistrationService.rejectRegistration(registration)){
+                    OfficerRegistrationModel registration = listOfRegistration.get(index);
+                    if (officerRegistrationService.rejectRegistration(registration)) {
                         System.out.println("Officer removed successfully.");
                     }
                 }
@@ -400,7 +408,7 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
-    private void approveBTOApplicationMenu(AppContext appContext){
+    private void approveBTOApplicationMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications(approve): ");
@@ -419,7 +427,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingByProjectID(projectID);
+        List<BTOApplicationModel> listOfApplications = appContext.getApplicationRepo().findPendingByProjectID(projectID);
         if (listOfApplications.isEmpty()) {
             System.out.println("No applications found for this project.");
         } else {
@@ -439,8 +447,8 @@ public class HDBManagerView {
         System.out.print("Enter the index of the application you wish to approve: ");
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
-            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
-                applicationService.approveApplicantApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+            if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
+                applicationService.approveApplicantApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("Application approved successfully.");
             } else {
                 System.out.println("Invalid index.");
@@ -449,7 +457,8 @@ public class HDBManagerView {
             System.out.println("Error: Invalid integer for the index.");
         }
     }
-    private void rejectBTOApplicationMenu(AppContext appContext){
+
+    private void rejectBTOApplicationMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications(reject): ");
@@ -468,7 +477,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingByProjectID(projectID);
+        List<BTOApplicationModel> listOfApplications = appContext.getApplicationRepo().findPendingByProjectID(projectID);
         if (listOfApplications.isEmpty()) {
             System.out.println("No applications found for this project.");
         } else {
@@ -488,8 +497,8 @@ public class HDBManagerView {
         System.out.print("Enter the index of the application you wish to reject: ");
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
-            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
-                applicationService.rejectApplicantApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+            if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
+                applicationService.rejectApplicantApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("Application rejected successfully.");
             } else {
                 System.out.println("Invalid index.");
@@ -498,7 +507,8 @@ public class HDBManagerView {
             System.out.println("Error: Invalid integer for the index.");
         }
     }
-    private void approveApplicationWithdrawalMenu(AppContext appContext){
+
+    private void approveApplicationWithdrawalMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications Withdrawal (approve): ");
@@ -516,7 +526,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
+        List<BTOApplicationModel> listOfApplications = appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
         if (listOfApplications.isEmpty()) {
             System.out.println("No applications found for this project.");
         } else {
@@ -536,8 +546,8 @@ public class HDBManagerView {
         System.out.print("Enter the index of the application you wish to approve withdrawal: ");
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
-            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
-                applicationService.approveApplicantWithdrawalApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+            if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
+                applicationService.approveApplicantWithdrawalApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("BTO Application successfully withdrawn.");
             } else {
                 System.out.println("Invalid index.");
@@ -546,7 +556,8 @@ public class HDBManagerView {
             System.out.println("Error: Invalid integer for the index.");
         }
     }
-    private void rejectApplicationWithdrawalMenu(AppContext appContext){
+
+    private void rejectApplicationWithdrawalMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications Withdrawal (approve): ");
@@ -564,7 +575,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the Project ID.");
             return;
         }
-        List<BTOApplicationModel> listOfApplications=appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
+        List<BTOApplicationModel> listOfApplications = appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
         if (listOfApplications.isEmpty()) {
             System.out.println("No applications found for this project.");
         } else {
@@ -584,8 +595,8 @@ public class HDBManagerView {
         System.out.print("Enter the index of the application you wish to reject withdrawal: ");
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
-            if (appChoice >= 1 && appChoice < listOfApplications.size()+1) {
-                applicationService.rejectApplicantWithdrawalApplication(listOfApplications.get(appChoice-1)); // we start with index 1
+            if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
+                applicationService.rejectApplicantWithdrawalApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("BTO Application to withdraw rejected successfully.");
             } else {
                 System.out.println("Invalid index.");
@@ -594,7 +605,8 @@ public class HDBManagerView {
             System.out.println("Error: Invalid integer for the index.");
         }
     }
-    private void generateReportMenu(AppContext appContext){
+
+    private void generateReportMenu(AppContext appContext) {
         Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to print report for: ");
@@ -636,8 +648,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the report type.");
             return;
         }
-        reportingService.generateProjectReport(project,generateType);
-        
-    }
+        reportingService.generateProjectReport(project, generateType);
 
+    }
 }

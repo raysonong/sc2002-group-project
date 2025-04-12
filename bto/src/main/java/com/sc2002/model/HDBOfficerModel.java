@@ -8,6 +8,7 @@ import com.sc2002.enums.FlatType; // for FlatType enums
 import com.sc2002.enums.UserRole;
 
 public class HDBOfficerModel extends ApplicantModel {
+
     private int projectID;
     private boolean registrationStatus;
 
@@ -38,12 +39,13 @@ public class HDBOfficerModel extends ApplicantModel {
         List<String> options = new ArrayList<>();
         options.addAll(super.getMenuOptions()); // Inherit Applicant's options
         options.addAll(Arrays.asList(
-        "Register for Project Team", 
-        "View Registration Status", 
-        "Manage Applications",
-        "Generate Flat Selection Receipt",
-        "Manage Enquiries",
-        "Logout"
+                "Register for Project Team",
+                "View Registration Status",
+                "Manage Applications",
+                "Generate Flat Selection Receipt",
+                "Manage Enquiries",
+                "Reset Password",
+                "Logout"
         ));
         return options;
     }

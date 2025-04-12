@@ -7,6 +7,7 @@ import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.controller.UserService;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
@@ -15,16 +16,19 @@ import com.sc2002.model.EnquiryModel;
 import com.sc2002.utilities.Receipt;
 
 public class ApplicantView {
+
     // declare all the services required by Applicant
     private EnquiryService enquiryService = null;
     private ProjectService projectService = null;
     private ApplicationService applicationService = null;
-    
+    private UserService userService = null;
+
     public void ApplicantMenu(AppContext appContext) {
         // Initialize Services with context
         enquiryService = new EnquiryService(appContext);
         projectService = new ProjectService(appContext);
         applicationService = new ApplicationService(appContext);
+        userService = new UserService();
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
 
@@ -33,10 +37,12 @@ public class ApplicantView {
         for (int i = 0; i < menus.size(); i++) {
             System.out.println("Option " + (i + 1) + ": " + menus.get(i));
         }
-        System.out.println("Option " + (menus.size() + 1) + ": Logout");
+
+        System.out.println("Option " + (menus.size() + 1) + ": Reset Password");
+        System.out.println("Option " + (menus.size() + 2) + ": Logout");
         System.out.print("Please select an option: ");
         userInput = appContext.getScanner().nextLine();
-        try{
+        try {
             switch (userInput) {
                 case "1" -> {
                     // Option 1: Apply for BTO Project
@@ -59,6 +65,10 @@ public class ApplicantView {
                     viewMyEnquiriesMenu(appContext);
                 }
                 case "8" -> {
+                    // Reset Password
+                    userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                }
+                case "9" -> {
                     // Option 7: Logout
                     System.out.println("Logging out...");
                     appContext.setCurrentUser(null);
@@ -67,186 +77,184 @@ public class ApplicantView {
                     System.out.println("Please select a valid option!");
                 }
             }
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
 
     }
 
     private void applyForProjectMenu(AppContext appContext) {
-    // display eligible projects 
-    System.out.println("Available Projects: ");
-    applicationService.viewAvailableProjectsForApplicant(); 
+        // display eligible projects 
+        System.out.println("Available Projects: ");
+        applicationService.viewAvailableProjectsForApplicant();
 
         Boolean application = applicationService.applyToProject(
-            appContext.getProjectRepo(),
-            appContext.getScanner(),
-            appContext.getCurrentUser()
+                appContext.getProjectRepo(),
+                appContext.getScanner(),
+                appContext.getCurrentUser()
         );
 
         if (application) {
-           System.out.println("Successfully applied to the project.");
+            System.out.println("Successfully applied to the project.");
         } else {
-           System.out.println("Application was not submitted.");
+            System.out.println("Application was not submitted.");
         }
 
-}
+    }
 
     private void viewApplicationStatusMenu(AppContext appContext) {
-      ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
 
-    // retrieve the application 
-      Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
+        // retrieve the application 
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
 
-    //check if the application exists
-      if (applicationOpt.isPresent()) {
-        BTOApplicationModel application = applicationOpt.get();
+        //check if the application exists
+        if (applicationOpt.isPresent()) {
+            BTOApplicationModel application = applicationOpt.get();
 
-        System.out.println("Your application status is: " + application.getStatus());
+            System.out.println("Your application status is: " + application.getStatus());
 
-        if(application.getStatus() == ApplicationStatus.SUCCESSFUL ||application.getStatus() == ApplicationStatus.BOOKED ||
-           application.getStatus() == ApplicationStatus.PENDING) {
-            String withdrawChoice;
-            do {
-                System.out.println("Would you like to withdraw your application? (yes/no)");
-                withdrawChoice = appContext.getScanner().nextLine().trim().toLowerCase();
-            
-                if (withdrawChoice.equals("yes")) {
-                    application.setWithdrawalRequested(true);
-                    System.out.println("Your application withdrawal has been requested.");
-                } else if (withdrawChoice.equals("no")) {
-                    System.out.println("You chose not to withdraw your application.");
-                } else {
-                    System.out.println("Invalid input. Please enter 'yes' or 'no'.");
-                }
-            } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
+            if (application.getStatus() == ApplicationStatus.SUCCESSFUL || application.getStatus() == ApplicationStatus.BOOKED
+                    || application.getStatus() == ApplicationStatus.PENDING) {
+                String withdrawChoice;
+                do {
+                    System.out.println("Would you like to withdraw your application? (yes/no)");
+                    withdrawChoice = appContext.getScanner().nextLine().trim().toLowerCase();
+
+                    if (withdrawChoice.equals("yes")) {
+                        application.setWithdrawalRequested(true);
+                        System.out.println("Your application withdrawal has been requested.");
+                    } else if (withdrawChoice.equals("no")) {
+                        System.out.println("You chose not to withdraw your application.");
+                    } else {
+                        System.out.println("Invalid input. Please enter 'yes' or 'no'.");
+                    }
+                } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
+            }
         }
-      }
     }
 
     private void generateReceiptMenu(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
-    Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
-    
-    if (applicationOpt.isPresent()) {
-        BTOApplicationModel application = applicationOpt.get();
-        // Create a receipt for the application
-        Receipt receipt = new Receipt(application);
-        // print the receipt
-        receipt.printReceipt();
-    } else {
-        System.out.println("You have not applied to any projects");
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
+
+        if (applicationOpt.isPresent()) {
+            BTOApplicationModel application = applicationOpt.get();
+            // Create a receipt for the application
+            Receipt receipt = new Receipt(application);
+            // print the receipt
+            receipt.printReceipt();
+        } else {
+            System.out.println("You have not applied to any projects");
+        }
     }
-}
 
     private void submitEnquiryMenu(AppContext appContext) {
-    // Display eligible projects for the applicant
-       System.out.println("Eligible Projects for Enquiry: ");
-       applicationService.viewAvailableProjectsForApplicant();
+        // Display eligible projects for the applicant
+        System.out.println("Eligible Projects for Enquiry: ");
+        applicationService.viewAvailableProjectsForApplicant();
 
-    // ask applicant to select project
-      System.out.print("Enter Project ID to submit an enquiry: ");
-      int selectedProjectId = appContext.getScanner().nextInt();
-      appContext.getScanner().nextLine(); 
+        // ask applicant to select project
+        System.out.print("Enter Project ID to submit an enquiry: ");
+        int selectedProjectId = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
 
-    // check project exists
-      BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
-      if (selectedProject == null) {
-         System.out.println("Invalid Project ID. Please try again.");
-         return;
-     }
+        // check project exists
+        BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
+        if (selectedProject == null) {
+            System.out.println("Invalid Project ID. Please try again.");
+            return;
+        }
 
-   
-      System.out.print("Enter your enquiry: ");
-      String enquiryText = appContext.getScanner().nextLine();
+        System.out.print("Enter your enquiry: ");
+        String enquiryText = appContext.getScanner().nextLine();
 
-    // submit using EnquiryService
-      String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-      boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+        // submit using EnquiryService
+        String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
+        boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
 
-      if (isSubmitted) {
-        System.out.println("Your enquiry has been submitted successfully");
-      } else {
-        System.out.println("There was an issue submitting your enquiry. Please try again");
-      }
-}
-
-
-   private void viewMyEnquiriesMenu(AppContext appContext) {
-    String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-
-    //get enquiries of applicant 
-    List<EnquiryModel> applicantEnquiries = appContext.getEnquiryRepo().findByApplicantNRIC(applicantNRIC);
-
-    //check if no enquiries
-    if (applicantEnquiries.isEmpty()) {
-        System.out.println("You have not submitted any enquiries.");
-        return;
+        if (isSubmitted) {
+            System.out.println("Your enquiry has been submitted successfully");
+        } else {
+            System.out.println("There was an issue submitting your enquiry. Please try again");
+        }
     }
 
-    //disply enquiries
-    System.out.println("Your Enquiries:");
-    for (int i = 0; i < applicantEnquiries.size(); i++) {
-        EnquiryModel enquiry = applicantEnquiries.get(i);
-        System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getProjectId() + " | Enquiry: " + enquiry.getEnquiryText());
+    private void viewMyEnquiriesMenu(AppContext appContext) {
+        String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
+
+        //get enquiries of applicant 
+        List<EnquiryModel> applicantEnquiries = appContext.getEnquiryRepo().findByApplicantNRIC(applicantNRIC);
+
+        //check if no enquiries
+        if (applicantEnquiries.isEmpty()) {
+            System.out.println("You have not submitted any enquiries.");
+            return;
+        }
+
+        //disply enquiries
+        System.out.println("Your Enquiries:");
+        for (int i = 0; i < applicantEnquiries.size(); i++) {
+            EnquiryModel enquiry = applicantEnquiries.get(i);
+            System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getProjectId() + " | Enquiry: " + enquiry.getEnquiryText());
+        }
+
+        //ask user to select enquiry
+        System.out.println("Enter the number of the enquiry you want to view/edit/delete or enter 0 to return to the menu: ");
+        int selectedEnquiryIndex = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
+
+        if (selectedEnquiryIndex == 0) {
+            System.out.println("Returning to the menu...");
+            return;
+        }
+
+        if (selectedEnquiryIndex < 1 || selectedEnquiryIndex > applicantEnquiries.size()) {
+            System.out.println("Invalid selection. Returning to the menu...");
+            return;
+        }
+
+        EnquiryModel selectedEnquiry = applicantEnquiries.get(selectedEnquiryIndex - 1);
+
+        //ask user for action
+        System.out.println("You selected Enquiry: " + selectedEnquiry.getEnquiryText());
+        System.out.println("What would you like to do?");
+        System.out.println("1. View Enquiry");
+        System.out.println("2. Edit Enquiry");
+        System.out.println("3. Delete Enquiry");
+        System.out.print("Enter your choice: ");
+        String actionChoice = appContext.getScanner().nextLine();
+
+        switch (actionChoice) {
+            case "1":
+                //view
+                System.out.println("Enquiry Details:");
+                System.out.println(selectedEnquiry.getFormattedEnquiry());
+                break;
+            case "2":
+                //edit
+                System.out.print("Enter the new enquiry text: ");
+                String newEnquiryText = appContext.getScanner().nextLine();
+                boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
+                if (isEdited) {
+                    System.out.println("Your enquiry has been updated.");
+                } else {
+                    System.out.println("There was an issue updating your enquiry.");
+                }
+                break;
+            case "3":
+                //delete
+                boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getId());
+                if (isDeleted) {
+                    System.out.println("Your enquiry has been deleted.");
+                } else {
+                    System.out.println("There was an issue deleting your enquiry.");
+                }
+                break;
+            default:
+                System.out.println("Invalid choice. Returning to the menu...");
+                break;
+        }
     }
-
-    //ask user to select enquiry
-    System.out.println("Enter the number of the enquiry you want to view/edit/delete or enter 0 to return to the menu: ");
-    int selectedEnquiryIndex = appContext.getScanner().nextInt();
-    appContext.getScanner().nextLine();
-
-    if (selectedEnquiryIndex == 0) {
-        System.out.println("Returning to the menu...");
-        return;
-    }
-
-    if (selectedEnquiryIndex < 1 || selectedEnquiryIndex > applicantEnquiries.size()) {
-        System.out.println("Invalid selection. Returning to the menu...");
-        return;
-    }
-
-    EnquiryModel selectedEnquiry = applicantEnquiries.get(selectedEnquiryIndex - 1);
-
-    //ask user for action
-    System.out.println("You selected Enquiry: " + selectedEnquiry.getEnquiryText());
-    System.out.println("What would you like to do?");
-    System.out.println("1. View Enquiry");
-    System.out.println("2. Edit Enquiry");
-    System.out.println("3. Delete Enquiry");
-    System.out.print("Enter your choice: ");
-    String actionChoice = appContext.getScanner().nextLine();
-
-    switch (actionChoice) {
-        case "1":
-            //view
-            System.out.println("Enquiry Details:");
-            System.out.println(selectedEnquiry.getFormattedEnquiry());
-            break;
-        case "2":
-            //edit
-            System.out.print("Enter the new enquiry text: ");
-            String newEnquiryText = appContext.getScanner().nextLine();
-            boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
-            if (isEdited) {
-                System.out.println("Your enquiry has been updated.");
-            } else {
-                System.out.println("There was an issue updating your enquiry.");
-            }
-            break;
-        case "3":
-           //delete
-            boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getId());
-            if (isDeleted) {
-                System.out.println("Your enquiry has been deleted.");
-            } else {
-                System.out.println("There was an issue deleting your enquiry.");
-            }
-            break;
-        default:
-            System.out.println("Invalid choice. Returning to the menu...");
-            break;
-    }
- }
 
 }

@@ -8,6 +8,7 @@ import com.sc2002.controller.ApplicationService;
 import com.sc2002.controller.EnquiryService;
 import com.sc2002.controller.OfficerRegistrationService;
 import com.sc2002.controller.ProjectService;
+import com.sc2002.controller.UserService;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.model.ApplicantModel;
@@ -18,18 +19,21 @@ import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.utilities.Receipt;
 
 public class HDBOfficerView {
+
     //Service Declaration
     private EnquiryService enquiryService = null;
     private ApplicationService applicationService = null;
     private OfficerRegistrationService officerRegistrationService = null;
     private ProjectService projectService = null;
+    private UserService userService = null;
 
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
         this.enquiryService = new EnquiryService(appContext);
-        this.applicationService=new ApplicationService(appContext);
+        this.applicationService = new ApplicationService(appContext);
         this.officerRegistrationService = new OfficerRegistrationService(appContext);
         this.projectService = new ProjectService(appContext);
+        this.userService = new UserService();
 
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
@@ -72,9 +76,9 @@ public class HDBOfficerView {
             case "7" -> {
                 // Option 7: Register for Project Team
                 OfficerRegistrationStatus application_status = appContext.getOfficerRegistrationRepo()
-                                                        .findbyUserID(appContext.getCurrentUser().getUserID())
-                                                        .map(OfficerRegistrationModel::getStatus)
-                                                        .orElse(null);
+                        .findbyUserID(appContext.getCurrentUser().getUserID())
+                        .map(OfficerRegistrationModel::getStatus)
+                        .orElse(null);
 
                 if (application_status == OfficerRegistrationStatus.APPROVED) {
                     System.out.println("You can't submit a new application as you are registered in an existing project!");
@@ -89,12 +93,11 @@ public class HDBOfficerView {
             case "8" -> {
                 // Option 8: View Registration Status
                 Optional<OfficerRegistrationModel> registrationOpt = appContext.getOfficerRegistrationRepo()
-                    .findbyUserID(appContext.getCurrentUser().getUserID());
+                        .findbyUserID(appContext.getCurrentUser().getUserID());
 
                 if (registrationOpt.isEmpty()) {
                     System.out.println("You have not submitted a registration to join a project yet!");
-                }
-                else{
+                } else {
                     OfficerRegistrationModel reg = registrationOpt.get();
 
                     if (reg.getStatus() == OfficerRegistrationStatus.APPROVED) {
@@ -108,7 +111,7 @@ public class HDBOfficerView {
                 // Option 9: View and updating bookings
                 Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
                         .findbyUserID(appContext.getCurrentUser().getUserID());
-            
+
                 if (officerRegOpt.isEmpty() || officerRegOpt.get().getStatus() != OfficerRegistrationStatus.APPROVED) {
                     System.out.println("You are not an approved officer. Access denied.");
                     break;
@@ -116,7 +119,7 @@ public class HDBOfficerView {
 
                 System.out.println("Enter applicant's NRIC:");
                 String input_nric = appContext.getScanner().nextLine();
-            
+
                 int officerProjectID = officerRegOpt.get().getProjectID();
 
                 BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
@@ -158,17 +161,17 @@ public class HDBOfficerView {
                             for (FlatType flatType : FlatType.values()) {
                                 System.out.println("- " + flatType);
                             }
-                            
+
                             System.out.print("Enter new flat type: ");
                             String newFlatTypeInput = appContext.getScanner().nextLine();
-                        
+
                             try {
                                 // Convert the input to a FlatType enum
                                 FlatType newFlatType = FlatType.valueOf(newFlatTypeInput.toUpperCase());
-                            
+
                                 // Call the service to update the flat type
                                 boolean updated = applicationService.updateApplicationFlatType(applicationID, newFlatType);
-                            
+
                                 if (updated) {
                                     System.out.println("Flat type updated successfully.");
                                 } else {
@@ -177,9 +180,10 @@ public class HDBOfficerView {
                             } catch (IllegalArgumentException e) {
                                 System.out.println("Invalid flat type entered. Please try again.");
                             }
-                        
+
                         }
-                        default -> System.out.println("Invalid option selected.");
+                        default ->
+                            System.out.println("Invalid option selected.");
                     }
                 } else {
                     System.out.println("No application found or you are not authorized to view this application.");
@@ -188,7 +192,7 @@ public class HDBOfficerView {
             }
             case "10" -> {
                 Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
-                .findbyUserID(appContext.getCurrentUser().getUserID());
+                        .findbyUserID(appContext.getCurrentUser().getUserID());
 
                 if (officerRegOpt.isEmpty() || officerRegOpt.get().getStatus() != OfficerRegistrationStatus.APPROVED) {
                     System.out.println("You are not an approved officer. Access denied.");
@@ -218,62 +222,66 @@ public class HDBOfficerView {
             case "11" -> {
                 // Retrieve all enquiries
                 List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
-            
+
                 if (enquiries.isEmpty()) {
                     System.out.println("No enquiries found.");
                     return;
                 }
-            
+
                 // Display all enquiries
                 System.out.println("Enquiries:");
                 for (int i = 0; i < enquiries.size(); i++) {
                     EnquiryModel enquiry = enquiries.get(i);
-                    System.out.println((i + 1) + ". Enquiry ID: " + enquiry.getId() +
-                                    ", Applicant NRIC: " + enquiry.getApplicantNRIC() +
-                                    ", Response: " + enquiry.getEnquiryText() +
-                                    ", Status: " + (enquiry.getStatus() ? "Replied" : "Pending"));
+                    System.out.println((i + 1) + ". Enquiry ID: " + enquiry.getId()
+                            + ", Applicant NRIC: " + enquiry.getApplicantNRIC()
+                            + ", Response: " + enquiry.getEnquiryText()
+                            + ", Status: " + (enquiry.getStatus() ? "Replied" : "Pending"));
                 }
-            
+
                 // Prompt officer to select an enquiry to reply to
                 System.out.print("Enter the number of the enquiry you want to reply to: ");
                 String input = appContext.getScanner().nextLine();
-            
+
                 try {
                     int enquiryIndex = Integer.parseInt(input) - 1;
-            
+
                     if (enquiryIndex < 0 || enquiryIndex >= enquiries.size()) {
                         System.out.println("Invalid selection. Please try again.");
                         return;
                     }
-            
+
                     EnquiryModel selectedEnquiry = enquiries.get(enquiryIndex);
-            
+
                     // Display the selected enquiry details
                     System.out.println("Selected Enquiry:");
                     System.out.println("Enquiry ID: " + selectedEnquiry.getId());
                     System.out.println("Applicant NRIC: " + selectedEnquiry.getApplicantNRIC());
                     System.out.println("Message: " + selectedEnquiry.getEnquiryText());
-            
+
                     // Check if the enquiry has already been replied to
                     if (selectedEnquiry.getStatus()) {
                         System.out.println("This enquiry has already been replied to.");
                         return;
                     }
-            
+
                     // Prompt officer to enter a reply
                     System.out.print("Enter your reply: ");
                     String reply = appContext.getScanner().nextLine();
-            
+
                     // Reply to the enquiry
                     selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
-            
+
                     System.out.println("Reply sent successfully.");
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid input. Please enter a valid number.");
                 }
             }
             case "12" -> {
-                // Option 11: Logout
+                // Reset Password
+                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+            }
+            case "13" -> {
+                // Option 13: Logout
                 System.out.println("Logging out...");
                 appContext.setCurrentUser(null); // set the CurrentUser null
             }
@@ -285,52 +293,51 @@ public class HDBOfficerView {
     }
 
     private void applyForProjectMenu(AppContext appContext) {
-    // display eligible projects 
-    System.out.println("Available Projects: ");
-    applicationService.viewAvailableProjectsForApplicant(); // CAUSING ERROR IMPLEMENT FIRST
+        // display eligible projects 
+        System.out.println("Available Projects: ");
+        applicationService.viewAvailableProjectsForApplicant(); // CAUSING ERROR IMPLEMENT FIRST
 
-    System.out.print("Enter Project ID to apply for: ");
-    int selectedProjectId = appContext.getScanner().nextInt();
-    appContext.getScanner().nextLine(); 
-    //get project
-    BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
+        System.out.print("Enter Project ID to apply for: ");
+        int selectedProjectId = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
+        //get project
+        BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
 
+        if (selectedProject != null) {
+            // apply to the project
+            Boolean application = applicationService.applyToProject(
+                    appContext.getProjectRepo(),
+                    appContext.getScanner(),
+                    appContext.getCurrentUser()
+            );
 
-    if (selectedProject != null) {
-        // apply to the project
-        Boolean application = applicationService.applyToProject(
-            appContext.getProjectRepo(),
-            appContext.getScanner(),
-            appContext.getCurrentUser()
-        );
-
-        // check application
-        if (application) {
-            System.out.println("You have successfully applied for project ID: " + selectedProjectId);
+            // check application
+            if (application) {
+                System.out.println("You have successfully applied for project ID: " + selectedProjectId);
+            } else {
+                System.out.println("Application failed. Please try again.");
+            }
         } else {
-            System.out.println("Application failed. Please try again.");
+            System.out.println("Invalid Project ID. Please try again.");
         }
-    } else {
-        System.out.println("Invalid Project ID. Please try again.");
     }
-}
 
     private void viewApplicationStatusMenu(AppContext appContext) {
-      ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
+        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
 
-    // retrieve the application 
-      Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
+        // retrieve the application 
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
 
-    //check if the application exists
-      if (applicationOpt.isPresent()) {
-        BTOApplicationModel application = applicationOpt.get();
+        //check if the application exists
+        if (applicationOpt.isPresent()) {
+            BTOApplicationModel application = applicationOpt.get();
 
-        System.out.println("Your application status is: " + application.getStatus());
-    } else {
-        System.out.println("You have not applied to any projects yet.");
+            System.out.println("Your application status is: " + application.getStatus());
+        } else {
+            System.out.println("You have not applied to any projects yet.");
+        }
+
     }
-
-}
 
     private void updateFlatDetailsMenu(AppContext appContext) {
         throw new RuntimeException("Not implemented");
@@ -338,126 +345,124 @@ public class HDBOfficerView {
 
     private void generateReceiptMenu(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
-    Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
-    
-    if (applicationOpt.isPresent()) {
-        BTOApplicationModel application = applicationOpt.get();
-        // Create a receipt for the application
-        Receipt receipt = new Receipt(application);
-        // print the receipt
-        receipt.printReceipt();
-    } else {
-        System.out.println("You have not applied to any projects");
+        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
+
+        if (applicationOpt.isPresent()) {
+            BTOApplicationModel application = applicationOpt.get();
+            // Create a receipt for the application
+            Receipt receipt = new Receipt(application);
+            // print the receipt
+            receipt.printReceipt();
+        } else {
+            System.out.println("You have not applied to any projects");
+        }
     }
-}
 
     private void submitEnquiryMenu(AppContext appContext) {
-    // Display eligible projects for the applicant
-       System.out.println("Eligible Projects for Enquiry: ");
-       applicationService.viewAvailableProjectsForApplicant();
+        // Display eligible projects for the applicant
+        System.out.println("Eligible Projects for Enquiry: ");
+        applicationService.viewAvailableProjectsForApplicant();
 
-    // ask applicant to select project
-      System.out.print("Enter Project ID to submit an enquiry: ");
-      int selectedProjectId = appContext.getScanner().nextInt();
-      appContext.getScanner().nextLine(); 
+        // ask applicant to select project
+        System.out.print("Enter Project ID to submit an enquiry: ");
+        int selectedProjectId = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
 
-    // check project exists
-      BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
-      if (selectedProject == null) {
-         System.out.println("Invalid Project ID. Please try again.");
-         return;
-     }
+        // check project exists
+        BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
+        if (selectedProject == null) {
+            System.out.println("Invalid Project ID. Please try again.");
+            return;
+        }
 
-   
-      System.out.print("Enter your enquiry: ");
-      String enquiryText = appContext.getScanner().nextLine();
+        System.out.print("Enter your enquiry: ");
+        String enquiryText = appContext.getScanner().nextLine();
 
-    // submit using EnquiryService
-      String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-      boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+        // submit using EnquiryService
+        String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
+        boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
 
-      if (isSubmitted) {
-        System.out.println("Your enquiry has been submitted successfully");
-      } else {
-        System.out.println("There was an issue submitting your enquiry. Please try again");
-      }
-}
-
-
-   private void viewMyEnquiriesMenu(AppContext appContext) {
-    String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-
-    //get enquiries of applicant 
-    List<EnquiryModel> applicantEnquiries = appContext.getEnquiryRepo().findByApplicantNRIC(applicantNRIC);
-
-    //check if no enquiries
-    if (applicantEnquiries.isEmpty()) {
-        System.out.println("You have not submitted any enquiries.");
-        return;
+        if (isSubmitted) {
+            System.out.println("Your enquiry has been submitted successfully");
+        } else {
+            System.out.println("There was an issue submitting your enquiry. Please try again");
+        }
     }
 
-    //disply enquiries
-    System.out.println("Your Enquiries:");
-    for (int i = 0; i < applicantEnquiries.size(); i++) {
-        EnquiryModel enquiry = applicantEnquiries.get(i);
-        System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getProjectId() + " | Enquiry: " + enquiry.getEnquiryText());
-    }
+    private void viewMyEnquiriesMenu(AppContext appContext) {
+        String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
 
-    //ask user to select enquiry
-    System.out.println("Enter the number of the enquiry you want to view/edit/delete or enter 0 to return to the menu: ");
-    int selectedEnquiryIndex = appContext.getScanner().nextInt();
-    appContext.getScanner().nextLine();
+        //get enquiries of applicant 
+        List<EnquiryModel> applicantEnquiries = appContext.getEnquiryRepo().findByApplicantNRIC(applicantNRIC);
 
-    if (selectedEnquiryIndex == 0) {
-        System.out.println("Returning to the menu...");
-        return;
-    }
+        //check if no enquiries
+        if (applicantEnquiries.isEmpty()) {
+            System.out.println("You have not submitted any enquiries.");
+            return;
+        }
 
-    if (selectedEnquiryIndex < 1 || selectedEnquiryIndex > applicantEnquiries.size()) {
-        System.out.println("Invalid selection. Returning to the menu...");
-        return;
-    }
+        //disply enquiries
+        System.out.println("Your Enquiries:");
+        for (int i = 0; i < applicantEnquiries.size(); i++) {
+            EnquiryModel enquiry = applicantEnquiries.get(i);
+            System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getProjectId() + " | Enquiry: " + enquiry.getEnquiryText());
+        }
 
-    EnquiryModel selectedEnquiry = applicantEnquiries.get(selectedEnquiryIndex - 1);
+        //ask user to select enquiry
+        System.out.println("Enter the number of the enquiry you want to view/edit/delete or enter 0 to return to the menu: ");
+        int selectedEnquiryIndex = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
 
-    //ask user for action
-    System.out.println("You selected Enquiry: " + selectedEnquiry.getEnquiryText());
-    System.out.println("What would you like to do?");
-    System.out.println("1. View Enquiry");
-    System.out.println("2. Edit Enquiry");
-    System.out.println("3. Delete Enquiry");
-    System.out.print("Enter your choice: ");
-    String actionChoice = appContext.getScanner().nextLine();
+        if (selectedEnquiryIndex == 0) {
+            System.out.println("Returning to the menu...");
+            return;
+        }
 
-    switch (actionChoice) {
-        case "1":
-            //view
-            System.out.println("Enquiry Details:");
-            System.out.println(selectedEnquiry.getFormattedEnquiry());
-            break;
-        case "2":
-            //edit
-            System.out.print("Enter the new enquiry text: ");
-            String newEnquiryText = appContext.getScanner().nextLine();
-            boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
-            if (isEdited) {
-                System.out.println("Your enquiry has been updated.");
-            } else {
-                System.out.println("There was an issue updating your enquiry.");
-            }
-            break;
-        case "3":
-           //delete
-            boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getId());
-            if (isDeleted) {
-                System.out.println("Your enquiry has been deleted.");
-            } else {
-                System.out.println("There was an issue deleting your enquiry.");
-            }
-            break;
-        default:
-            System.out.println("Invalid choice. Returning to the menu...");
-            break;
+        if (selectedEnquiryIndex < 1 || selectedEnquiryIndex > applicantEnquiries.size()) {
+            System.out.println("Invalid selection. Returning to the menu...");
+            return;
+        }
+
+        EnquiryModel selectedEnquiry = applicantEnquiries.get(selectedEnquiryIndex - 1);
+
+        //ask user for action
+        System.out.println("You selected Enquiry: " + selectedEnquiry.getEnquiryText());
+        System.out.println("What would you like to do?");
+        System.out.println("1. View Enquiry");
+        System.out.println("2. Edit Enquiry");
+        System.out.println("3. Delete Enquiry");
+        System.out.print("Enter your choice: ");
+        String actionChoice = appContext.getScanner().nextLine();
+
+        switch (actionChoice) {
+            case "1":
+                //view
+                System.out.println("Enquiry Details:");
+                System.out.println(selectedEnquiry.getFormattedEnquiry());
+                break;
+            case "2":
+                //edit
+                System.out.print("Enter the new enquiry text: ");
+                String newEnquiryText = appContext.getScanner().nextLine();
+                boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
+                if (isEdited) {
+                    System.out.println("Your enquiry has been updated.");
+                } else {
+                    System.out.println("There was an issue updating your enquiry.");
+                }
+                break;
+            case "3":
+                //delete
+                boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getId());
+                if (isDeleted) {
+                    System.out.println("Your enquiry has been deleted.");
+                } else {
+                    System.out.println("There was an issue deleting your enquiry.");
+                }
+                break;
+            default:
+                System.out.println("Invalid choice. Returning to the menu...");
+                break;
         }
     }
 }

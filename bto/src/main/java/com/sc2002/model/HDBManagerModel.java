@@ -34,12 +34,14 @@ public class HDBManagerModel extends User {
     public void setProjectID(int projectID) {
         this.projectID = projectID;
     }
+
     /**
      * To delete the project ID
      */
     public void deleteProjectID() {
         this.projectID = null;
     }
+
     /**
      * To get the project ID
      *
@@ -54,10 +56,11 @@ public class HDBManagerModel extends User {
         List<String> options = new ArrayList<>();
         //options.addAll(super.getMenuOptions()); // Inherit HDBOfficer's options
         options.addAll(Arrays.asList("Create BTO Project", "Edit BTO Project",
-                "Delete BTO Project", "Toggle Project Visibility", "View All Project", "View Your Projects", "View Enquiries", "Reply Enquiries",
+                "Delete BTO Project", "Toggle Project Visibility", "View All Project",
+                "View Your Projects", "View Enquiries", "Reply Enquiries",
                 "Approve Officer Registration", "Reject Officer Registration",
                 "Approve Application", "Reject Application", "Approve Withdrawal",
-                "Reject Withdrawal", "Generate Reports", "Logout"));
+                "Reject Withdrawal", "Generate Reports", "Reset Password", "Logout"));
         return options;
     }
 }
