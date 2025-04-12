@@ -52,23 +52,23 @@ public class ApplicantView {
                     // Option 2: View Application Status
                     viewApplicationStatusMenu(appContext);
                 }
-                case "5" -> {
-                    // Option 4: Generate Flat Selection Receipt
+                case "3" -> {
+                    // Option 3: Generate Flat Selection Receipt
                     generateReceiptMenu(appContext);
                 }
-                case "6" -> {
-                    // Option 5: Submit Enquiry
+                case "4" -> {
+                    // Option 4: Submit Enquiry
                     submitEnquiryMenu(appContext);
                 }
-                case "7" -> {
-                    // Option 6: View My Enquiries
+                case "5" -> {
+                    // Option 5: View My Enquiries
                     viewMyEnquiriesMenu(appContext);
                 }
-                case "8" -> {
+                case "6" -> {
                     // Reset Password
                     userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
                 }
-                case "9" -> {
+                case "7" -> {
                     // Option 7: Logout
                     System.out.println("Logging out...");
                     appContext.setCurrentUser(null);
@@ -173,9 +173,7 @@ public class ApplicantView {
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
         boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
 
-        if (isSubmitted) {
-            System.out.println("Your enquiry has been submitted successfully");
-        } else {
+        if (!isSubmitted) {
             System.out.println("There was an issue submitting your enquiry. Please try again");
         }
     }

@@ -27,7 +27,6 @@ public class ApplicantModel extends User {
         options.addAll(Arrays.asList(
         "Apply for BTO Project",
         "View Application Status",
-        "Update Flat Details",
         "Generate Flat Selection Receipt",
         "Submit Enquiry",
         "View Enquiry"
