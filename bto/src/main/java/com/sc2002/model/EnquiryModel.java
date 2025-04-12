@@ -59,7 +59,7 @@ public class EnquiryModel {
     
     public String getFormattedEnquiry() {
         StringBuilder strToReturn = new StringBuilder();
-        strToReturn.append("Enquiry ID: ").append(this.enquiryID+1).append("\n");
+        strToReturn.append("Enquiry ID: ").append(this.enquiryID).append("\n");
         strToReturn.append("Submitted by: ").append(this.submittedByApplicantNRIC).append("\n");
         strToReturn.append("Project ID: ").append(this.projectID).append("\n");
         strToReturn.append("Submission Date: ").append(this.submissionDate).append("\n");
