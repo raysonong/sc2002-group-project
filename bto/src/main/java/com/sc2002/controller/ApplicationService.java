@@ -68,7 +68,7 @@ public class ApplicationService {
 
     public Boolean applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
         // Check role
-        if(currentUser.getUsersRole() != UserRole.APPLICANT) {
+        if(currentUser.getUsersRole() != UserRole.APPLICANT && currentUser.getUsersRole() != UserRole.HDB_OFFICER){
             System.out.println("You do not have permission to apply an application to join a project.");
             return false;
         }
