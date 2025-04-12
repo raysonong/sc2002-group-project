@@ -7,6 +7,7 @@ import com.sc2002.controller.UserService;
 import com.sc2002.model.User;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.NRICValidator;
+import com.sc2002.utilities.PasswordValidator;
 
 public class mainAppView {
 
@@ -104,15 +105,19 @@ public class mainAppView {
             if (currentUser != null) {
                 System.out.println("Login successful!");
 
-                if ("password".equals(password.toLowerCase())) {
-                    System.out.printf("Please change your password: ");
-                    String newPassword = scanner.nextLine().trim();
-
-                    while (newPassword.toLowerCase().equals("password")) {
-                        System.out.println("New password cannot be 'password'. Please try again!");
+                if ("password".equals(password.toLowerCase())) { // check if it is 1st login
+                    String newPassword = "";
+                    do {
                         System.out.printf("Please change your password: ");
                         newPassword = scanner.nextLine().trim();
-                    }
+
+                        if (!PasswordValidator.getValidationMessages(newPassword).isEmpty()) {
+                            for (String message : PasswordValidator.getValidationMessages(newPassword)) {
+                                System.out.println(message);
+                            }
+                        }
+
+                    } while (!PasswordValidator.isValid(newPassword));
 
                     userService.updatePassword(currentUser, password, newPassword);
                 }
@@ -135,8 +140,8 @@ public class mainAppView {
         String name;
         int age;
         String maritalStatus;
-        String password;
-        String confirmPassword;
+        String password = "";
+        String confirmPassword = "";
 
         // Input and validate NRIC
         while (true) {
@@ -209,13 +214,18 @@ public class mainAppView {
         }
 
         // Input password, by right Ass. document ask for default password, but thats bad ? right ?
-        while (true) {
-            System.out.print("Enter your password: ");
-            password = scanner.nextLine();
+        do {
+            if (password.isEmpty()) {
+                System.out.print("Enter your password: ");
+                password = scanner.nextLine();
 
-            if (password.length() < 8) {
-                System.out.println("Password must be at least 8 characters long.");
-                continue;
+                if (!PasswordValidator.isValid(password)) {
+                    for (String message : PasswordValidator.getValidationMessages(password)) {
+                        System.out.println(message);
+                    }
+                    password = "";
+                    continue;
+                }
             }
 
             System.out.print("Confirm your password: ");
@@ -223,11 +233,8 @@ public class mainAppView {
 
             if (!password.equals(confirmPassword)) {
                 System.out.println("Passwords do not match. Please try again.");
-                continue;
             }
-
-            break;
-        }
+        } while (!PasswordValidator.isValid(password) || !password.equals(confirmPassword));
 
         // Register user using service
         User newUser = userService.registerApplicant(nric, name, age, maritalStatus, password, userList);
