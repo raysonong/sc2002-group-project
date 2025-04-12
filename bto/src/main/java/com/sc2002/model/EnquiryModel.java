@@ -45,19 +45,21 @@ public class EnquiryModel {
         this.enquiryResponse = response;
     }
 
-    public void editEnquiry(String newEnquiryText) {
+    public boolean editEnquiry(String newEnquiryText) {
         // Update the enquiry text with the new text
         this.enquiryText = newEnquiryText;
         // Assuming garbage collection will handle the old response
         this.submissionDate= new Date();
         // Reset the response since the enquiry has been edited
         this.enquiryResponse = null;
+        
+        return true;
     }
 
     
     public String getFormattedEnquiry() {
         StringBuilder strToReturn = new StringBuilder();
-        strToReturn.append("Enquiry ID: ").append(this.enquiryID).append("\n");
+        strToReturn.append("Enquiry ID: ").append(this.enquiryID+1).append("\n");
         strToReturn.append("Submitted by: ").append(this.submittedByApplicantNRIC).append("\n");
         strToReturn.append("Project ID: ").append(this.projectID).append("\n");
         strToReturn.append("Submission Date: ").append(this.submissionDate).append("\n");

@@ -233,12 +233,9 @@ public class ApplicantView {
                 //edit
                 System.out.print("Enter the new enquiry text: ");
                 String newEnquiryText = appContext.getScanner().nextLine();
-                boolean isEdited = enquiryService.editEnquiryResponse(selectedEnquiry.getId(), newEnquiryText);
-                if (isEdited) {
-                    System.out.println("Your enquiry has been updated.");
-                } else {
-                    System.out.println("There was an issue updating your enquiry.");
-                }
+                selectedEnquiry.editEnquiry(newEnquiryText);
+                System.out.println("Your enquiry has been updated.");
+                
                 break;
             case "3":
                 //delete
