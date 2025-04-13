@@ -110,7 +110,15 @@ public class HDBOfficerView {
         Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
                 .findbyUserID(appContext.getCurrentUser().getUserID());
 
-        if (officerRegOpt.isPresent()) {
+        // Retrieve the projects managed by the officer
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+
+        if (!managedProjects.isEmpty()) {
+            System.out.println("You can no longer apply for a project as you have already managing a project.");
+            return;
+        }
+
+        if (officerRegOpt.isPresent() || !managedProjects.isEmpty()) {
             if (officerRegOpt.get().getStatus() == OfficerRegistrationStatus.APPROVED || officerRegOpt.get().getStatus() == OfficerRegistrationStatus.PENDING) {
                 System.out.println("You can no longer apply for a project as you have already applied to be an officer.");
                 return;
@@ -296,10 +304,18 @@ public class HDBOfficerView {
             return;
         }
 
+        // Retrieve the projects managed by the officer
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+
+        if (!managedProjects.isEmpty()) {
+            System.out.println("You can no longer register for a project as you have already managing a project.");
+            return;
+        }
+
         // Check if the user is already registered for a project
         OfficerRegistrationModel registration = officerRegistrationService.registerForProject();
         if (registration == null) {
-            System.out.println("You are already registered for a project or there was an error in registration.");
+            System.out.println("There was an error in registration.");
             return;
         }
         
@@ -326,21 +342,25 @@ public class HDBOfficerView {
     }
 
     private void viewAndUpdateBookings(AppContext appContext) {
-        Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
-                .findbyUserID(appContext.getCurrentUser().getUserID());
+        // Retrieve the projects managed by the officer
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
 
-        if (officerRegOpt.isEmpty() || officerRegOpt.get().getStatus() != OfficerRegistrationStatus.APPROVED) {
-            System.out.println("You are not an approved officer. Access denied.");
+        if (managedProjects.isEmpty()) {
+            System.out.println("You must be an approving officer for a project to view or update bookings.");
             return;
         }
 
+        // Assuming an officer can manage only one project at a time
+        BTOProjectModel managedProject = managedProjects.get(0);
+
         System.out.println("Enter applicant's NRIC:");
-        String input_nric = appContext.getScanner().nextLine();
+        String inputNric = appContext.getScanner().nextLine();
 
-        int officerProjectID = officerRegOpt.get().getProjectID();
-
+        // Check if the applicant's application exists for the managed project
         BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
-        boolean found = applicationService.viewApplicationByNRIC(officerProjectID, input_nric, outputApplication);
+        boolean found = applicationService.viewApplicationByNRIC(managedProject.getProjectID(), inputNric, outputApplication);
+        System.out.println(managedProject.getProjectID());
+        System.out.println("NRIC: " + inputNric);
 
         if (found) {
             BTOApplicationModel application = outputApplication[0];
@@ -407,18 +427,18 @@ public class HDBOfficerView {
     }
 
     private void generateApplicationReceipt(AppContext appContext) {
-        Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
-                .findbyUserID(appContext.getCurrentUser().getUserID());
+        // Retrieve the projects managed by the officer
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
 
-        if (officerRegOpt.isEmpty() || officerRegOpt.get().getStatus() != OfficerRegistrationStatus.APPROVED) {
-            System.out.println("You are not an approved officer. Access denied.");
+        if (managedProjects.isEmpty()) {
+            System.out.println("You must be an approving officer for a project to generate a receipt.");
             return;
         }
 
         System.out.println("Enter applicant's NRIC:");
         String inputNric = appContext.getScanner().nextLine();
 
-        int officerProjectID = officerRegOpt.get().getProjectID();
+        int officerProjectID = managedProjects.get(0).getProjectID();
 
         BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
         boolean found = applicationService.viewApplicationByNRIC(officerProjectID, inputNric, outputApplication);
@@ -437,11 +457,11 @@ public class HDBOfficerView {
     }
 
     private void manageEnquiriesMenu(AppContext appContext) {
-        Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
-                .findbyUserID(appContext.getCurrentUser().getUserID());
+        // Retrieve the projects managed by the officer
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
 
-        if (officerRegOpt.isEmpty() || officerRegOpt.get().getStatus() != OfficerRegistrationStatus.APPROVED) {
-            System.out.println("You are not an approved officer. Access denied.");
+        if (managedProjects.isEmpty()) {
+            System.out.println("You must be an approving officer for a project to manage enquiries.");
             return;
         }
         
