@@ -399,8 +399,7 @@ public class HDBOfficerView {
                     }
 
                 }
-                default ->
-                    System.out.println("Invalid option selected.");
+                default -> System.out.println("Invalid option selected.");
             }
         } else {
             System.out.println("No application found or you are not authorized to view this application.");
@@ -458,14 +457,13 @@ public class HDBOfficerView {
         System.out.println("Enquiries:");
         for (int i = 0; i < enquiries.size(); i++) {
             EnquiryModel enquiry = enquiries.get(i);
-            System.out.println((i + 1) + ". Enquiry ID: " + enquiry.getId()
-                    + ", Applicant NRIC: " + enquiry.getApplicantNRIC()
+            System.out.println((i + 1) + ". Applicant NRIC: " + enquiry.getApplicantNRIC()
                     + ", Response: " + enquiry.getEnquiryText()
                     + ", Status: " + (enquiry.getStatus() ? "Replied" : "Pending"));
         }
 
         // Prompt officer to select an enquiry to reply to
-        System.out.print("Enter the number of the enquiry you want to reply to: ");
+        System.out.print("Enter the row number you want to view: ");
         String input = appContext.getScanner().nextLine();
 
         try {
@@ -476,28 +474,44 @@ public class HDBOfficerView {
                 return;
             }
 
-            EnquiryModel selectedEnquiry = enquiries.get(enquiryIndex);
-
             // Display the selected enquiry details
-            System.out.println("Selected Enquiry:");
-            System.out.println("Enquiry ID: " + selectedEnquiry.getId());
-            System.out.println("Applicant NRIC: " + selectedEnquiry.getApplicantNRIC());
-            System.out.println("Message: " + selectedEnquiry.getEnquiryText());
+            enquiryService.viewEnquiry(enquiryIndex);
+            System.out.println("What would you like to do?");
+            System.out.println("1. Create/Edit Reply");
+            System.out.println("2. Exit to Menu");
+            System.out.print("Enter your choice: ");
 
-            // Check if the enquiry has already been replied to
-            if (selectedEnquiry.getStatus()) {
-                System.out.println("This enquiry has already been replied to.");
-                return;
+            input = appContext.getScanner().nextLine();
+            switch (input) {
+                case "1" -> {
+                    String reply;
+                    EnquiryModel selectedEnquiry = enquiries.get(enquiryIndex);
+
+                    // Check if the enquiry has already been replied to
+                    if (selectedEnquiry.getStatus()) {
+                        System.out.println("Edit your reply:");
+                        reply = appContext.getScanner().nextLine();
+
+                        enquiryService.editEnquiryResponse(enquiryIndex, reply);
+                        System.out.println("Reply edited successfully.");
+                        return;
+                    }
+
+                    // Prompt officer to enter a reply
+                    System.out.print("Enter your reply: ");
+                    reply = appContext.getScanner().nextLine();
+
+                    // Reply to the enquiry
+                    selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
+                    System.out.println("Reply sent successfully.");
+                    return;
+                }
+                case "2" -> {
+                    System.out.println("Exiting to menu...");
+                    return;
+                }
+                default -> System.out.println("Invalid option selected.");
             }
-
-            // Prompt officer to enter a reply
-            System.out.print("Enter your reply: ");
-            String reply = appContext.getScanner().nextLine();
-
-            // Reply to the enquiry
-            selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
-
-            System.out.println("Reply sent successfully.");
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a valid number.");
         }

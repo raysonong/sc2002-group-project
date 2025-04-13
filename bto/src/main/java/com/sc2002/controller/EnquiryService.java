@@ -17,14 +17,14 @@ public class EnquiryService {
     }
 
     public boolean submitEnquiry(String applicantNRIC, int projectId, String enquiryText) {
-    // create a new enquiry
-    EnquiryModel newEnquiry = new EnquiryModel(applicantNRIC, projectId, enquiryText);
+        // create a new enquiry
+        EnquiryModel newEnquiry = new EnquiryModel(applicantNRIC, projectId, enquiryText);
 
-    // save the new enquiry
-    appContext.getEnquiryRepo().saveEnquiry(newEnquiry);
-    System.out.println("Your enquiry has been submitted successfully!");
-    return true;
-}
+        // save the new enquiry
+        appContext.getEnquiryRepo().saveEnquiry(newEnquiry);
+        System.out.println("Your enquiry has been submitted successfully!");
+        return true;
+    }
 
     // viewAllEnquiry for Managers & Officer (Mostly for printing menu related tasks)
     public List<EnquiryModel> getAllEnquiries() {
@@ -51,13 +51,14 @@ public class EnquiryService {
         }
     }
 
-    public boolean viewEnquiry(int enquiryID){
+    public boolean viewEnquiry(int enquiryID) {
         try{
             EnquiryModel enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
+
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
                 // for managers, can reply all
                 if (enquiry!=null) {
-                    enquiry.getFormattedEnquiry(); // we print it in the service
+                    System.out.println(enquiry.getFormattedEnquiry()); // we print it in the service
                     return true;
                 } else {
                     throw new RuntimeException("Project not found.");
@@ -69,15 +70,16 @@ public class EnquiryService {
                 // 1) print menu using getAllEnquiry
                 // 2) viewEnquiry(index) to view the exact enquiry
                 // 3) editEnquiry(index) to edit that exact enquiry
-                
                 if (enquiry!=null) {
-                    if(appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())){
-                        enquiry.getFormattedEnquiry(); // we print it in the service
+                    if (appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())) {
+                        System.out.println(enquiry.getFormattedEnquiry()); // we print it in the service
                         return true;
-                    }else{ // might need to check if officer is applicant, will see when we debugging @rayson
+                    }
+                    else { // might need to check if officer is applicant, will see when we debugging @rayson
                         throw new RuntimeException("User is not an officer for project.");
                     }
-                } else {
+                }
+                else {
                     throw new RuntimeException("Project not found.");
                 }
                 
