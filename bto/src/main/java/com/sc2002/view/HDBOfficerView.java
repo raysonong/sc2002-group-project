@@ -190,6 +190,13 @@ public class HDBOfficerView {
     }
 
     private void submitEnquiryMenu(AppContext appContext) {
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+
+        if (!managedProjects.isEmpty()) {
+            System.out.println("You cannot submit an enquiry as you are managing a project.");
+            return;
+        }
+
         // Display eligible projects for the applicant
         System.out.println("Eligible Projects for Enquiry: ");
         applicationService.viewAvailableProjectsForApplicant();
@@ -219,6 +226,13 @@ public class HDBOfficerView {
     }
 
     private void viewMyEnquiriesMenu(AppContext appContext) {
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+
+        if (!managedProjects.isEmpty()) {
+            System.out.println("You cannot view your enquiry as you are managing a project.");
+            return;
+        }
+
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
 
         //get enquiries of applicant 
