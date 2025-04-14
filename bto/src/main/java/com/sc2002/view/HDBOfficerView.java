@@ -107,24 +107,6 @@ public class HDBOfficerView {
     }
 
     private void applyForProjectMenu(AppContext appContext) {
-        Optional<OfficerRegistrationModel> officerRegOpt = appContext.getOfficerRegistrationRepo()
-                .findbyUserID(appContext.getCurrentUser().getUserID());
-
-        // Retrieve the projects managed by the officer
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
-
-        if (!managedProjects.isEmpty()) {
-            System.out.println("You can no longer apply for a project as you have already managing a project.");
-            return;
-        }
-
-        if (officerRegOpt.isPresent() || !managedProjects.isEmpty()) {
-            if (officerRegOpt.get().getStatus() == OfficerRegistrationStatus.APPROVED || officerRegOpt.get().getStatus() == OfficerRegistrationStatus.PENDING) {
-                System.out.println("You can no longer apply for a project as you have already applied to be an officer.");
-                return;
-            }
-        }
-        
         // display eligible projects 
         System.out.println("Available Projects: ");
         applicationService.viewAvailableProjectsForApplicant();
@@ -409,7 +391,8 @@ public class HDBOfficerView {
                 case "2" -> {
                     // Option 2: Update applicant's flat type
                     System.out.println("Available Flat Types:");
-                    for (FlatType flatType : FlatType.values()) {
+                    List<FlatType> availableFlatTypes = managedProject.getAvailableFlatTypes();
+                    for (FlatType flatType : availableFlatTypes) {
                         System.out.println("- " + flatType);
                     }
 
@@ -419,6 +402,12 @@ public class HDBOfficerView {
                     try {
                         // Convert the input to a FlatType enum
                         FlatType newFlatType = FlatType.valueOf(newFlatTypeInput.toUpperCase());
+
+                        // Validate if the flat type is available
+                        if (!availableFlatTypes.contains(newFlatType)) {
+                            System.out.println("The selected flat type is not available. Please try again.");
+                            return;
+                        }
 
                         // Call the service to update the flat type
                         boolean updated = applicationService.updateApplicationFlatType(applicationID, newFlatType);

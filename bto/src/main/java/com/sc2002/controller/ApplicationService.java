@@ -78,12 +78,21 @@ public class ApplicationService {
         while (true) { 
             System.out.printf("Enter Project ID (Input -1 to return back to menu): ");
             if (scanner.hasNextInt()) {
+                List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
                 input_projectId = scanner.nextInt();
                 scanner.nextLine(); // Consume the leftover newline
 
                 // Return back to menu
                 if (input_projectId == -1) {
                     return false;
+                }
+
+                // Condition that officer cannot apply a BTO project that he is managing
+                if (!managedProjects.isEmpty()) {
+                    if (managedProjects.get(0).getProjectID() == input_projectId) {
+                        System.out.println("You cannot apply to your own project.");
+                        return false;
+                    }
                 }
 
                 // Validate input
@@ -270,7 +279,17 @@ public class ApplicationService {
     
         if (applicationOpt.isPresent()) {
             BTOApplicationModel application = applicationOpt.get();
-    
+            BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
+
+            if (newFlatType == FlatType.TWO_ROOM) {
+                project.setTwoRoomCount(project.getTwoRoomCount() - 1);
+                project.setThreeRoomCount(project.getThreeRoomCount() + 1);
+            }
+            else if (newFlatType == FlatType.THREE_ROOM) {
+                project.setTwoRoomCount(project.getTwoRoomCount() + 1);
+                project.setThreeRoomCount(project.getThreeRoomCount() - 1);
+            }
+
             // Update the flat type
             application.setFlatType(newFlatType);
             appContext.getApplicationRepo().save(application);
