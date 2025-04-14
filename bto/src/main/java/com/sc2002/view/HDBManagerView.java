@@ -290,7 +290,7 @@ public class HDBManagerView {
             System.out.println("-- All Enquiries --");
             for (EnquiryModel enquiry : enquiries) {
                 System.out.printf("ID: %d, Subject: %s, Status: %s%n",
-                        enquiry.getId(), enquiry.getEnquiryText(), enquiry.getStatus());
+                        enquiry.getID(), enquiry.getEnquiryText(), enquiry.getStatus());
             }
         }
         System.out.print("Press enter to continue...");
@@ -629,7 +629,7 @@ public class HDBManagerView {
         try {
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
-                project = appContext.getProjectRepo().getProjectByID(projectID);
+                project = appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     System.out.println("Error: Project not found.");
                     return;

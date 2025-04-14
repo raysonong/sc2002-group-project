@@ -6,7 +6,7 @@ import javax.naming.AuthenticationException;
 
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.ApplicantModel;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.NRICValidator;
 import com.sc2002.utilities.PasswordValidator;
@@ -21,13 +21,13 @@ public class UserService {
      * @param userRepo The user repository
      * @return The authenticated user or null if authentication fails
      */
-    public User authenticateUser(String nric, String password, UserRepo userRepo) {
+    public UserModel authenticateUser(String nric, String password, UserRepo userRepo) {
         try {
             // Format NRIC to uppercase
             nric = NRICValidator.formatNRIC(nric);
 
             // Find user by NRIC
-            User user = userRepo.getUserByNRIC(nric);
+            UserModel user = userRepo.getUserByNRIC(nric);
             if (user == null) {
                 throw new AuthenticationException("User with this NRIC not found");
             }
@@ -53,7 +53,7 @@ public class UserService {
      * @param userRepo The user repository
      * @return The registered user or null if registration fails
      */
-    public User registerApplicant(String nric, String name, int age, String maritalStatus,
+    public UserModel registerApplicant(String nric, String name, int age, String maritalStatus,
             String password, UserRepo userRepo) {
         try {
             // Validate NRIC format
@@ -70,10 +70,10 @@ public class UserService {
             }
 
             // Create new applicant
-            User newUser = new ApplicantModel(name, nric, age, maritalStatus, password, UserRole.APPLICANT);
+            UserModel newUser = new ApplicantModel(name, nric, age, maritalStatus, password, UserRole.APPLICANT);
 
             // Add to repository
-            userRepo.addUser(newUser);
+            userRepo.save(newUser);
 
             return newUser;
         } catch (Exception e) {
@@ -90,7 +90,7 @@ public class UserService {
      * @param newPassword The new password to set
      * @return true if update successful, false otherwise
      */
-    public boolean updatePassword(User user, String currentPassword, String newPassword) {
+    public boolean updatePassword(UserModel user, String currentPassword, String newPassword) {
         try {
             // Verify current password
             user.authenticate(currentPassword);
@@ -105,7 +105,7 @@ public class UserService {
         }
     }
 
-    public void resetPassword(User user, Scanner scanner) {
+    public void resetPassword(UserModel user, Scanner scanner) {
         String oldPassword = "";
         String password = "";
         String confirmPassword = "";

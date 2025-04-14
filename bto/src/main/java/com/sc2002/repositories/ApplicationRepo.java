@@ -7,8 +7,9 @@ import java.util.stream.Collectors;
 
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.BTOApplicationModel;
+import com.sc2002.interfaces.RepoInterface; // Ensure this is the correct package for RepoInterface
 
-public class ApplicationRepo {
+public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integer> {
 
     private List<BTOApplicationModel> applications;
 
@@ -19,6 +20,36 @@ public class ApplicationRepo {
         this.applications = new ArrayList<>();
     }
 
+    @Override
+    public void save(BTOApplicationModel application) {
+        Optional<BTOApplicationModel> existingApplication = findByApplicationID(application.getApplicationID());
+        if (existingApplication.isPresent()) {
+            applications.remove(existingApplication.get());
+        }
+        applications.add(application);
+    }
+
+    @Override
+    public List<BTOApplicationModel> findAll() {
+        return new ArrayList<>(applications);
+    }
+
+    @Override
+    public BTOApplicationModel findByID(Integer applicationID) {
+        Optional<BTOApplicationModel> result = findByApplicationID(applicationID);
+        return result.orElse(null);
+    }
+
+    @Override
+    public boolean delete(Integer applicationID) {
+        Optional<BTOApplicationModel> application = findByApplicationID(applicationID);
+        if (application.isPresent()) {
+            applications.remove(application.get());
+            return true;
+        }
+        return false;
+    }
+
     public Optional<BTOApplicationModel> findbyUserID(long userId) {
         for (BTOApplicationModel application : this.applications) {
             if (application.getApplicantUserID() == userId) {
@@ -26,19 +57,6 @@ public class ApplicationRepo {
             }
         }
         return Optional.empty();
-    }
-
-    public void save(BTOApplicationModel application) {
-        // Check if the application already exists
-        Optional<BTOApplicationModel> existingApplication = findbyUserID(application.getApplicantUserID());
-
-        if (existingApplication.isPresent()) {
-            // Remove the existing application
-            applications.remove(existingApplication.get());
-        }
-
-        // Add the new or updated application
-        applications.add(application);
     }
 
     public Optional<BTOApplicationModel> findActiveByApplicantID(String userID) { // returns a Optional, to tell whether the user has an active Application

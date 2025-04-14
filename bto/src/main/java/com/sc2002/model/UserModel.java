@@ -15,7 +15,7 @@ import com.sc2002.model.ProjectViewFilterModel;
  * Abstract class representing a user in the system. This class provides basic
  * user attributes and functionalities
  */
-public abstract class User {
+public abstract class UserModel {
     /**
      * Contains user's Role, used for authentication.
      */
@@ -62,7 +62,7 @@ public abstract class User {
      * @param isMarried Marital Status of the user
      * @param password The password of the account
      */
-    User(String nric, String name, int age, String isMarried, String password, UserRole role) {
+    UserModel(String nric, String name, int age, String isMarried, String password, UserRole role) {
         this.password = hashPasswd(password);
         if (this.password == null) {
             System.out.println("User not created");

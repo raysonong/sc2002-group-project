@@ -31,7 +31,7 @@ public class ProjectManagementService {
         }
 
         // check if currently are managing other project
-        for (BTOProjectModel btoProjectModel : appContext.getProjectRepo().getAllProjects()) {
+        for (BTOProjectModel btoProjectModel : appContext.getProjectRepo().findAll()) {
             if (btoProjectModel.getManagerUserID() == appContext.getCurrentUser().getUserID()) {
                 if (btoProjectModel.getClosingDate().isAfter(LocalDate.now())) {
                     System.out.println("You are currently managing another project!");
@@ -194,7 +194,7 @@ public class ProjectManagementService {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
                 int projectID = ((HDBManagerModel) this.appContext.getCurrentUser()).getProjectID();
-                BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(projectID);
+                BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
@@ -269,12 +269,12 @@ public class ProjectManagementService {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
                 HDBManagerModel currentUser = (HDBManagerModel) this.appContext.getCurrentUser();
-                BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(currentUser.getProjectID());
+                BTOProjectModel project = this.appContext.getProjectRepo().findByID(currentUser.getProjectID());
                 if (project.getManagerUserID() == currentUser.getUserID()) {
                     currentUser.deleteProjectID(); // if deleting currently managing project
 
                 }
-                if (this.appContext.getProjectRepo().deleteByProjectID(currentUser.getProjectID())) {
+                if (this.appContext.getProjectRepo().delete(currentUser.getProjectID())) {
                     return true;
                 } else {
                     throw new RuntimeException("Failed to delete project.");
@@ -291,7 +291,7 @@ public class ProjectManagementService {
     public void toggleProjectVisibility(Integer projectID) {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
-                BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(projectID);
+                BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Project with the given ID does not exist.");
                 }

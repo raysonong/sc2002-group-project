@@ -6,7 +6,7 @@ import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.OfficerRegistrationModel;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ProjectRepo;
 
 public class OfficerRegistrationService {
@@ -19,7 +19,7 @@ public class OfficerRegistrationService {
         // Initialize appContext required
         ProjectRepo projectRepo = this.appContext.getProjectRepo();
         Scanner scanner = this.appContext.getScanner();
-        User currentUser = this.appContext.getCurrentUser();
+        UserModel currentUser = this.appContext.getCurrentUser();
         // Check role
         if(currentUser.getUsersRole() != UserRole.HDB_OFFICER) {
             System.out.println("You do not have permission to apply an application to join a project.");
@@ -40,7 +40,7 @@ public class OfficerRegistrationService {
                 }
 
                 // Validate input
-                if (projectRepo.getProjectByID(input_projectId)==null) {
+                if (projectRepo.findByID(input_projectId)==null) {
                     System.out.println("This project ID does not exist. Please enter a valid ID.");
                 }
                 else {
@@ -59,7 +59,7 @@ public class OfficerRegistrationService {
     public boolean approveRegistration(OfficerRegistrationModel registration){
         try{
             //Checking if isManager and is Project's manager
-            BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(registration.getProjectID());
+            BTOProjectModel project = this.appContext.getProjectRepo().findByID(registration.getProjectID());
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser()) && project.getManagerUserID()==this.appContext.getCurrentUser().getUserID()){
                 // Add to project 
                 if(project.addManagingOfficerUser(registration.getOfficerUser())){
@@ -79,7 +79,7 @@ public class OfficerRegistrationService {
     public boolean rejectRegistration(OfficerRegistrationModel registration){
         try{
             //Checking if isManager and is Project's manager
-            BTOProjectModel project = this.appContext.getProjectRepo().getProjectByID(registration.getProjectID());
+            BTOProjectModel project = this.appContext.getProjectRepo().findByID(registration.getProjectID());
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser()) && project.getManagerUserID()==this.appContext.getCurrentUser().getUserID()){
                 // Add to project 
                 if(project.removeManagingOfficerUser(registration.getOfficerUser())){

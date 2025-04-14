@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.sc2002.enums.UserRole; // for FlatType enums
 
-public class HDBManagerModel extends User {
+public class HDBManagerModel extends UserModel {
 
     /**
      * The projectID that they are handling at the moment

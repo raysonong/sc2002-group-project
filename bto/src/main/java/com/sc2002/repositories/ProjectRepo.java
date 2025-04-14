@@ -9,17 +9,29 @@ import java.util.stream.Collectors;
 import com.sc2002.controller.AppContext;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.UserRole;
+import com.sc2002.interfaces.RepoInterface;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.ProjectViewFilterModel;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 
 
-public class ProjectRepo {
+public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
 
     private List<BTOProjectModel> projects = new ArrayList<>();
+    
+    @Override
+    public void save(BTOProjectModel project) {
+        projects.add(project);
+    }
 
-    public BTOProjectModel getProjectByID(int projectID) {
+    @Override
+    public boolean delete(Integer projectID) {
+        return projects.removeIf(project -> project.getProjectID() == projectID);
+    }
+
+    @Override
+    public BTOProjectModel findByID(Integer projectID) {
         for (BTOProjectModel project : projects) {
             if (project.getProjectID() == projectID) {
                 return project;
@@ -27,11 +39,12 @@ public class ProjectRepo {
         }
         return null;
     }
-    
-    public boolean deleteByProjectID(int projectID) {
-        return projects.removeIf(project -> project.getProjectID() == projectID);
-    }
 
+    @Override
+    public List<BTOProjectModel> findAll() {
+        return new ArrayList<>(projects);
+    }
+    
     public Map<Integer, String> getAllProject() {
         Map<Integer, String> toReturn = new HashMap<>();
         for (int i = 0; i < projects.size(); i++) {
@@ -49,7 +62,7 @@ public class ProjectRepo {
         }
         return toReturn;
     }
-    public List<BTOProjectModel> getProjectsByOfficerID(User currentUser) {
+    public List<BTOProjectModel> getProjectsByOfficerID(UserModel currentUser) {
         List<BTOProjectModel> toReturn = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).isManagingOfficer(currentUser)) {
@@ -58,17 +71,10 @@ public class ProjectRepo {
         }
         return toReturn;
     }
-    public List<BTOProjectModel> getAllProjects() {
-        return new ArrayList<>(projects);
-    }
-
-    public void save(BTOProjectModel project) {
-        projects.add(project);
-    }
 
     public List<BTOProjectModel> findByFilter(AppContext appContext) { // we parse user since we need check all the age and stuff as well
         // Get user
-        User user=appContext.getCurrentUser();
+        UserModel user=appContext.getCurrentUser();
         // We filter base on user's filter criterion first
         ProjectViewFilterModel filter = user.getProjectViewFilter();
         List<BTOProjectModel> filteredProjects = projects.stream()

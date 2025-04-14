@@ -7,7 +7,7 @@ import java.util.List;
 import com.sc2002.enums.FlatType; // for FlatType enums
 import com.sc2002.enums.UserRole; // for UserRole enums
 
-public class ApplicantModel extends User {
+public class ApplicantModel extends UserModel {
     // contain ID of project applicant applied to
     private int appliedProject; // ProjectID in INT
     

@@ -81,7 +81,7 @@ public class BTOProjectModel {
     /**
      * The list of managing officer object who are assigned to the project.
      */
-    private ArrayList<User> managingOfficerUsers;
+    private ArrayList<UserModel> managingOfficerUsers;
 
     /**
      * Constructs a new BTOProjectModel with the specified details.
@@ -301,7 +301,7 @@ public class BTOProjectModel {
      *
      * @return The list of managing officer UserIDs.
      */
-    public ArrayList<User> getManagingOfficerUsers() {
+    public ArrayList<UserModel> getManagingOfficerUsers() {
         return this.managingOfficerUsers;
     }
 
@@ -312,7 +312,7 @@ public class BTOProjectModel {
      * @param managingOfficerUser The User object of the managing officer to
      * add.
      */
-    public boolean addManagingOfficerUser(User managingOfficerUser) {
+    public boolean addManagingOfficerUser(UserModel managingOfficerUser) {
         if (this.managingOfficerUsers.size() >= this.maxManagingOfficer) {
             return false;
         }
@@ -327,7 +327,7 @@ public class BTOProjectModel {
      * @throws NoSuchElementException If the User object is not found in the
      * list.
      */
-    public boolean removeManagingOfficerUser(User currentUser) {
+    public boolean removeManagingOfficerUser(UserModel currentUser) {
         if (this.managingOfficerUsers.remove(currentUser)) {
             return true;
         } else {
@@ -341,7 +341,7 @@ public class BTOProjectModel {
      * @param user The User object to check.
      * @return True if the User is in the list, false otherwise.
      */
-    public boolean isManagingOfficer(User currentUser) {
+    public boolean isManagingOfficer(UserModel currentUser) {
         return this.managingOfficerUsers.contains(currentUser);
     }
 
@@ -364,7 +364,7 @@ public class BTOProjectModel {
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
         System.out.println("Managing Officers: "
                 + String.join(", ", managingOfficerUsers.stream()
-                        .map(User::getName)
+                        .map(UserModel::getName)
                         .toList()));
         System.out.println("---------------------");
     }

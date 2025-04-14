@@ -19,14 +19,14 @@ public class EnquiryModel {
         this.enquiryResponse = null; // Initialize enquiry response
     }
 
-    public int getId(){
+    public int getID(){
         return this.enquiryID;
     }
     public String getApplicantNRIC(){
         return this.submittedByApplicantNRIC;
     }
 
-    public int getProjectId() {
+    public int getProjectID() {
         return this.projectID;
     }
 

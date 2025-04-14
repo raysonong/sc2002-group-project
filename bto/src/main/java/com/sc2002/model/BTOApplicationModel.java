@@ -9,7 +9,7 @@ public class BTOApplicationModel {
     private static int nextApplicationID = 1; // Static counter for auto-incrementing IDs
     private int applicationID;
 
-    private User applicantUser;
+    private UserModel applicantUser;
     private BTOProjectModel project;
     private ApplicationStatus status;
     private FlatType applicationFlatType;
@@ -17,7 +17,7 @@ public class BTOApplicationModel {
     private Date submissionDate;
     private Boolean withdrawalRequested;
 
-    public BTOApplicationModel(User applicantUser, BTOProjectModel project, FlatType applicationFlatType) {
+    public BTOApplicationModel(UserModel applicantUser, BTOProjectModel project, FlatType applicationFlatType) {
         //Cond 1, Singles 35 year old and above, can only apply for 2-Room
         if(applicantUser.getAge()<35 && !applicantUser.getMaritalStatus()){ // Checks for singles less than 35
             throw new RuntimeException("User is Single & age less than 35.");

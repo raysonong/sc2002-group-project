@@ -1,16 +1,14 @@
 package com.sc2002.repositories;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.sc2002.model.OfficerRegistrationModel;
+import com.sc2002.interfaces.RepoInterface; // Ensure this is the correct package for RepoInterface
 
-
-public class OfficerRegistrationRepo {
+public class OfficerRegistrationRepo implements RepoInterface<OfficerRegistrationModel, Long> {
     private List<OfficerRegistrationModel> applications;
     
     /**
@@ -20,15 +18,7 @@ public class OfficerRegistrationRepo {
         this.applications = new ArrayList<>();
     }
 
-    public Optional<OfficerRegistrationModel> findbyUserID(long userId) {
-        for (OfficerRegistrationModel application : this.applications) {
-            if (application.getUserID() == userId) {
-                return Optional.of(application);
-            }
-        }
-        return Optional.empty();
-    }
-
+    @Override
     public void save(OfficerRegistrationModel application) {
         // Check if the application already exists
         Optional<OfficerRegistrationModel> existingApplication = findbyUserID(application.getUserID());
@@ -42,6 +32,36 @@ public class OfficerRegistrationRepo {
         applications.add(application);
     }
 
+    @Override
+    public List<OfficerRegistrationModel> findAll() {
+        return new ArrayList<>(applications);
+    }
+
+    @Override
+    public OfficerRegistrationModel findByID(Long userID) {
+        Optional<OfficerRegistrationModel> result = findbyUserID(userID);
+        return result.orElse(null);
+    }
+
+    @Override
+    public boolean delete(Long userID) {
+        Optional<OfficerRegistrationModel> application = findbyUserID(userID);
+        if (application.isPresent()) {
+            applications.remove(application.get());
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<OfficerRegistrationModel> findbyUserID(long userId) {
+        for (OfficerRegistrationModel application : this.applications) {
+            if (application.getUserID() == userId) {
+                return Optional.of(application);
+            }
+        }
+        return Optional.empty();
+    }
+
     public Optional<OfficerRegistrationModel> findActiveByOfficerID(String userID) {
         return applications.stream()
                 .filter(application -> String.valueOf(application.getUserID()).equals(userID))
@@ -53,6 +73,4 @@ public class OfficerRegistrationRepo {
         .filter(application -> String.valueOf(application.getProjectID()).equals(projectID))
         .collect(Collectors.toList());
     }
-
-
 }

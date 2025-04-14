@@ -203,7 +203,7 @@ public class HDBOfficerView {
         appContext.getScanner().nextLine();
 
         // check project exists
-        BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(selectedProjectId);
+        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectId);
         if (selectedProject == null) {
             System.out.println("Invalid Project ID. Please try again.");
             return;
@@ -244,7 +244,7 @@ public class HDBOfficerView {
         System.out.println("Your Enquiries:");
         for (int i = 0; i < applicantEnquiries.size(); i++) {
             EnquiryModel enquiry = applicantEnquiries.get(i);
-            System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getProjectId() + " | Enquiry: " + enquiry.getEnquiryText());
+            System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getID() + " | Enquiry: " + enquiry.getEnquiryText());
         }
 
         //ask user to select enquiry
@@ -289,7 +289,7 @@ public class HDBOfficerView {
                 break;
             case "3":
                 //delete
-                boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getId());
+                boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getID());
                 if (isDeleted) {
                     System.out.println("Your enquiry has been deleted.");
                 } else {

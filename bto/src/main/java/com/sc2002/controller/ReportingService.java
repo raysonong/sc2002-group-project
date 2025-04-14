@@ -5,7 +5,7 @@ import java.util.List;
 import com.sc2002.enums.FlatType;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ApplicationRepo;
 
 public class ReportingService {
@@ -18,7 +18,7 @@ public class ReportingService {
         // 1) List of Applicants and their respective flat booking - flat type, project name , age marital status.
         // 2) There should be filters to generate a list based on various categories,
         //      e.g. report of married applicants' choice of flat type
-        User currentUser = this.appContext.getCurrentUser();
+        UserModel currentUser = this.appContext.getCurrentUser();
         ApplicationRepo applicationRepo=this.appContext.getApplicationRepo();
 
         try{

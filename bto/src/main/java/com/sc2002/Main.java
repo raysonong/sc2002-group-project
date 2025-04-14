@@ -5,7 +5,7 @@ import java.util.Scanner;
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.AuthService;
 import com.sc2002.controller.InitializationService;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ApplicationRepo;
 import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.repositories.OfficerRegistrationRepo;
@@ -44,7 +44,7 @@ public class Main {
         initialService.initializeUsers(userList);
         initialService.initializeProjects(projectList,userList,authService);
         // Declaring variables
-        User currentUser = null;
+        UserModel currentUser = null;
         // AppContext service, To make things less clustered, improving readibility
         AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
         // Project

@@ -53,7 +53,7 @@ public class EnquiryService {
 
     public boolean viewEnquiry(int enquiryID) {
         try{
-            EnquiryModel enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
+            EnquiryModel enquiry = this.appContext.getEnquiryRepo().findByID(enquiryID);
 
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
                 // for managers, can reply all
@@ -71,7 +71,7 @@ public class EnquiryService {
                 // 2) viewEnquiry(index) to view the exact enquiry
                 // 3) editEnquiry(index) to edit that exact enquiry
                 if (enquiry!=null) {
-                    if (appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())) {
+                    if (appContext.getProjectRepo().findByID(enquiry.getID()).isManagingOfficer(appContext.getCurrentUser())) {
                         System.out.println(enquiry.getFormattedEnquiry()); // we print it in the service
                         return true;
                     }
@@ -95,7 +95,7 @@ public class EnquiryService {
 
     public boolean editEnquiryResponse( int enquiryID, String response){
         try{
-            EnquiryModel enquiry = this.appContext.getEnquiryRepo().findById(enquiryID);
+            EnquiryModel enquiry = this.appContext.getEnquiryRepo().findByID(enquiryID);
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
                 // Manager can reply any so no need to do extra checking
                 if (enquiry!=null) {
@@ -111,7 +111,7 @@ public class EnquiryService {
                 // 2) viewEnquiry(index) to view the exact enquiry
                 // 3) editEnquiry(index) to edit that exact enquiry
                 if (enquiry!=null) {
-                    if(appContext.getProjectRepo().getProjectByID(enquiry.getProjectId()).isManagingOfficer(appContext.getCurrentUser())){
+                    if(appContext.getProjectRepo().findByID(enquiry.getID()).isManagingOfficer(appContext.getCurrentUser())){
                         enquiry.replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
                         return true;
                     }else{
@@ -132,6 +132,6 @@ public class EnquiryService {
 
     //delete enquiry
     public boolean deleteEnquiry(int enquiryId) {
-        return appContext.getEnquiryRepo().deleteById(enquiryId);
+        return appContext.getEnquiryRepo().delete(enquiryId);
     }
 }

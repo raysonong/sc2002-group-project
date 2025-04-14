@@ -10,7 +10,7 @@ import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 import com.sc2002.model.HDBOfficerModel;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.CSVReader;
@@ -58,7 +58,7 @@ public class InitializationService {
      * provided user data and user role.
      */
     private static void addUserbyArrayList(ArrayList<List<Object>> userData, UserRole UserType, UserRepo userList) {  // Private to prevent others from accessing
-        User newUser = null;
+        UserModel newUser = null;
         for (List<Object> user : userData) {
             String name = (String) user.get(0);
             String nric = (String) user.get(1);
@@ -78,7 +78,7 @@ public class InitializationService {
                         newUser = new ApplicantModel(name, nric, age, maritalStatus, password, UserRole.APPLICANT);
                         break;
                 }
-                userList.addUser(newUser); // Add the new User to the list
+                userList.save(newUser); // Add the new User to the list
             } catch (Exception e) {
                 System.out.println("Error creating user: " + e.getMessage());
                 continue; // Skip to the next user if there's an error
@@ -110,7 +110,7 @@ public class InitializationService {
                 int officerSlots = (int) project.get(11);
                 String officerNames = (String) project.get(12); // comma separated list of Officer names
                 // Retrieve manager's User Object with name
-                User manager = userList.getUserByName(managerName);
+                UserModel manager = userList.getUserByName(managerName);
                 if (manager == null) {
                     System.err.println("Manager with name '" + managerName + "' not found. Skipping project.");
                     continue;
@@ -155,7 +155,7 @@ public class InitializationService {
                         break; // Stop adding officers if the maximum slots are filled
                     }
 
-                    User officer = userList.getUserByName(officerName.trim().replace("\"", ""));
+                    UserModel officer = userList.getUserByName(officerName.trim().replace("\"", ""));
                     if (officer != null && authService.isOfficer(officer)) {
                         newProject.addManagingOfficerUser(officer);
                         addedOfficers++;

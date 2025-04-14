@@ -1,19 +1,19 @@
 package com.sc2002.controller;
 
 import com.sc2002.enums.UserRole;
-import com.sc2002.model.User;
+import com.sc2002.model.UserModel;
 
 public class AuthService {
 
-    public boolean isOfficer(User currentUser) {
+    public boolean isOfficer(UserModel currentUser) {
         return currentUser.getUsersRole() == UserRole.HDB_OFFICER;
     }
 
-    public boolean isManager(User currentUser) {
+    public boolean isManager(UserModel currentUser) {
         return currentUser.getUsersRole() == UserRole.HDB_MANAGER;
     }
 
-    public boolean isApplicant(User currentUser) {
+    public boolean isApplicant(UserModel currentUser) {
         return currentUser.getUsersRole() == UserRole.APPLICANT;
     }
 }

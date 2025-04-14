@@ -5,11 +5,11 @@ import com.sc2002.enums.OfficerRegistrationStatus;
 public class OfficerRegistrationModel {
     private static int nextRegistrationId = 1; // Static counter for auto-incrementing IDs
     private final int registrationId;
-    private User officer;
+    private UserModel officer;
     private int projectID;
     private OfficerRegistrationStatus status;
 
-    public OfficerRegistrationModel(User officer, int projectID) {
+    public OfficerRegistrationModel(UserModel officer, int projectID) {
         this.registrationId = nextRegistrationId++;
         this.officer = officer;
         this.projectID = projectID;
@@ -32,7 +32,7 @@ public class OfficerRegistrationModel {
         return this.officer.getUserID();
     }
 
-    public User getOfficerUser(){
+    public UserModel getOfficerUser(){
         return this.officer;
     }
 
