@@ -47,7 +47,7 @@ public class ApplicantView {
         userInput = appContext.getScanner().nextLine();
         try {
             switch (userInput) {
-                case "1" ->{
+                case "1" -> {
                     projectView.viewProjectFilterableMenu(appContext);
                 }
                 case "2" -> {
@@ -90,6 +90,12 @@ public class ApplicantView {
     }
 
     private void applyForProjectMenu(AppContext appContext) {
+        // check if applicant is currently applying a project
+        if (!appContext.getApplicationRepo().canApplyForProject(appContext.getCurrentUser().getUserID())) {
+            System.out.println("You can't applied for more than 1 project!");
+            return;
+        }
+
         // display eligible projects 
         System.out.println("Available Projects: ");
         applicationService.viewAvailableProjectsForApplicant();
@@ -241,7 +247,7 @@ public class ApplicantView {
                 String newEnquiryText = appContext.getScanner().nextLine();
                 selectedEnquiry.editEnquiry(newEnquiryText);
                 System.out.println("Your enquiry has been updated.");
-                
+
                 break;
             case "3":
                 //delete

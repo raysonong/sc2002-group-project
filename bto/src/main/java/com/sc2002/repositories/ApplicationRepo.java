@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.BTOApplicationModel;
 
-
 public class ApplicationRepo {
+
     private List<BTOApplicationModel> applications;
-    
+
     /**
      * Constructor initializes an empty list of applications
      */
@@ -31,12 +31,12 @@ public class ApplicationRepo {
     public void save(BTOApplicationModel application) {
         // Check if the application already exists
         Optional<BTOApplicationModel> existingApplication = findbyUserID(application.getApplicantUserID());
-        
-        if(existingApplication.isPresent()) {
+
+        if (existingApplication.isPresent()) {
             // Remove the existing application
             applications.remove(existingApplication.get());
         }
-        
+
         // Add the new or updated application
         applications.add(application);
     }
@@ -46,36 +46,39 @@ public class ApplicationRepo {
                 .filter(application -> String.valueOf(application.getApplicantUserID()).equals(userID))
                 .findFirst();
     }
+
     // Finds all application by a specific userid
-    public List<BTOApplicationModel> findApplicationByApplicantID(int UserID){
+    public List<BTOApplicationModel> findApplicationByApplicantID(int UserID) {
         return applications.stream()
-        .filter(application -> application.getApplicantUserID() == UserID)
-        .collect(Collectors.toList());
+                .filter(application -> application.getApplicantUserID() == UserID)
+                .collect(Collectors.toList());
     }
 
     public List<BTOApplicationModel> findByProjectID(int projectID) {
         return applications.stream()
-        .filter(application -> application.getProjectID() == projectID)
-        .collect(Collectors.toList());
+                .filter(application -> application.getProjectID() == projectID)
+                .collect(Collectors.toList());
     }
 
     public List<BTOApplicationModel> findBookedByProjectID(int projectID) {
         return applications.stream()
-        .filter(application -> application.getProjectID() == projectID // projectID filter
+                .filter(application -> application.getProjectID() == projectID // projectID filter
                 && application.getStatus() == ApplicationStatus.BOOKED) // Also check if BOOKED
-        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
+
     public List<BTOApplicationModel> findPendingByProjectID(int projectID) {
         return applications.stream()
-        .filter(application -> application.getProjectID() == projectID // projectID filter
+                .filter(application -> application.getProjectID() == projectID // projectID filter
                 && application.getStatus() == ApplicationStatus.PENDING) // Also check if BOOKED
-        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
+
     public List<BTOApplicationModel> findPendingWithDrawalByProjectID(int projectID) {
         return applications.stream()
-        .filter(application -> application.getProjectID() == projectID // projectID filter
+                .filter(application -> application.getProjectID() == projectID // projectID filter
                 && application.getWithdrawalRequested()) // Also check if withdrawal is requested
-        .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     public Optional<BTOApplicationModel> findByApplicationID(int applicationID) {
@@ -106,5 +109,17 @@ public class ApplicationRepo {
             }
         }
         return null;
+    }
+
+    public boolean canApplyForProject(int userID) {
+        List<BTOApplicationModel> applications = findApplicationByApplicantID(userID);
+
+        for (BTOApplicationModel application : applications) {
+            if (application.getStatus() != ApplicationStatus.WITHDRAWN) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

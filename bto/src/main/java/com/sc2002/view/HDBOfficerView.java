@@ -28,7 +28,7 @@ public class HDBOfficerView {
     private ProjectService projectService = null;
     private UserService userService = null;
     // Initialize other views
-    private ProjectView projectView= new ProjectView(); // used to print filtered projectView
+    private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
@@ -113,6 +113,12 @@ public class HDBOfficerView {
     }
 
     private void applyForProjectMenu(AppContext appContext) {
+        // check if applicant is currently applying a project
+        if (!appContext.getApplicationRepo().canApplyForProject(appContext.getCurrentUser().getUserID())) {
+            System.out.println("You can't applied for more than 1 project!");
+            return;
+        }
+
         // display eligible projects 
         System.out.println("Available Projects: ");
         applicationService.viewAvailableProjectsForApplicant();
@@ -277,7 +283,7 @@ public class HDBOfficerView {
                 String newEnquiryText = appContext.getScanner().nextLine();
                 selectedEnquiry.editEnquiry(newEnquiryText);
                 System.out.println("Your enquiry has been updated.");
-                
+
                 break;
             case "3":
                 //delete
@@ -320,7 +326,7 @@ public class HDBOfficerView {
             System.out.println("There was an error in registration.");
             return;
         }
-        
+
         appContext.getOfficerRegistrationRepo().save(registration);
         System.out.println("You have successfully registered for the project.");
     }
@@ -431,7 +437,8 @@ public class HDBOfficerView {
                     System.out.println("Exiting to menu...");
                     return;
                 }
-                default -> System.out.println("Invalid option selected.");
+                default ->
+                    System.out.println("Invalid option selected.");
             }
         } else {
             System.out.println("No application found or you are not authorized to view this application.");
@@ -476,7 +483,7 @@ public class HDBOfficerView {
             System.out.println("You must be an approving officer for a project to manage enquiries.");
             return;
         }
-        
+
         // Retrieve all enquiries
         List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
 
@@ -542,7 +549,8 @@ public class HDBOfficerView {
                     System.out.println("Exiting to menu...");
                     return;
                 }
-                default -> System.out.println("Invalid option selected.");
+                default ->
+                    System.out.println("Invalid option selected.");
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a valid number.");
