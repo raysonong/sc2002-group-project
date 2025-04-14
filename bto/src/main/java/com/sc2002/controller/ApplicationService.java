@@ -57,13 +57,18 @@ public class ApplicationService {
             if (project.getTwoRoomCount() <=0) {
                 return false;
             }
+            return true;
         }
-        // For married individualds just check age
-        if(currentUser.getAge()<21){ // this will remove married under 21, technically not needed since we only allow 21 above to register
-            return false;
+        // For married individuals check age
+        if(currentUser.getMaritalStatus()&&currentUser.getAge()>21){ // this will remove married under 21, technically not needed since we only allow 21 above to register
+            if (project.getTwoRoomCount() <= 0 && project.getThreeRoomCount() <=0) {
+                return false; // if no more rooms to book
+            }
+            // married and room avail, return true
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public Boolean applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
@@ -109,7 +114,7 @@ public class ApplicationService {
                 // no need check married people since user can only register if >=21
                 if(!currentUser.getMaritalStatus() && currentUser.getAge()<35){ // if is single and younger then 35
                     System.out.println(currentUser.getMaritalStatus());
-                    System.out.println("WTF?");
+                    System.out.println("User is single, can't apply for any projects.");
                     return false;
                 }
                 inputFlatType = FlatType.TWO_ROOM;
