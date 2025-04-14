@@ -285,6 +285,14 @@ public class BTOProjectModel {
      * @param maxManagingOfficer The maximum number to set.
      */
     public void setMaxManagingOfficer(int maxManagingOfficer) {
+        if(maxManagingOfficer>10){
+            this.maxManagingOfficer=10;
+            System.out.println("Limit hit, setting to 10");
+        }
+        if(maxManagingOfficer<0){
+            System.out.println("Out of range.");
+            return;
+        }
         this.maxManagingOfficer = maxManagingOfficer;
     }
 

@@ -155,7 +155,7 @@ public class InitializationService {
                         break; // Stop adding officers if the maximum slots are filled
                     }
 
-                    User officer = userList.getUserByName(officerName.trim());
+                    User officer = userList.getUserByName(officerName.trim().replace("\"", ""));
                     if (officer != null && authService.isOfficer(officer)) {
                         newProject.addManagingOfficerUser(officer);
                         addedOfficers++;

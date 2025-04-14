@@ -174,10 +174,10 @@ public class CSVReader {
                     System.exit(1);
                 }
                 
-                // Manager
+                // Manager 10
                 projectData.add(values[10]);
                 
-                // Officer Slot
+                // No of Officer Slot 11
                 try {
                     projectData.add(Integer.parseInt(values[11]));
                 } catch (NumberFormatException e) {
@@ -186,8 +186,11 @@ public class CSVReader {
                 }
                 
                 // Officer (can be empty)
-                projectData.add(values.length > 12 ? values[12] : "");
-                
+                String officers="";
+                for (int i = 12; i < values.length; i++) {
+                    officers += values[i] + (i < values.length - 1 ? "," : "");
+                }
+                projectData.add(officers);
                 projectList.add(projectData);
             }
             
