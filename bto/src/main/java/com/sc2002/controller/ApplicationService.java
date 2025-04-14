@@ -15,19 +15,22 @@ import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.utilities.Receipt;
 
 public class ApplicationService {
+
     //
     // PS: ruba pls refer to my code, think i have accidentally did ur part :,) - rayson
     //
-   private AppContext appContext;
-   public ApplicationService(AppContext appContext){
-       this.appContext=appContext;
-   }
-   public void viewAvailableProjectsForApplicant() {
+    private AppContext appContext;
+
+    public ApplicationService(AppContext appContext) {
+        this.appContext = appContext;
+    }
+
+    public void viewAvailableProjectsForApplicant() {
         User currentUser = this.appContext.getCurrentUser();
 
         // get the list of available projects from the project repository
         List<BTOProjectModel> allProjects = this.appContext.getProjectRepo().getAllProjects();
-        
+
         for (BTOProjectModel project : allProjects) {
             if (isProjectVisibleForApplicant(currentUser, project)) {
                 project.printAll();
@@ -36,35 +39,26 @@ public class ApplicationService {
     }
 
     private boolean isProjectVisibleForApplicant(User currentUser, BTOProjectModel project) {
+        // if project is not visible
         if (!project.isVisible()) {
-            List<BTOApplicationModel> listOfUsersApplication=appContext.getApplicationRepo().findApplicationByApplicantID(currentUser.getUserID());
-            for (BTOApplicationModel application : listOfUsersApplication) {
-                if (application.getProjectID() == project.getProjectID()) { // If the user applied for the project before
-                    if (application.getStatus() == ApplicationStatus.WITHDRAWN || application.getStatus() == ApplicationStatus.UNSUCCESSFUL) { // If the user was already rejected or unsuccessful
-                        return false; // dont let him see it if he applied but withdrawn/unsuccessful and not visible
-                    }else{
-                        return true; // let him see it if he applied and is not visible
-                    }
-                }
-            }
+            return false;
+        }
+
+        // if user have applied for this project before
+        if (this.appContext.getApplicationRepo().hasUserAppliedForProject(currentUser.getUserID(), project.getProjectID())) {
             return false;
         }
 
         // criteria for single 35 years old and above can only apply for 2-Room flats, hence we only allow viewing if
-        // tworoom count > 0,
+        // two room count > 0,
         if (!currentUser.getMaritalStatus() && currentUser.getAge() >= 35) {
-            if (project.getTwoRoomCount() <=0) {
-                return false;
-            }
-            return true;
+            return project.getTwoRoomCount() > 0;
         }
         // For married individuals check age
-        if(currentUser.getMaritalStatus()&&currentUser.getAge()>21){ // this will remove married under 21, technically not needed since we only allow 21 above to register
-            if (project.getTwoRoomCount() <= 0 && project.getThreeRoomCount() <=0) {
-                return false; // if no more rooms to book
-            }
-            // married and room avail, return true
-            return true;
+        if (currentUser.getMaritalStatus() && currentUser.getAge() > 21) {
+            // this will remove married under 21, technically not needed since we only allow 21 above to register
+            // check if have any more room to book
+            return !(project.getTwoRoomCount() <= 0 && project.getThreeRoomCount() <= 0);
         }
 
         return false;
@@ -72,14 +66,14 @@ public class ApplicationService {
 
     public Boolean applyToProject(ProjectRepo projectRepo, Scanner scanner, User currentUser) {
         // Check role
-        if(currentUser.getUsersRole() != UserRole.APPLICANT && currentUser.getUsersRole() != UserRole.HDB_OFFICER){
+        if (currentUser.getUsersRole() != UserRole.APPLICANT && currentUser.getUsersRole() != UserRole.HDB_OFFICER) {
             System.out.println("You do not have permission to apply an application to join a project.");
             return false;
         }
         ApplicantModel applicant = (ApplicantModel) currentUser;
         int input_projectId = 0;
 
-        while (true) { 
+        while (true) {
             System.out.printf("Enter Project ID (Input -1 to return back to menu): ");
             if (scanner.hasNextInt()) {
                 List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
@@ -100,10 +94,9 @@ public class ApplicationService {
                 }
 
                 // Validate input
-                if (projectRepo.getProjectByID(input_projectId)==null) {
+                if (projectRepo.getProjectByID(input_projectId) == null) {
                     System.out.println("This project ID does not exist. Please enter a valid ID.");
-                }
-                else {
+                } else {
                     break;
                 }
             } else {
@@ -112,42 +105,42 @@ public class ApplicationService {
             }
         }
         String userInput2;
-        FlatType inputFlatType=null;
-        while (true) { 
+        FlatType inputFlatType = null;
+        while (true) {
             System.out.printf("Enter Flat Type (2-Room or 3-Room) (Input -1 to return back to menu): ");
             userInput2 = scanner.nextLine().trim().toLowerCase();
-            
+
             // Validate input
-            if (userInput2.equals("2-room")){
+            if (userInput2.equals("2-room")) {
                 // no need check married people since user can only register if >=21
-                if(!currentUser.getMaritalStatus() && currentUser.getAge()<35){ // if is single and younger then 35
+                if (!currentUser.getMaritalStatus() && currentUser.getAge() < 35) { // if is single and younger then 35
                     System.out.println(currentUser.getMaritalStatus());
                     System.out.println("User is single, can't apply for any projects.");
                     return false;
                 }
-                if(projectRepo.getProjectByID(input_projectId).getTwoRoomCount()<=0){
+                if (projectRepo.getProjectByID(input_projectId).getTwoRoomCount() <= 0) {
                     System.out.println("No more 2-room.");
                     continue;
-                }else{ // if there is 2-room avail then allow him to book.
+                } else { // if there is 2-room avail then allow him to book.
                     inputFlatType = FlatType.TWO_ROOM;
                     break;
                 }
-            }else if(userInput2.equals("3-room")) {
-                if(!currentUser.getMaritalStatus()){ // if is single 
+            } else if (userInput2.equals("3-room")) {
+                if (!currentUser.getMaritalStatus()) { // if is single 
                     System.out.println("User can only apply 2-room.");
                     continue; // reloop him
                 }
-                if(projectRepo.getProjectByID(input_projectId).getThreeRoomCount()<=0){
+                if (projectRepo.getProjectByID(input_projectId).getThreeRoomCount() <= 0) {
                     System.out.println("No more 3-room.");
                     continue;
-                }else{ // if there is 3-room avail then allow him to book.
+                } else { // if there is 3-room avail then allow him to book.
                     inputFlatType = FlatType.THREE_ROOM;
                     break;
                 }
-            } else if(userInput2.equals("-1")){
+            } else if (userInput2.equals("-1")) {
                 return false;
-            }else {
-            System.out.println("Invalid flat type. Please enter a valid flat type (\"2-Room\" or \"3-Room\" or \"-1\" to exit).");
+            } else {
+                System.out.println("Invalid flat type. Please enter a valid flat type (\"2-Room\" or \"3-Room\" or \"-1\" to exit).");
             }
         }
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);
@@ -155,31 +148,33 @@ public class ApplicationService {
         return true;
     }
 
-    public ApplicationStatus viewApplicationStatus(BTOApplicationModel application){
+    public ApplicationStatus viewApplicationStatus(BTOApplicationModel application) {
         return application.getStatus();
     }
 
-    public void updateApplicationStatus(BTOApplicationModel application, ApplicationStatus status){
-        application.setStatus(status);    
+    public void updateApplicationStatus(BTOApplicationModel application, ApplicationStatus status) {
+        application.setStatus(status);
     }
 
-    public void approveApplication(BTOApplicationModel application){
+    public void approveApplication(BTOApplicationModel application) {
         updateApplicationStatus(application, ApplicationStatus.SUCCESSFUL);
     }
 
-    public void rejectApplication(BTOApplicationModel application){
+    public void rejectApplication(BTOApplicationModel application) {
         updateApplicationStatus(application, ApplicationStatus.UNSUCCESSFUL);
     }
+
     public Receipt generateReceipt(BTOApplicationModel application) {
         return new Receipt(application);
     }
-    public Boolean approveApplicantApplication(BTOApplicationModel application){
-        try{ // for both Managers and Officer @Rayson
+
+    public Boolean approveApplicantApplication(BTOApplicationModel application) {
+        try { // for both Managers and Officer @Rayson
             // Do initial authentication checking to see if currentUser can actually change values
             User currentUser = appContext.getCurrentUser();
             BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
-            if(currentUser.getUserID()!=project.getManagerUserID()){// If manager of project
-                if(!project.isManagingOfficer(currentUser)){
+            if (currentUser.getUserID() != project.getManagerUserID()) {// If manager of project
+                if (!project.isManagingOfficer(currentUser)) {
                     throw new RuntimeException("User is not authorized to perform this action.");
                 }
             }
@@ -187,43 +182,50 @@ public class ApplicationService {
             // limited to the supply of the flats (number of units for the respective flat 
             // types)
             // we will immediately deduct from total count once the user's booking is approved.
-            if(application.getFlatType()==FlatType.TWO_ROOM){
-                if(project.getTwoRoomCount()==0) throw new RuntimeException("Not enough rooms.");// check at least 1
+            if (application.getFlatType() == FlatType.TWO_ROOM) {
+                if (project.getTwoRoomCount() == 0) {
+                    throw new RuntimeException("Not enough rooms.");// check at least 1
+
+                }
                 application.setStatus(ApplicationStatus.SUCCESSFUL);
                 project.setTwoRoomCount(project.getTwoRoomCount() - 1);
-            }else if(application.getFlatType()==FlatType.THREE_ROOM){
-                if(project.getThreeRoomCount()==0) throw new RuntimeException("Not enough rooms.");// check at least 1
+            } else if (application.getFlatType() == FlatType.THREE_ROOM) {
+                if (project.getThreeRoomCount() == 0) {
+                    throw new RuntimeException("Not enough rooms.");// check at least 1
+
+                }
                 application.setStatus(ApplicationStatus.SUCCESSFUL);
                 project.setThreeRoomCount(project.getThreeRoomCount() - 1);
-            }else{
+            } else {
                 throw new RuntimeException("RoomType not implemented.");
             }
             return true;
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
             return false;
         }
     }
-    public Boolean rejectApplicantApplication(BTOApplicationModel application){
-        try{ // for both Managers and Officer @Rayson
+
+    public Boolean rejectApplicantApplication(BTOApplicationModel application) {
+        try { // for both Managers and Officer @Rayson
             // Do initial authentication checking to see if currentUser can actually change values
             User currentUser = appContext.getCurrentUser();
             BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
-            if(currentUser.getUserID()!=project.getManagerUserID()){// If manager of project
-                if(!project.isManagingOfficer(currentUser)){
+            if (currentUser.getUserID() != project.getManagerUserID()) {// If manager of project
+                if (!project.isManagingOfficer(currentUser)) {
                     throw new RuntimeException("User is not authorized to perform this action.");
                 }
             }
             // Only need do initial checks, afterwards just change status to unsucessful
             application.setStatus(ApplicationStatus.UNSUCCESSFUL);
             return true;
-        }catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
             return false;
         }
     }
 
-    public boolean approveApplicantWithdrawalApplication(BTOApplicationModel application){
+    public boolean approveApplicantWithdrawalApplication(BTOApplicationModel application) {
         try {
             User currentUser = appContext.getCurrentUser();
             BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
@@ -252,7 +254,7 @@ public class ApplicationService {
         }
     }
 
-    public boolean rejectApplicantWithdrawalApplication(BTOApplicationModel application){
+    public boolean rejectApplicantWithdrawalApplication(BTOApplicationModel application) {
         try {
             User currentUser = appContext.getCurrentUser();
             BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
@@ -273,10 +275,10 @@ public class ApplicationService {
     public boolean updateApplicationStatusToBooked(int applicationID) {
         // Fetch the application by its ID
         Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findByApplicationID(applicationID);
-    
+
         if (applicationOpt.isPresent()) {
             BTOApplicationModel application = applicationOpt.get();
-    
+
             // Check if the current status is 'SUCCESSFUL'
             if (application.getStatus() == ApplicationStatus.SUCCESSFUL) {
                 // Update the status to 'BOOKED'
@@ -297,7 +299,7 @@ public class ApplicationService {
             System.out.println("The selected flat type is not available. Please try again.");
             return false;
         }
-    
+
         if (applicationOpt.isPresent()) {
             BTOApplicationModel application = applicationOpt.get();
             BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
@@ -309,8 +311,7 @@ public class ApplicationService {
                 project.setThreeRoomCount(project.getThreeRoomCount() + 1);
                 System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
                 System.out.println("New 3 room count: " + project.getThreeRoomCount());
-            }
-            else if (newFlatType == FlatType.THREE_ROOM) {
+            } else if (newFlatType == FlatType.THREE_ROOM) {
                 System.out.println("old 2 room count: " + project.getTwoRoomCount());
                 System.out.println("old 3 room count: " + project.getThreeRoomCount());
                 project.setTwoRoomCount(project.getTwoRoomCount() + 1);
@@ -332,16 +333,16 @@ public class ApplicationService {
 
     public boolean viewApplicationByNRIC(int projectID, String nric, BTOApplicationModel[] outputApplication) {
         Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findByNRIC(nric);
-    
+
         if (applicationOpt.isEmpty()) {
             return false; // No application found for the provided NRIC
         }
-    
+
         BTOApplicationModel application = applicationOpt.get();
         if (application.getProjectID() != projectID) {
             return false; // Officer is not authorized to view applications for this project
         }
-    
+
         // Store the application in the output parameter
         outputApplication[0] = application;
         return true; // Application found and authorized

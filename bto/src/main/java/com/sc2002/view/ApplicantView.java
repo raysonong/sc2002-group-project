@@ -93,6 +93,8 @@ public class ApplicantView {
         // check if applicant is currently applying a project
         if (!appContext.getApplicationRepo().canApplyForProject(appContext.getCurrentUser().getUserID())) {
             System.out.println("You can't applied for more than 1 project!");
+            System.out.println("Press enter to continue...");
+            appContext.getScanner().nextLine();
             return;
         }
 
