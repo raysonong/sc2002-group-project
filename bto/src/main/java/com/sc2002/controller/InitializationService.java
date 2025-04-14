@@ -12,7 +12,7 @@ import com.sc2002.model.HDBOfficerModel;
 import com.sc2002.model.User;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
-import com.sc2002.utilities.XLSXReader;
+import com.sc2002.utilities.CSVReader;
 // THIS FILE CONTROLS UserService such as adding
 
 public class InitializationService {
@@ -30,11 +30,11 @@ public class InitializationService {
     public void initializeUsers(UserRepo userList) {
         String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
         // Initializing userList from Excel
-        ArrayList<List<Object>> userData = XLSXReader.readUserList(projectDir + "/ApplicantList.xlsx");
+        ArrayList<List<Object>> userData = CSVReader.readUserList(projectDir + "/ApplicantList.csv");
         addUserbyArrayList(userData, UserRole.APPLICANT, userList);
-        userData = XLSXReader.readUserList(projectDir + "/ManagerList.xlsx");
+        userData = CSVReader.readUserList(projectDir + "/ManagerList.csv");
         addUserbyArrayList(userData, UserRole.HDB_MANAGER, userList);
-        userData = XLSXReader.readUserList(projectDir + "/OfficerList.xlsx");
+        userData = CSVReader.readUserList(projectDir + "/OfficerList.csv");
         addUserbyArrayList(userData, UserRole.HDB_OFFICER, userList);
     }
 
@@ -87,7 +87,7 @@ public class InitializationService {
 
     public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthService authService) {
         String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
-        ArrayList<List<Object>> projectData = XLSXReader.readProjectList(projectDir + "/ProjectList.xlsx");
+        ArrayList<List<Object>> projectData = CSVReader.readProjectList(projectDir + "/ProjectList.csv");
         addProjectByArrayList(projectData, projectList, userList, authService);
     }
 
