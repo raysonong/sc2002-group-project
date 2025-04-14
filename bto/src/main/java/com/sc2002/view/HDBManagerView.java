@@ -11,6 +11,7 @@ import com.sc2002.controller.ProjectManagementService;
 import com.sc2002.controller.ProjectService;
 import com.sc2002.controller.ReportingService;
 import com.sc2002.controller.UserService;
+import com.sc2002.enums.Neighborhood;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
@@ -26,6 +27,8 @@ public class HDBManagerView {
     private ReportingService reportingService = null;
     private ApplicationService applicationService = null;
     private UserService userService = null;
+    // Initialize other views
+    private ProjectView projectView=new ProjectView(); // used to print filtered projectView
 
     public void HDBManagerMenu(AppContext appContext) {
         // TODO: Menu for HDB Manager
@@ -53,71 +56,75 @@ public class HDBManagerView {
 
         switch (userInput) {
             case "1" -> {
-                // Option 1: Create a new BTO project
-                appContext.getProjectRepo().save(projectManagementService.createProject());
+                // Option 1: View projects with filters
+                projectView.viewProjectFilterableMenu(appContext);
             }
             case "2" -> {
-                // Option 2: Edit an existing BTO project
-                editBTOProjectMenu(appContext);
+                // Option 2: Create a new BTO project
+                appContext.getProjectRepo().save(projectManagementService.createProject());
             }
             case "3" -> {
-                // Option 3: Delete an existing BTO project
-                deleteBTOProjectMenu(appContext);
+                // Option 3: Edit an existing BTO project
+                editBTOProjectMenu(appContext);
             }
             case "4" -> {
-                // Option 4: Toggle the visibility of a BTO project
-                toggleProjectVisibilityMenu(appContext);
+                // Option 4: Delete an existing BTO project
+                deleteBTOProjectMenu(appContext);
             }
             case "5" -> {
-                // Option 5: View all BTO projects
-                getAllBTOProjectMenu(appContext);
+                // Option 5: Toggle the visibility of a BTO project
+                toggleProjectVisibilityMenu(appContext);
             }
             case "6" -> {
-                // Option 6: View details of a specific BTO project
-                getBTOProjectByUserIDMenu(appContext);
+                // Option 6: View all BTO projects
+                getAllBTOProjectMenu(appContext);
             }
             case "7" -> {
-                // Option 7: View Enquiries
-                getAllEnquiryMenu(appContext);
+                // Option 7: View details of a specific BTO project
+                getBTOProjectByUserIDMenu(appContext);
             }
             case "8" -> {
-                // Option 8: Reply Enquiries
-                editEnquiryMenu(appContext);
+                // Option 8: View Enquiries
+                getAllEnquiryMenu(appContext);
             }
             case "9" -> {
-                // Option 9: Approve officer registration
-                approveOfficerRegistrationMenu(appContext);
+                // Option 9: Reply Enquiries
+                editEnquiryMenu(appContext);
             }
             case "10" -> {
-                // Option 10: Reject officer registration
-                rejectOfficerRegistrationMenu(appContext);
+                // Option 10: Approve officer registration
+                approveOfficerRegistrationMenu(appContext);
             }
             case "11" -> {
-                // Option 11: Approve an application
-                approveBTOApplicationMenu(appContext);
+                // Option 11: Reject officer registration
+                rejectOfficerRegistrationMenu(appContext);
             }
             case "12" -> {
-                // Option 12: Reject an application
-                rejectBTOApplicationMenu(appContext);
+                // Option 12: Approve an application
+                approveBTOApplicationMenu(appContext);
             }
             case "13" -> {
-                // Option 13: Approve a withdrawal request
-                approveApplicationWithdrawalMenu(appContext);
+                // Option 13: Reject an application
+                rejectBTOApplicationMenu(appContext);
             }
             case "14" -> {
-                // Option 14: Reject a withdrawal request
-                rejectApplicationWithdrawalMenu(appContext);
+                // Option 14: Approve a withdrawal request
+                approveApplicationWithdrawalMenu(appContext);
             }
             case "15" -> {
-                // Option 15: Generate reports
-                generateReportMenu(appContext);
+                // Option 15: Reject a withdrawal request
+                rejectApplicationWithdrawalMenu(appContext);
             }
             case "16" -> {
-                // Option 16: Reset Password
-                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                // Option 16: Generate reports
+                generateReportMenu(appContext);
             }
             case "17" -> {
-                // Option 17: Logout
+                // Option 17: Reset Password
+                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+            }
+            case "18" -> {
+                // Option 18: Logout
                 System.out.println("Logging out...");
                 appContext.setCurrentUser(null); // set the CurrentUser null
             }
@@ -149,6 +156,13 @@ public class HDBManagerView {
             }
             case "2" -> {
                 // Neighborhood
+                // Prompt user to select Neighborhood
+                System.out.println("-- Select Neighbourhood --");
+                // Display all Neighborhood from the enum
+                Neighborhood[] neighborhoods = Neighborhood.values();
+                for (int i = 0; i < neighborhoods.length; i++) {
+                    System.out.println((i + 1) + ". " + neighborhoods[i]);
+                }
                 System.out.println("Enter new Neighborhood Name: ");
                 String valueToChange = appContext.getScanner().nextLine();
                 projectManagementService.editProject(userOption, valueToChange);

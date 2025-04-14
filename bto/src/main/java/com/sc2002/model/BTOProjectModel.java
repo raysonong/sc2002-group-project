@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.sc2002.enums.FlatType;
+import com.sc2002.enums.Neighborhood;
 
 /**
  * Represents a BTO (Build-To-Order) project with details such as project name,
@@ -32,7 +33,7 @@ public class BTOProjectModel {
     /**
      * The neighborhood where the project is located.
      */
-    private String neighborhood;
+    private Neighborhood neighborhood;
 
     /**
      * The number of 2-room flats available.
@@ -97,7 +98,7 @@ public class BTOProjectModel {
      * @param maxManagingOfficer The maximum number of managing officers
      * allowed.
      */
-    public BTOProjectModel(String projectName, String neighborhood, int twoRoomCount, int twoRoomPrice, int threeRoomCount, int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
+    public BTOProjectModel(String projectName, Neighborhood neighborhood, int twoRoomCount, int twoRoomPrice, int threeRoomCount, int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
         this.managingOfficerUsers = new ArrayList<>();
         this.projectID = this.nextprojectID;
@@ -148,7 +149,7 @@ public class BTOProjectModel {
      *
      * @return The neighborhood.
      */
-    public String getNeighborhood() {
+    public Neighborhood getNeighborhood() {
         return neighborhood;
     }
 
@@ -157,7 +158,7 @@ public class BTOProjectModel {
      *
      * @param neighborhood The neighborhood to set.
      */
-    public void setNeighborhood(String neighborhood) {
+    public void setNeighborhood(Neighborhood neighborhood) {
         this.neighborhood = neighborhood;
     }
 

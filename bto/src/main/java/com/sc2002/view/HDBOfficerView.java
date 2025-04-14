@@ -27,6 +27,8 @@ public class HDBOfficerView {
     private OfficerRegistrationService officerRegistrationService = null;
     private ProjectService projectService = null;
     private UserService userService = null;
+    // Initialize other views
+    private ProjectView projectView= new ProjectView(); // used to print filtered projectView
 
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
@@ -51,50 +53,54 @@ public class HDBOfficerView {
 
         switch (userInput) {
             case "1" -> {
-                // Option 1: Apply for BTO Project
-                applyForProjectMenu(appContext);
+                // Option 1: View Projects with Filters
+                projectView.viewProjectFilterableMenu(appContext);
             }
             case "2" -> {
-                // Option 2: View Application Status
-                viewApplicationStatusMenu(appContext);
+                // Option 2: Apply for BTO Project
+                applyForProjectMenu(appContext);
             }
             case "3" -> {
-                // Option 3: Generate Flat Selection Receipt
-                generateReceiptMenu(appContext);
+                // Option 3: View Application Status
+                viewApplicationStatusMenu(appContext);
             }
             case "4" -> {
-                // Option 4: Submit Enquiry
-                submitEnquiryMenu(appContext);
+                // Option 4: Generate Flat Selection Receipt
+                generateReceiptMenu(appContext);
             }
             case "5" -> {
-                // Option 5: View My Enquiries
-                viewMyEnquiriesMenu(appContext);
+                // Option 5: Submit Enquiry
+                submitEnquiryMenu(appContext);
             }
             case "6" -> {
-                // Option 6: Register for Project Team
-                registerForProjectMenu(appContext);
+                // Option 6: View My Enquiries
+                viewMyEnquiriesMenu(appContext);
             }
             case "7" -> {
-                // Option 7: View Registration Status
-                viewRegistrationStatusMenu(appContext);
+                // Option 7: Register for Project Team
+                registerForProjectMenu(appContext);
             }
             case "8" -> {
-                // Option 8: View and updating bookings
-                viewAndUpdateBookings(appContext);
+                // Option 8: View Registration Status
+                viewRegistrationStatusMenu(appContext);
             }
             case "9" -> {
-                // Option 9: Generate receipt for application
-                generateApplicationReceipt(appContext);
+                // Option 9: View and updating bookings
+                viewAndUpdateBookings(appContext);
             }
             case "10" -> {
-                // Option 10: Manage Enquiries
-                manageEnquiriesMenu(appContext);
+                // Option 10: Generate receipt for application
+                generateApplicationReceipt(appContext);
             }
             case "11" -> {
-                // Reset Password
-                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                // Option 11: Manage Enquiries
+                manageEnquiriesMenu(appContext);
             }
             case "12" -> {
+                // Option 12: Reset Password
+                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+            }
+            case "13" -> {
                 // Option 13: Logout
                 System.out.println("Logging out...");
                 appContext.setCurrentUser(null); // set the CurrentUser null

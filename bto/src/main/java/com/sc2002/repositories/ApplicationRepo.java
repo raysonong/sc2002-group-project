@@ -89,4 +89,22 @@ public class ApplicationRepo {
                 .filter(app -> app.getApplicantNRIC().equals(nric))
                 .findFirst();
     }
+
+    public boolean hasUserAppliedForProject(int userID, int projectID) {
+        for (BTOApplicationModel application : applications) {
+            if (application.getApplicantUserID() == userID && application.getProjectID() == projectID) {
+                return true; // If an application exists return true, no matter status
+            }// therefore can be PENDING,SUCCESSFUL,BOOKED,WITHDRAWN.
+        }
+        return false;
+    }
+
+    public ApplicationStatus getApplicationStatus(int userID, int projectID) {
+        for (BTOApplicationModel application : applications) {
+            if (application.getApplicantUserID() == userID && application.getProjectID() == projectID) {
+                return application.getStatus();
+            }
+        }
+        return null;
+    }
 }
