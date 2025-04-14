@@ -114,7 +114,7 @@ public class ApplicationService {
         String userInput2;
         FlatType inputFlatType=null;
         while (true) { 
-            System.out.printf("Enter Flat Type (2-Room or 3-Room): ");
+            System.out.printf("Enter Flat Type (2-Room or 3-Room) (Input -1 to return back to menu): ");
             userInput2 = scanner.nextLine().trim().toLowerCase();
             
             // Validate input
@@ -288,29 +288,35 @@ public class ApplicationService {
         return false; // Return false if the application is not found or the status is not 'SUCCESSFUL'
     }
 
-    public boolean updateApplicationFlatType(int applicationID, FlatType newFlatType) {
+    public boolean updateApplicationFlatType(int applicationID, FlatType newFlatType, List<FlatType> availableFlatTypes) {
         // Fetch the application by its ID
         Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findByApplicationID(applicationID);
+
+        // Validate if the flat type is available
+        if (!availableFlatTypes.contains(newFlatType)) {
+            System.out.println("The selected flat type is not available. Please try again.");
+            return false;
+        }
     
         if (applicationOpt.isPresent()) {
             BTOApplicationModel application = applicationOpt.get();
             BTOProjectModel project = appContext.getProjectRepo().getProjectByID(application.getProjectID());
 
             if (newFlatType == FlatType.TWO_ROOM) {
-                // System.out.println("old 2 room count: " + project.getTwoRoomCount());
-                // System.out.println("old 3 room count: " + project.getThreeRoomCount());
+                System.out.println("old 2 room count: " + project.getTwoRoomCount());
+                System.out.println("old 3 room count: " + project.getThreeRoomCount());
                 project.setTwoRoomCount(project.getTwoRoomCount() - 1);
                 project.setThreeRoomCount(project.getThreeRoomCount() + 1);
-                // System.out.println("New 2 room count: " + project.getTwoRoomCount());
-                // System.out.println("New 3 room count: " + project.getThreeRoomCount());
+                System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
+                System.out.println("New 3 room count: " + project.getThreeRoomCount());
             }
             else if (newFlatType == FlatType.THREE_ROOM) {
-                // System.out.println("old 2 room count: " + project.getTwoRoomCount());
-                // System.out.println("old 3 room count: " + project.getThreeRoomCount());
+                System.out.println("old 2 room count: " + project.getTwoRoomCount());
+                System.out.println("old 3 room count: " + project.getThreeRoomCount());
                 project.setTwoRoomCount(project.getTwoRoomCount() + 1);
                 project.setThreeRoomCount(project.getThreeRoomCount() - 1);
-                // System.out.println("New 2 room count: " + project.getTwoRoomCount());
-                // System.out.println("New 3 room count: " + project.getThreeRoomCount());
+                System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
+                System.out.println("New 3 room count: " + project.getThreeRoomCount());
             }
 
             // Update the flat type
@@ -318,7 +324,10 @@ public class ApplicationService {
             appContext.getApplicationRepo().save(application);
             return true;
         }
-        return false; // Return false if the application is not found
+
+        // If the application is not found, print an error message
+        System.out.println("Failed to update flat type. Please check the Application ID.");
+        return false;
     }
 
     public boolean viewApplicationByNRIC(int projectID, String nric, BTOApplicationModel[] outputApplication) {

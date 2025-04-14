@@ -362,6 +362,7 @@ public class HDBOfficerView {
             BTOApplicationModel application = outputApplication[0];
             int applicationID = application.getApplicationID();
 
+            // Display application details
             System.out.println("");
             System.out.println("Application Details:");
             System.out.println("----------------------------------------------");
@@ -373,6 +374,7 @@ public class HDBOfficerView {
             System.out.println("----------------------------------------------");
             System.out.println("1. Book application");
             System.out.println("2. Update applicant's flat type");
+            System.out.println("3. Exit to Menu");
             System.out.print("Select an option: ");
 
             String subOption = appContext.getScanner().nextLine();
@@ -390,6 +392,11 @@ public class HDBOfficerView {
                 }
                 case "2" -> {
                     // Option 2: Update applicant's flat type
+                    if (application.getStatus() != ApplicationStatus.SUCCESSFUL) {
+                        System.out.println("This application requires approval to updates its flat type, please check again later.");
+                        return;
+                    }
+
                     System.out.println("Available Flat Types:");
                     List<FlatType> availableFlatTypes = managedProject.getAvailableFlatTypes();
                     for (FlatType flatType : availableFlatTypes) {
@@ -403,24 +410,20 @@ public class HDBOfficerView {
                         // Convert the input to a FlatType enum
                         FlatType newFlatType = FlatType.valueOf(newFlatTypeInput.toUpperCase());
 
-                        // Validate if the flat type is available
-                        if (!availableFlatTypes.contains(newFlatType)) {
-                            System.out.println("The selected flat type is not available. Please try again.");
-                            return;
-                        }
-
                         // Call the service to update the flat type
-                        boolean updated = applicationService.updateApplicationFlatType(applicationID, newFlatType);
+                        boolean updated = applicationService.updateApplicationFlatType(applicationID, newFlatType, availableFlatTypes);
 
                         if (updated) {
                             System.out.println("Flat type updated successfully.");
-                        } else {
-                            System.out.println("Failed to update flat type. Please check the Application ID.");
                         }
                     } catch (IllegalArgumentException e) {
                         System.out.println("Invalid flat type entered. Please try again.");
                     }
 
+                }
+                case "3" -> {
+                    System.out.println("Exiting to menu...");
+                    return;
                 }
                 default -> System.out.println("Invalid option selected.");
             }
