@@ -20,25 +20,37 @@ public class mainAppView {
         HDBOfficerView officerView = new HDBOfficerView();
         HDBManagerView managerView = new HDBManagerView();
         while (true) {
-            userInput = MainMenu(appContext.getScanner());
-            if (userInput.equals("1")) {
-                appContext.setCurrentUser(LoginMenu(appContext.getScanner(), appContext.getUserRepo()));
-            } else if (userInput.equals("2")) {
-                appContext.setCurrentUser(RegisterMenu(appContext.getScanner(), appContext.getUserRepo()));// we will use this as 'login token'
+            try{
+                userInput = MainMenu(appContext.getScanner());
+                if (userInput.equals("1")) {
+                    appContext.setCurrentUser(LoginMenu(appContext.getScanner(), appContext.getUserRepo()));
+                } else if (userInput.equals("2")) {
+                    appContext.setCurrentUser(RegisterMenu(appContext.getScanner(), appContext.getUserRepo()));// we will use this as 'login token'
+                }
+                while (appContext.getCurrentUser() != null) {
+                    // Handle different user roles using a switch-case
+                    if (appContext.getAuthService().isApplicant(appContext.getCurrentUser())) {
+                        applicantView.ApplicantMenu(appContext);
+                    } else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())) {
+                        officerView.HDBOfficerMenu(appContext);
+                    } else if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+                        managerView.HDBManagerMenu(appContext);
+                    } else {
+                        System.out.println("Unknown role. Logging out...");
+                        appContext.setCurrentUser(null);
+                    }// End of if-else for checking user type
+                }// end of while loop for when currentUser!=null
+            }catch(Exception e){
+                System.out.println("An error occurred: " + e.getMessage());
+                System.out.println("Would you like to exit the application? (yes/no): ");
+                String exitOption = appContext.getScanner().nextLine().trim().toLowerCase();
+                if (exitOption.equals("yes")) {
+                    System.out.println("Exiting the application. Goodbye!");
+                    break;
+                }else{
+                    System.out.println("Continue...");
+                }
             }
-            while (appContext.getCurrentUser() != null) {
-                // Handle different user roles using a switch-case
-                if (appContext.getAuthService().isApplicant(appContext.getCurrentUser())) {
-                    applicantView.ApplicantMenu(appContext);
-                } else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())) {
-                    officerView.HDBOfficerMenu(appContext);
-                } else if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
-                    managerView.HDBManagerMenu(appContext);
-                } else {
-                    System.out.println("Unknown role. Logging out...");
-                    appContext.setCurrentUser(null);
-                }// End of if-else for checking user type
-            }// end of while loop for when currentUser!=null
         }// while program is running
     }
 

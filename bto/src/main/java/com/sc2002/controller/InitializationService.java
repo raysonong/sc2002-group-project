@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sc2002.enums.Neighborhood;
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOProjectModel;
@@ -131,10 +132,17 @@ public class InitializationService {
                     threeRoomCount = unitsType2;
                     threeRoomPrice = priceType2;
                 }
-
+                // Check if neighborhood is a valid enum value
+                Neighborhood neighborhoodEnum = null;
+                try {
+                    neighborhoodEnum = Neighborhood.valueOf(neighborhood.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Invalid neighborhood: " + neighborhood + ". Skipping project.");
+                    continue;
+                }
                 // Create and save the project
                 BTOProjectModel newProject = new BTOProjectModel(
-                        projectName, neighborhood, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice,
+                        projectName, neighborhoodEnum, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice,
                         openingDate, closingDate, officerSlots, manager.getUserID()
                 );
                 projectList.save(newProject);

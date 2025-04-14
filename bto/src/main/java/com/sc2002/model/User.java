@@ -10,14 +10,20 @@ import javax.naming.AuthenticationException;
 
 import com.sc2002.enums.UserRole;
 
+import com.sc2002.model.ProjectViewFilterModel;
 /**
  * Abstract class representing a user in the system. This class provides basic
  * user attributes and functionalities
  */
 public abstract class User {
-    // Contains user's role
-    private UserRole usersRole; // view com.sc2002.enums.UserRole for more info 
-    
+    /**
+     * Contains user's Role, used for authentication.
+     */
+    private UserRole usersRole; 
+    /**
+     * Contains user's filter options, used to filter projectView in non-volatile manner.
+     */
+    private ProjectViewFilterModel projectViewFilter;
     /**
      * The National Registration Identity Card (NRIC) of the user.
      */
@@ -39,8 +45,13 @@ public abstract class User {
      * The hashed password of the user.
      */
     private String password;
-
-    private static int nextUserId = 0; // Static counter for auto-incrementing IDs
+        /**
+     * Static counter for auto-incrementing IDs.
+     */
+    private static int nextUserId = 0;
+        /**
+     * The IDs of user unique to them.
+     */
     private int userID;
     /**
      * The constructor
@@ -59,14 +70,16 @@ public abstract class User {
         }
         if (isMarried.equalsIgnoreCase("married")) {
             this.isMarried = true;
-        } else {
+        } else { //we assume if not married then single, since divorce is also single am i right :)
             this.isMarried = false;
         }
+
         this.usersRole=role;
         this.nric = nric;
         this.name = name;
         this.age = age;
         this.userID = nextUserId++; // Assign current ID and increment for next use
+        this.projectViewFilter=new ProjectViewFilterModel(); // Initialized as empty
     }
 
     /**
@@ -158,4 +171,9 @@ public abstract class User {
     }
 
     public abstract List<String> getMenuOptions();
+
+    
+    public ProjectViewFilterModel getProjectViewFilter(){
+        return this.projectViewFilter;
+    }
 }

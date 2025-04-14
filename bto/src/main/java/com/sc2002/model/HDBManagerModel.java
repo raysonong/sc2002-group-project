@@ -55,7 +55,7 @@ public class HDBManagerModel extends User {
     public List<String> getMenuOptions() {
         List<String> options = new ArrayList<>();
         //options.addAll(super.getMenuOptions()); // Inherit HDBOfficer's options
-        options.addAll(Arrays.asList("Create BTO Project", "Edit BTO Project",
+        options.addAll(Arrays.asList("View Project (Filterable)","Create BTO Project", "Edit BTO Project",
                 "Delete BTO Project", "Toggle Project Visibility", "View All Project",
                 "View Your Projects", "View Enquiries", "Reply Enquiries",
                 "Approve Officer Registration", "Reject Officer Registration",

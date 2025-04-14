@@ -48,6 +48,14 @@ public class Main {
         // AppContext service, To make things less clustered, improving readibility
         AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
         // Project
-        mainAppView.startMenu(appContext);
+        try{
+            mainAppView.startMenu(appContext);
+        }catch (Exception e){
+            System.out.println("A critical occurred: " + e.getMessage());
+            System.out.println("Exiting Program.");
+        }finally{
+            scanner.close();
+        }
+        
     }// end of public main class
 }// end of main class

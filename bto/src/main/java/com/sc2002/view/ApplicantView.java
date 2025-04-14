@@ -22,8 +22,11 @@ public class ApplicantView {
     private ProjectService projectService = null;
     private ApplicationService applicationService = null;
     private UserService userService = null;
+    // Initialize other views
+    private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     public void ApplicantMenu(AppContext appContext) {
+
         // Initialize Services with context
         enquiryService = new EnquiryService(appContext);
         projectService = new ProjectService(appContext);
@@ -44,32 +47,35 @@ public class ApplicantView {
         userInput = appContext.getScanner().nextLine();
         try {
             switch (userInput) {
-                case "1" -> {
-                    // Option 1: Apply for BTO Project
-                    applyForProjectMenu(appContext);
+                case "1" ->{
+                    projectView.viewProjectFilterableMenu(appContext);
                 }
                 case "2" -> {
-                    // Option 2: View Application Status
-                    viewApplicationStatusMenu(appContext);
+                    // Option 2: Apply for BTO Project
+                    applyForProjectMenu(appContext);
                 }
                 case "3" -> {
-                    // Option 3: Generate Flat Selection Receipt
-                    generateReceiptMenu(appContext);
+                    // Option 3: View Application Status
+                    viewApplicationStatusMenu(appContext);
                 }
                 case "4" -> {
-                    // Option 4: Submit Enquiry
-                    submitEnquiryMenu(appContext);
+                    // Option 4: Generate Flat Selection Receipt
+                    generateReceiptMenu(appContext);
                 }
                 case "5" -> {
-                    // Option 5: View My Enquiries
-                    viewMyEnquiriesMenu(appContext);
+                    // Option 5: Submit Enquiry
+                    submitEnquiryMenu(appContext);
                 }
                 case "6" -> {
-                    // Reset Password
-                    userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                    // Option 6: View My Enquiries
+                    viewMyEnquiriesMenu(appContext);
                 }
                 case "7" -> {
-                    // Option 7: Logout
+                    // Option 7: Reset Password
+                    userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                }
+                case "8" -> {
+                    // Option 8: Logout
                     System.out.println("Logging out...");
                     appContext.setCurrentUser(null);
                 }

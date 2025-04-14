@@ -25,6 +25,7 @@ public class ApplicantModel extends User {
     public List<String> getMenuOptions() {
         List<String> options = new ArrayList<>();
         options.addAll(Arrays.asList(
+            "View Project (Filterable)",
         "Apply for BTO Project",
         "View Application Status",
         "Generate Flat Selection Receipt",
