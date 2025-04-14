@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.sc2002.controller.AppContext;
+import com.sc2002.controller.ProjectService;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.Neighborhood;
 
 // Primary to view Projects with filterable options
 public class ProjectView {
+
     public void viewProjectFilterableMenu(AppContext appContext){
         System.out.println("BTO Project View Options:");
         System.out.println("1. Change filters");
@@ -30,6 +32,17 @@ public class ProjectView {
                 break;
         }
     }
+
+    public void projectManagingMenu(AppContext appContext){ // handling printing of which project officer is currently handling
+        ProjectService projectService=new ProjectService(appContext);
+        BTOProjectModel project=projectService.viewManagingProject();
+        if(project!=null){
+            System.out.printf("%s Currently Managing \"%s\" Project ID: %d\n",appContext.getCurrentUser().getUsersRole(),project.getProjectName(),project.getProjectID());
+        }else{
+            System.out.println("Current not managing Project");
+        }
+    }
+
     private void printProjectMenu(AppContext appContext){
         List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().findByFilter(appContext);
         System.out.println("\n-- All BTO Projects --");

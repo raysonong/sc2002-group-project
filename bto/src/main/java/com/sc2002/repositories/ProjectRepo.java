@@ -53,16 +53,16 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
         return toReturn;
     }
 
-    public Map<Integer, String> getProjectsByManagerID(int managerUserID) {
-        Map<Integer, String> toReturn = new HashMap<>();
+    public List<BTOProjectModel> getProjectsByManagerID(int managerUserID) {
+        List<BTOProjectModel> toReturn = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).getManagerUserID() == managerUserID) {
-                toReturn.put(i, projects.get(i).getProjectName());
+                toReturn.add(projects.get(i));
             }
         }
         return toReturn;
     }
-    public List<BTOProjectModel> getProjectsByOfficerID(UserModel currentUser) {
+    public List<BTOProjectModel> getProjectsByOfficer(UserModel currentUser) {
         List<BTOProjectModel> toReturn = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
             if (projects.get(i).isManagingOfficer(currentUser)) {

@@ -36,7 +36,7 @@ public class EnquiryService {
                 // @rayson, was thinking you put your getAllEnquiries here, (this is for printing your menus)
                 // Then sort to only return those which officer by right can view (you can code the sorting either in repo or here)
                 List<EnquiryModel> toReturn=new ArrayList<>();
-                List<BTOProjectModel> projects=this.appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser()); // [projectID,projectname]
+                List<BTOProjectModel> projects=this.appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser()); // [projectID,projectname]
                 for (BTOProjectModel project : projects) {
                     int projectId = project.getProjectID();
                     List<EnquiryModel> enquiries=this.appContext.getEnquiryRepo().findByProjectId(projectId);

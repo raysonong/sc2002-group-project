@@ -193,8 +193,10 @@ public class ProjectManagementService {
     public void editProject(String userOption, String valueToChange) {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
-                int projectID = ((HDBManagerModel) this.appContext.getCurrentUser()).getProjectID();
-                BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
+                // @HS TODO IF YOU ARE IMPLEMENTING A NEW WAY TO CHECK MANAGINGPROJECT
+                // int projectID = ((HDBManagerModel) this.appContext.getCurrentUser()).getProjectID();
+                // BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
+                BTOProjectModel project = this.appContext.getProjectRepo().getProjectsByManagerID(this.appContext.getCurrentUser().getUserID()).stream().findFirst().orElse(null);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
@@ -254,12 +256,25 @@ public class ProjectManagementService {
                             throw new RuntimeException("Invalid date format for Closing Date. Please use DD-MM-YYYY.");
                         }
                     }
+                    case "7"->{
+                        try{
+                            int managingOfficerCount = Integer.parseInt(valueToChange);
+                            if (managingOfficerCount>=0 && managingOfficerCount<=10){
+                                project.setMaxManagingOfficer(managingOfficerCount);
+                            }else{
+                                throw new RuntimeException("Invalid input! (0-10)");
+                            }
+                        }catch (NumberFormatException e) {
+                            throw new RuntimeException("Invalid input for 3 Room Count. Please enter a valid integer.");
+                        }
+                    }
                     default ->
                         throw new RuntimeException("Invalid option selected!");
                 }
             } else {
                 throw new RuntimeException("User is not authorized to perform this action.");
             }
+            System.out.println("Successfully Updated");
         } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }

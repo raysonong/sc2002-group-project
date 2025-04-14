@@ -45,6 +45,9 @@ public class HDBManagerView {
         this.reportingService = new ReportingService(appContext);
         this.applicationService = new ApplicationService(appContext);
         this.userService = new UserService();
+        // View which project Managing is currently Managing
+        projectView.projectManagingMenu(appContext);
+
         System.out.println("\n--HDB Manager Menu--");
         // Loop variable `i` is used to generate menu numbers starting from 1
         for (int i = 0; i < menus.size(); i++) {
@@ -135,17 +138,17 @@ public class HDBManagerView {
         }
     }// End of HDBManagerMenu
 
-    private void printProjectsManagedByUser(Map<Integer, String> managerProjects) {
+    private void printProjectsManagedByUser(List<BTOProjectModel> managerProjects) {
         System.out.println("-- Projects Managed by You --");
         System.out.println("Project ID\tProject Name");
         System.out.println("-----------------------------------");
-        for (Map.Entry<Integer, String> entry : managerProjects.entrySet()) {
-            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
+        for (BTOProjectModel project : managerProjects) {
+            System.out.printf("%d\t\t%s%n", project.getProjectID(), project.getProjectName());
         }
     }
 
     private void editBTOProjectMenu(AppContext appContext) {
-        System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\nPlease select an option: ");
+        System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\n(7) Update ManagingOfficer count (0-10)\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
             case "1" -> {
@@ -191,6 +194,12 @@ public class HDBManagerView {
                 String valueToChange = appContext.getScanner().nextLine();
                 projectManagementService.editProject(userOption, valueToChange);
             }
+            case "7"->{
+                // Update Managing Officer Count
+                System.out.println("Enter new Officer Managing Count: ");
+                String valueToChange = appContext.getScanner().nextLine();
+                projectManagementService.editProject(userOption, valueToChange);
+            }
             default -> {
                 System.out.println("Invalid option selected!");
             }
@@ -215,21 +224,21 @@ public class HDBManagerView {
 
     private void toggleProjectVisibilityMenu(AppContext appContext) {
 
-        Map<Integer, String> listOfProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         // In case they allow any manager to toggle any project visiblity
         // Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
         System.out.println("-- All BTO Projects --");
         System.out.println("Project ID\tProject Name");
         System.out.println("-----------------------------------");
         int index = 1;
-        for (Map.Entry<Integer, String> entry : listOfProjects.entrySet()) {
-            System.out.printf("%d\t\t%s%n", entry.getKey(), entry.getValue());
+        for (BTOProjectModel projects : listOfProjects) {
+            System.out.printf("%d\t\t%s%n", projects.getProjectID(), projects.getProjectName());
         }
         System.out.print("Enter the Project ID to toggle visiblity: ");
         try {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (listOfProjects.containsKey(projectID)) {
+            if (listOfProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) {
                 projectManagementService.toggleProjectVisibility(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
@@ -264,13 +273,13 @@ public class HDBManagerView {
     }
 
     private void getBTOProjectByUserIDMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to view details: ");
         try {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) {
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) {
                 projectService.viewProjectByID(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
@@ -333,14 +342,14 @@ public class HDBManagerView {
     }
 
     private void approveOfficerRegistrationMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage officer registration: ");
         List<OfficerRegistrationModel> listOfRegistration;
         try {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) {
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) {
                 // Call a method to handle officer registration for the selected project
                 listOfRegistration = appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
             } else {
@@ -378,14 +387,14 @@ public class HDBManagerView {
     }
 
     private void rejectOfficerRegistrationMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage officer registration: ");
         List<OfficerRegistrationModel> listOfRegistration;
         try {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) {
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) {
                 // Call a method to handle officer registration for the selected project
                 listOfRegistration = appContext.getOfficerRegistrationRepo().findByProjectID(projectIDString);
             } else {
@@ -423,15 +432,14 @@ public class HDBManagerView {
     }
 
     private void approveBTOApplicationMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications(approve): ");
         String projectIDString = appContext.getScanner().nextLine();
-        BTOProjectModel project;
         int projectID;
         try {
             projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) { // Check if user input is inside managerProjects
                 //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
@@ -473,15 +481,14 @@ public class HDBManagerView {
     }
 
     private void rejectBTOApplicationMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications(reject): ");
         String projectIDString = appContext.getScanner().nextLine();
-        BTOProjectModel project;
         int projectID;
         try {
             projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) { // Check if user input is inside managerProjects
                 //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
@@ -523,14 +530,14 @@ public class HDBManagerView {
     }
 
     private void approveApplicationWithdrawalMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications Withdrawal (approve): ");
         String projectIDString = appContext.getScanner().nextLine();
         int projectID;
         try {
             projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) { // Check if user input is inside managerProjects
                 //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
@@ -572,14 +579,14 @@ public class HDBManagerView {
     }
 
     private void rejectApplicationWithdrawalMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to manage Applications Withdrawal (approve): ");
         String projectIDString = appContext.getScanner().nextLine();
         int projectID;
         try {
             projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+            if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) { // Check if user input is inside managerProjects
                 //do nothing
             } else {
                 System.out.println("Error: Invalid Project ID.");
@@ -621,14 +628,14 @@ public class HDBManagerView {
     }
 
     private void generateReportMenu(AppContext appContext) {
-        Map<Integer, String> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
         System.out.print("Enter the Project ID to print report for: ");
         String projectIDString = appContext.getScanner().nextLine();
         BTOProjectModel project;
         try {
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
-            if (managerProjects.containsKey(projectID)) { // Check if user input is inside managerProjects
+            if (managerProjects.stream().anyMatch(projects -> projects.getProjectID() == projectID)) { // Check if user input is inside managerProjects
                 project = appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     System.out.println("Error: Project not found.");

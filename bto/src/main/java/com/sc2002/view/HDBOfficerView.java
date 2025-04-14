@@ -40,7 +40,8 @@ public class HDBOfficerView {
 
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
-
+        //prints the current Project this user is managing
+        projectView.projectManagingMenu(appContext);
         System.out.println("\n--HDB Officer Menu--");
 
         // Loop variable `i` is used to generate menu numbers starting from 1
@@ -186,7 +187,7 @@ public class HDBOfficerView {
     }
 
     private void submitEnquiryMenu(AppContext appContext) {
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
         if (!managedProjects.isEmpty()) {
             System.out.println("You cannot submit an enquiry as you are managing a project.");
@@ -222,7 +223,7 @@ public class HDBOfficerView {
     }
 
     private void viewMyEnquiriesMenu(AppContext appContext) {
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
         if (!managedProjects.isEmpty()) {
             System.out.println("You cannot view your enquiry as you are managing a project.");
@@ -315,7 +316,7 @@ public class HDBOfficerView {
         }
 
         // Retrieve the projects managed by the officer
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
         if (!managedProjects.isEmpty()) {
             System.out.println("You can no longer register for a project as you have already managing a project.");
@@ -353,7 +354,7 @@ public class HDBOfficerView {
 
     private void viewAndUpdateBookings(AppContext appContext) {
         // Retrieve the projects managed by the officer
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
         if (managedProjects.isEmpty()) {
             System.out.println("You must be an approving officer for a project to view or update bookings.");
@@ -449,7 +450,7 @@ public class HDBOfficerView {
 
     private void generateApplicationReceipt(AppContext appContext) {
         // Retrieve the projects managed by the officer
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
         if (managedProjects.isEmpty()) {
             System.out.println("You must be an approving officer for a project to generate a receipt.");
@@ -479,7 +480,7 @@ public class HDBOfficerView {
 
     private void manageEnquiriesMenu(AppContext appContext) {
         // Retrieve the projects managed by the officer
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
         if (managedProjects.isEmpty()) {
             System.out.println("You must be an approving officer for a project to manage enquiries.");
@@ -558,4 +559,5 @@ public class HDBOfficerView {
             System.out.println("Invalid input. Please enter a valid number.");
         }
     }
+
 }

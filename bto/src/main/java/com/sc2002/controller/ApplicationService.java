@@ -76,7 +76,7 @@ public class ApplicationService {
         while (true) {
             System.out.printf("Enter Project ID (Input -1 to return back to menu): ");
             if (scanner.hasNextInt()) {
-                List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficerID(appContext.getCurrentUser());
+                List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
                 input_projectId = scanner.nextInt();
                 scanner.nextLine(); // Consume the leftover newline
 
