@@ -41,14 +41,13 @@ public class ApplicationService {
             for (BTOApplicationModel application : listOfUsersApplication) {
                 if (application.getProjectID() == project.getProjectID()) { // If the user applied for the project before
                     if (application.getStatus() == ApplicationStatus.WITHDRAWN || application.getStatus() == ApplicationStatus.UNSUCCESSFUL) { // If the user was already rejected or unsuccessful
-                        return false; // dont let him see it
+                        return false; // dont let him see it if he applied but withdrawn/unsuccessful and not visible
+                    }else{
+                        return true; // let him see it if he applied and is not visible
                     }
-                    // if its in progress then just continue
-                }else{ // If user did not apply for project before & project is not visible
-                    return false;
                 }
             }
-            
+            return false;
         }
 
         // criteria for single 35 years old and above can only apply for 2-Room flats, hence we only allow viewing if
@@ -117,18 +116,29 @@ public class ApplicationService {
                     System.out.println("User is single, can't apply for any projects.");
                     return false;
                 }
-                inputFlatType = FlatType.TWO_ROOM;
-                break;
-
+                if(projectRepo.getProjectByID(input_projectId).getTwoRoomCount()<=0){
+                    System.out.println("No more 2-room.");
+                    continue;
+                }else{ // if there is 2-room avail then allow him to book.
+                    inputFlatType = FlatType.TWO_ROOM;
+                    break;
+                }
             }else if(userInput2.equals("3-room")) {
                 if(!currentUser.getMaritalStatus()){ // if is single 
                     System.out.println("User can only apply 2-room.");
                     continue; // reloop him
                 }
-                inputFlatType = FlatType.THREE_ROOM;
-                break;
-            } else {
-            System.out.println("Invalid flat type. Please enter a valid flat type (2-Room or 3-Room).");
+                if(projectRepo.getProjectByID(input_projectId).getThreeRoomCount()<=0){
+                    System.out.println("No more 3-room.");
+                    continue;
+                }else{ // if there is 3-room avail then allow him to book.
+                    inputFlatType = FlatType.THREE_ROOM;
+                    break;
+                }
+            } else if(userInput2.equals("-1")){
+                return false;
+            }else {
+            System.out.println("Invalid flat type. Please enter a valid flat type (\"2-Room\" or \"3-Room\" or \"-1\" to exit).");
             }
         }
         BTOProjectModel selectedProject = appContext.getProjectRepo().getProjectByID(input_projectId);

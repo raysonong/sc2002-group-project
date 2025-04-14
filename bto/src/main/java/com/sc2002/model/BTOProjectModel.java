@@ -113,7 +113,7 @@ public class BTOProjectModel {
         this.maxManagingOfficer = maxManagingOfficer;
         this.managerUserID = managerUserID;
 
-        this.isVisible = false;
+        this.isVisible = true; // default is visible
     }
 
     /**
