@@ -28,10 +28,9 @@ public class HDBManagerView {
     private ApplicationService applicationService = null;
     private UserService userService = null;
     // Initialize other views
-    private ProjectView projectView=new ProjectView(); // used to print filtered projectView
+    private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     public void HDBManagerMenu(AppContext appContext) {
-        // TODO: Menu for HDB Manager
         // Initializing variables & services,
         // we did services 2 ways, 1 where we have repo as attribute.
         // the other where we parse repo as parameters.
@@ -64,7 +63,7 @@ public class HDBManagerView {
             }
             case "2" -> {
                 // Option 2: Create a new BTO project
-                appContext.getProjectRepo().save(projectManagementService.createProject());
+                createProjectMenu(appContext);
             }
             case "3" -> {
                 // Option 3: Edit an existing BTO project
@@ -147,7 +146,18 @@ public class HDBManagerView {
         }
     }
 
+    private void createProjectMenu(AppContext appContext) {
+        appContext.getProjectRepo().save(projectManagementService.createProject());
+    }
+
     private void editBTOProjectMenu(AppContext appContext) {
+        // print all project
+        printProjectsManagedByUser(appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID()));
+        // select the project
+        System.out.print("Please select the project ID: ");
+        int projectID = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
+        // edit the project
         System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\n(7) Update ManagingOfficer count (0-10)\nPlease select an option: ");
         String userOption = appContext.getScanner().nextLine();
         switch (userOption) {
@@ -155,7 +165,7 @@ public class HDBManagerView {
                 // Project Name
                 System.out.println("Enter new Project Name: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
             case "2" -> {
                 // Neighborhood
@@ -168,37 +178,37 @@ public class HDBManagerView {
                 }
                 System.out.println("Enter new Neighborhood Name: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
             case "3" -> {
                 // 2 Room Count
                 System.out.println("Enter new 2 Room Count: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
             case "4" -> {
                 // 3 Room Count
                 System.out.println("Enter new 3 Room Count: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
             case "5" -> {
                 // Opening Date
                 System.out.println("Enter new Opening Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
             case "6" -> {
                 // Closing Date
                 System.out.println("Enter new Closing Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
-            case "7"->{
+            case "7" -> {
                 // Update Managing Officer Count
                 System.out.println("Enter new Officer Managing Count: ");
                 String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange);
+                projectManagementService.editProject(userOption, valueToChange, projectID);
             }
             default -> {
                 System.out.println("Invalid option selected!");
@@ -207,12 +217,19 @@ public class HDBManagerView {
     }
 
     private void deleteBTOProjectMenu(AppContext appContext) { // REDO THIS PART< THE LOGIC IS WRONG #TODO
+        // print all project
+        printProjectsManagedByUser(appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID()));
+        // select the project
+        System.out.print("Please select the project ID: ");
+        int projectID = appContext.getScanner().nextInt();
+        appContext.getScanner().nextLine();
+
         System.out.println("--deleteBTOProjectMenu--\n(yes) To Confirm Deletion: ");
         String userOption = appContext.getScanner().nextLine().toLowerCase();
         switch (userOption) {
             case "yes" -> {
                 // Confirm Deletion (REDO THIS PART!!)
-                if (projectManagementService.deleteProject()) {
+                if (projectManagementService.deleteProject(projectID)) {
                     System.out.println("Deletion Successful.");
                 }
             }
@@ -230,7 +247,6 @@ public class HDBManagerView {
         System.out.println("-- All BTO Projects --");
         System.out.println("Project ID\tProject Name");
         System.out.println("-----------------------------------");
-        int index = 1;
         for (BTOProjectModel projects : listOfProjects) {
             System.out.printf("%d\t\t%s%n", projects.getProjectID(), projects.getProjectName());
         }

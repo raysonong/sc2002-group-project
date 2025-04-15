@@ -31,22 +31,23 @@ public class ProjectManagementService {
         }
 
         // check if currently are managing other project
-        for (BTOProjectModel btoProjectModel : appContext.getProjectRepo().findAll()) {
-            if (btoProjectModel.getManagerUserID() == appContext.getCurrentUser().getUserID()) {
-                if (btoProjectModel.getClosingDate().isAfter(LocalDate.now())) {
-                    System.out.println("You are currently managing another project!");
-                    System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
-                    System.out.println("Closing Date: " + btoProjectModel.getClosingDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
-                    System.out.println("Today's Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
-                    System.out.println("------------------------------\nPress enter to continue...");
-                    appContext.getScanner().nextLine();
-                    return null;
-                }
+        for (BTOProjectModel btoProjectModel : appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID())) {
+            LocalDate today = LocalDate.now();
+            if ((today.equals(btoProjectModel.getOpeningDate()) || today.isAfter(btoProjectModel.getOpeningDate()))
+                    && (today.equals(btoProjectModel.getClosingDate()) || today.isBefore(btoProjectModel.getClosingDate()))) {
+                System.out.println("You are currently managing another project!");
+                System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
+                System.out.println("Closing Date: " + btoProjectModel.getClosingDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
+                System.out.println("Today's Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
+                System.out.println("------------------------------\nPress enter to continue...");
+                appContext.getScanner().nextLine();
+                return null;
+
             }
         }
 
         String projectName, neighborhoodChoice;
-        Neighborhood neighborhoodEnum=null;
+        Neighborhood neighborhoodEnum = null;
         int twoRoomCount = 0, twoRoomPrice = 0, threeRoomCount = 0, threeRoomPrice = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
         String tempDate;
@@ -75,7 +76,7 @@ public class ProjectManagementService {
                 int choice = Integer.parseInt(neighborhoodChoice);
                 if (choice >= 1 && choice <= neighborhoods.length) {
                     // Set location filter to selected enum value
-                    neighborhoodEnum=neighborhoods[choice - 1];
+                    neighborhoodEnum = neighborhoods[choice - 1];
                     System.out.println("Neighborhood choice: " + neighborhoods[choice - 1]);
                 } else {
                     System.out.println("Invalid Neighborhood choice.");
@@ -83,7 +84,7 @@ public class ProjectManagementService {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input.");
             }
-        } while (neighborhoodEnum==null);
+        } while (neighborhoodEnum == null);
 
         // Validate two-room flat count
         do {
@@ -186,34 +187,35 @@ public class ProjectManagementService {
                 this.appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (maxOfficer < 0 || maxOfficer > 10);
-        
+
         return new BTOProjectModel(projectName, neighborhoodEnum, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID());
     }
 
-    public void editProject(String userOption, String valueToChange) {
+    public void editProject(String userOption, String valueToChange, int projectID) {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
                 // @HS TODO IF YOU ARE IMPLEMENTING A NEW WAY TO CHECK MANAGINGPROJECT
                 // int projectID = ((HDBManagerModel) this.appContext.getCurrentUser()).getProjectID();
                 // BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
-                BTOProjectModel project = this.appContext.getProjectRepo().getProjectsByManagerID(this.appContext.getCurrentUser().getUserID()).stream().findFirst().orElse(null);
+                BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
                 switch (userOption) {
                     case "1" ->
                         project.setProjectName(valueToChange);
-                    case "2" ->{
+                    case "2" -> {
                         // Display all Neighborhood from the enum
-                        try{
+                        try {
                             int choice = Integer.parseInt(valueToChange);
                             Neighborhood[] neighborhoods = Neighborhood.values();
-                            project.setNeighborhood(neighborhoods[choice-1]);
-                            System.out.printf("Neighborhood changed to: %s\n",neighborhoods[choice-1]);
-                        }catch(NumberFormatException e){
+                            project.setNeighborhood(neighborhoods[choice - 1]);
+                            System.out.printf("Neighborhood changed to: %s\n", neighborhoods[choice - 1]);
+                        } catch (NumberFormatException e) {
                             throw new IllegalArgumentException("Invalid number.");
                         }
-                    }case "3" -> {
+                    }
+                    case "3" -> {
                         try {
                             int twoRoomCount = Integer.parseInt(valueToChange);
                             if (twoRoomCount < 0) {
@@ -256,15 +258,15 @@ public class ProjectManagementService {
                             throw new RuntimeException("Invalid date format for Closing Date. Please use DD-MM-YYYY.");
                         }
                     }
-                    case "7"->{
-                        try{
+                    case "7" -> {
+                        try {
                             int managingOfficerCount = Integer.parseInt(valueToChange);
-                            if (managingOfficerCount>=0 && managingOfficerCount<=10){
+                            if (managingOfficerCount >= 0 && managingOfficerCount <= 10) {
                                 project.setMaxManagingOfficer(managingOfficerCount);
-                            }else{
+                            } else {
                                 throw new RuntimeException("Invalid input! (0-10)");
                             }
-                        }catch (NumberFormatException e) {
+                        } catch (NumberFormatException e) {
                             throw new RuntimeException("Invalid input for 3 Room Count. Please enter a valid integer.");
                         }
                     }
@@ -280,16 +282,16 @@ public class ProjectManagementService {
         }
     }
 
-    public boolean deleteProject() {
+    public boolean deleteProject(int projectID) {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
                 HDBManagerModel currentUser = (HDBManagerModel) this.appContext.getCurrentUser();
-                BTOProjectModel project = this.appContext.getProjectRepo().findByID(currentUser.getProjectID());
+                BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project.getManagerUserID() == currentUser.getUserID()) {
                     currentUser.deleteProjectID(); // if deleting currently managing project
 
                 }
-                if (this.appContext.getProjectRepo().delete(currentUser.getProjectID())) {
+                if (this.appContext.getProjectRepo().delete(projectID)) {
                     return true;
                 } else {
                     throw new RuntimeException("Failed to delete project.");
