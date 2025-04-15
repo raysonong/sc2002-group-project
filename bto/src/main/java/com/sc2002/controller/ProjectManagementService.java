@@ -30,22 +30,6 @@ public class ProjectManagementService {
             return;
         }
 
-        // check if currently are managing other project
-        for (BTOProjectModel btoProjectModel : appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID())) {
-            LocalDate today = LocalDate.now();
-            if ((today.equals(btoProjectModel.getOpeningDate()) || today.isAfter(btoProjectModel.getOpeningDate()))
-                    && (today.equals(btoProjectModel.getClosingDate()) || today.isBefore(btoProjectModel.getClosingDate()))) {
-                System.out.println("You are currently managing another project!");
-                System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
-                System.out.println("Closing Date: " + btoProjectModel.getClosingDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
-                System.out.println("Today's Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
-                System.out.println("------------------------------\nPress enter to continue...");
-                appContext.getScanner().nextLine();
-                return;
-
-            }
-        }
-
         String projectName, neighborhoodChoice;
         Neighborhood neighborhoodEnum = null;
         int twoRoomCount = 0, twoRoomPrice = 0, threeRoomCount = 0, threeRoomPrice = 0, maxOfficer = 0;

@@ -1,5 +1,7 @@
 package com.sc2002.view;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -147,6 +149,16 @@ public class HDBManagerView {
     }
 
     private void createProjectMenu(AppContext appContext) {
+        BTOProjectModel btoProjectModel = projectService.viewManagingProject();
+        if (btoProjectModel != null) {
+            System.out.println("You are currently managing another project!");
+            System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
+            System.out.println("Closing Date: " + btoProjectModel.getClosingDate().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
+            System.out.println("Today's Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
+            System.out.println("------------------------------\nPress enter to continue...");
+            appContext.getScanner().nextLine();
+            return;
+        }
         projectManagementService.createProject();
     }
 
