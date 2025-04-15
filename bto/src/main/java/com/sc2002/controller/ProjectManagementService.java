@@ -201,7 +201,7 @@ public class ProjectManagementService {
         this.appContext.getProjectRepo().save(new BTOProjectModel(projectName, neighborhoodEnum, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID()));
     }
 
-    public void editProject(String userOption, String valueToChange, int projectID) {
+    public void editProject(String userOption, String valueToChange, int projectID, boolean managingProject) {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
                 // @HS TODO IF YOU ARE IMPLEMENTING A NEW WAY TO CHECK MANAGINGPROJECT
@@ -251,6 +251,10 @@ public class ProjectManagementService {
                         try {
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                             LocalDate openingDate = LocalDate.parse(valueToChange, formatter);
+                            LocalDate today = LocalDate.now();
+                            if (!today.isBefore(openingDate) && managingProject) {
+                                throw new IllegalArgumentException("You are currently managing another project! Set the date to later!");
+                            }
                             project.setOpeningDate(openingDate);
                         } catch (DateTimeParseException e) {
                             throw new RuntimeException("Invalid date format for Opening Date. Please use DD-MM-YYYY.");
@@ -263,9 +267,14 @@ public class ProjectManagementService {
                             if (!closingDate.isAfter(project.getOpeningDate())) {
                                 throw new IllegalArgumentException("Closing Date must be later than the Opening Date.");
                             }
+                            LocalDate today = LocalDate.now();
+                            if (!today.isAfter(closingDate) && managingProject) {
+                                throw new IllegalArgumentException("You are currently managing another project! Set the date to earlier!");
+                            }
                             project.setClosingDate(closingDate);
                         } catch (DateTimeParseException e) {
                             throw new RuntimeException("Invalid date format for Closing Date. Please use DD-MM-YYYY.");
+
                         }
                     }
                     case "7" -> {
@@ -290,6 +299,7 @@ public class ProjectManagementService {
         } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
+
     }
 
     public boolean deleteProject(int projectID) {

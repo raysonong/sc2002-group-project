@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.sc2002.controller.AppContext;
 import com.sc2002.controller.ApplicationService;
@@ -149,7 +150,7 @@ public class HDBManagerView {
     }
 
     private void createProjectMenu(AppContext appContext) {
-        BTOProjectModel btoProjectModel = projectService.viewManagingProject();
+        BTOProjectModel btoProjectModel = this.projectService.viewManagingProject();
         if (btoProjectModel != null) {
             System.out.println("You are currently managing another project!");
             System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
@@ -159,73 +160,100 @@ public class HDBManagerView {
             appContext.getScanner().nextLine();
             return;
         }
-        projectManagementService.createProject();
+        this.projectManagementService.createProject();
     }
 
     private void editBTOProjectMenu(AppContext appContext) {
-        System.out.println(appContext.getCurrentUser().getUserID());
-        // print all project
-        printProjectsManagedByUser(appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID()));
-        // select the project
-        System.out.print("Please select the project ID: ");
+        // check if currently managing any project
+        boolean managingAnyActiveProject = projectService.viewManagingProject() != null;
+
+        // 2. Get and display projects managed by this user (assuming manager role)
+        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
+        if (managedProjects == null || managedProjects.isEmpty()) {
+            System.out.println("You are not currently managing any projects.");
+            return;
+        }
+        printProjectsManagedByUser(managedProjects);
+
+        // 3. Select the project ID to edit
+        System.out.print("Please select the ID of the project to edit: ");
         int projectID = appContext.getScanner().nextInt();
         appContext.getScanner().nextLine();
-        // edit the project
-        System.out.println("--editBTOProjectMenu--\n(1) Project Name\n(2) Neighborhood\n(3) 2 Room Count\n(4) 3 Room Count\n(5) Opening Date\n(6) Closing Date\n(7) Update ManagingOfficer count (0-10)\nPlease select an option: ");
-        String userOption = appContext.getScanner().nextLine();
-        switch (userOption) {
-            case "1" -> {
-                // Project Name
-                System.out.println("Enter new Project Name: ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
+
+        // 4. Validate the selected project ID
+        final int finalProjectID = projectID; // Need final variable for lambda/stream
+        Optional<BTOProjectModel> projectToEdit = managedProjects.stream()
+                .filter(p -> p.getProjectID() == finalProjectID)
+                .findFirst();
+
+        if (projectToEdit.isEmpty()) {
+            System.out.println("Error: Invalid Project ID selected or you do not manage this project.");
+            return;
+        }
+        System.out.println("Selected project: " + projectToEdit.get().getProjectName());
+
+        // 5. Define menu options and prompts
+        // Using a Map for cleaner association of option code to prompt text
+        Map<String, String> editOptions = Map.of(
+                "1", "Enter new Project Name: ",
+                // "2" handled separately
+                "3", "Enter new 2 Room Count: ",
+                "4", "Enter new 3 Room Count: ",
+                "5", "Enter new Opening Date in DD-MM-YYYY format (e.g. 31-12-2025): ",
+                "6", "Enter new Closing Date in DD-MM-YYYY format (e.g. 31-12-2025): ",
+                "7", "Enter new Officer Managing Count (0-10): "
+        );
+
+        // 6. Display edit menu
+        System.out.println("\n-- Select field to edit for Project ID: " + projectID + " --");
+        System.out.println("(1) Project Name");
+        System.out.println("(2) Neighborhood");
+        System.out.println("(3) 2 Room Count");
+        System.out.println("(4) 3 Room Count");
+        System.out.println("(5) Opening Date");
+        System.out.println("(6) Closing Date");
+        System.out.println("(7) Update Managing Officer count");
+        System.out.print("Please select an option: ");
+        String userOption = appContext.getScanner().nextLine().trim();
+
+        String valueToChange = null;
+        String prompt = editOptions.get(userOption); // Get prompt from map
+
+        // 7. Handle user choice
+        if ("2".equals(userOption)) {
+            // Special handling for Neighborhood Enum
+            System.out.println("-- Select Neighbourhood --");
+            Neighborhood[] neighborhoods = Neighborhood.values();
+            for (int i = 0; i < neighborhoods.length; i++) {
+                System.out.println((i + 1) + ". " + neighborhoods[i]);
             }
-            case "2" -> {
-                // Neighborhood
-                // Prompt user to select Neighborhood
-                System.out.println("-- Select Neighbourhood --");
-                // Display all Neighborhood from the enum
-                Neighborhood[] neighborhoods = Neighborhood.values();
-                for (int i = 0; i < neighborhoods.length; i++) {
-                    System.out.println((i + 1) + ". " + neighborhoods[i]);
-                }
-                System.out.println("Enter new Neighborhood Name: ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
+            System.out.print("Enter the number corresponding to the new Neighborhood: ");
+            int neighborhoodChoice = appContext.getScanner().nextInt();
+            appContext.getScanner().nextLine();
+            if (neighborhoodChoice > 0 && neighborhoodChoice <= neighborhoods.length) {
+                // Pass the selected enum's name as the value
+                valueToChange = neighborhoods[neighborhoodChoice - 1].name(); // Pass enum name
+            } else {
+                System.out.println("Invalid neighborhood selection.");
+                return; // Exit if selection is invalid
             }
-            case "3" -> {
-                // 2 Room Count
-                System.out.println("Enter new 2 Room Count: ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
-            }
-            case "4" -> {
-                // 3 Room Count
-                System.out.println("Enter new 3 Room Count: ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
-            }
-            case "5" -> {
-                // Opening Date
-                System.out.println("Enter new Opening Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
-            }
-            case "6" -> {
-                // Closing Date
-                System.out.println("Enter new Closing Date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
-            }
-            case "7" -> {
-                // Update Managing Officer Count
-                System.out.println("Enter new Officer Managing Count: ");
-                String valueToChange = appContext.getScanner().nextLine();
-                projectManagementService.editProject(userOption, valueToChange, projectID);
-            }
-            default -> {
-                System.out.println("Invalid option selected!");
-            }
+        } else if (prompt != null) {
+            // Standard handling for other options using the map
+            System.out.print(prompt); // Use prompt from map
+            valueToChange = appContext.getScanner().nextLine();
+        } else {
+            System.out.println("Invalid option selected!");
+            return; // Exit if option is invalid
+        }
+
+        // 8. Call the edit service method (only if a valid option was processed)
+        if (!valueToChange.trim().isEmpty()) {
+            // Input validation for the valueToChange should ideally happen here
+            // or within the projectManagementService.editProject method.
+            // For simplicity, calling editProject directly as in the original code.
+            projectManagementService.editProject(userOption, valueToChange, projectID, managingAnyActiveProject);
+        } else {
+            System.out.println("Input cannot be empty");
         }
     }
 
