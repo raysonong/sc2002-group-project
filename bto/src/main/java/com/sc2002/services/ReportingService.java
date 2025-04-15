@@ -1,7 +1,8 @@
-package com.sc2002.controller;
+package com.sc2002.services;
 
 import java.util.List;
 
+import com.sc2002.config.AppContext;
 import com.sc2002.enums.FlatType;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;

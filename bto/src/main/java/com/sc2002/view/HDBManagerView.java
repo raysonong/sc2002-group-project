@@ -6,30 +6,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.sc2002.controller.AppContext;
-import com.sc2002.controller.ApplicationService;
-import com.sc2002.controller.EnquiryService;
-import com.sc2002.controller.OfficerRegistrationService;
-import com.sc2002.controller.ProjectManagementService;
-import com.sc2002.controller.ProjectService;
-import com.sc2002.controller.ReportingService;
-import com.sc2002.controller.UserService;
+import com.sc2002.controllers.ProjectController;
 import com.sc2002.enums.Neighborhood;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
-
+import com.sc2002.controllers.ApplicationController;
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.*;
 public class HDBManagerView {
 
     // declare all the services required by Manager
-    private ProjectManagementService projectManagementService = null;
-    private EnquiryService enquiryService = null;
-    private ProjectService projectService = null;
-    private OfficerRegistrationService officerRegistrationService = null;
-    private ReportingService reportingService = null;
-    private ApplicationService applicationService = null;
-    private UserService userService = null;
+    private ProjectController projectController = null;
+    private ProjectManagementController projectManagementController = null;
+    private EnquiryController enquiryController = null;
+    
+    private OfficerRegistrationController officerRegistrationController = null;
+    private ReportingController reportingController = null;
+    private ApplicationController applicationController = null;
+    private UserController userController = null;
     // Initialize other views
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
@@ -37,16 +33,17 @@ public class HDBManagerView {
         // Initializing variables & services,
         // we did services 2 ways, 1 where we have repo as attribute.
         // the other where we parse repo as parameters.
-        // *Only enquiryService uses repo as attribute. Part of learning process
+        // *Only enquiryController uses repo as attribute. Part of learning process
         String userInput = "";
+
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
-        this.projectManagementService = new ProjectManagementService(appContext);
-        this.enquiryService = new EnquiryService(appContext); // Only enquiryRepo, we parse repo as parameter to make it attribute
-        this.projectService = new ProjectService(appContext);
-        this.officerRegistrationService = new OfficerRegistrationService(appContext);
-        this.reportingService = new ReportingService(appContext);
-        this.applicationService = new ApplicationService(appContext);
-        this.userService = new UserService();
+        this.projectManagementController = new ProjectManagementController(appContext);
+        this.enquiryController = new EnquiryController(appContext); // Only enquiryRepo, we parse repo as parameter to make it attribute
+        this.projectController = new ProjectController(appContext);
+        this.officerRegistrationController = new OfficerRegistrationController(appContext);
+        this.reportingController = new ReportingController(appContext);
+        this.applicationController = new ApplicationController(appContext);
+        this.userController = new UserController();
         // View which project Managing is currently Managing
         projectView.projectManagingMenu(appContext);
 
@@ -126,7 +123,7 @@ public class HDBManagerView {
             }
             case "17" -> {
                 // Option 17: Reset Password
-                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                userController.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
             }
             case "18" -> {
                 // Option 18: Logout
@@ -150,7 +147,7 @@ public class HDBManagerView {
     }
 
     private void createProjectMenu(AppContext appContext) {
-        BTOProjectModel btoProjectModel = this.projectService.viewManagingProject();
+        BTOProjectModel btoProjectModel = this.projectController.viewManagingProject();
         if (btoProjectModel != null) {
             System.out.println("You are currently managing another project!");
             System.out.println("Current Project Name: " + btoProjectModel.getProjectName());
@@ -160,12 +157,12 @@ public class HDBManagerView {
             appContext.getScanner().nextLine();
             return;
         }
-        this.projectManagementService.createProject();
+        this.projectManagementController.createProject();
     }
 
     private void editBTOProjectMenu(AppContext appContext) {
         // check if currently managing any project
-        boolean managingAnyActiveProject = projectService.viewManagingProject() != null;
+        boolean managingAnyActiveProject = projectController.viewManagingProject() != null;
 
         // 2. Get and display projects managed by this user (assuming manager role)
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
@@ -249,9 +246,9 @@ public class HDBManagerView {
         // 8. Call the edit service method (only if a valid option was processed)
         if (!valueToChange.trim().isEmpty()) {
             // Input validation for the valueToChange should ideally happen here
-            // or within the projectManagementService.editProject method.
+            // or within the projectManagementController.editProject method.
             // For simplicity, calling editProject directly as in the original code.
-            projectManagementService.editProject(userOption, valueToChange, projectID, managingAnyActiveProject);
+            projectManagementController.editProject(userOption, valueToChange, projectID, managingAnyActiveProject);
         } else {
             System.out.println("Input cannot be empty");
         }
@@ -270,7 +267,7 @@ public class HDBManagerView {
         switch (userOption) {
             case "yes" -> {
                 // Confirm Deletion (REDO THIS PART!!)
-                if (projectManagementService.deleteProject(projectID)) {
+                if (projectManagementController.deleteProject(projectID)) {
                     System.out.println("Deletion Successful.");
                 }
             }
@@ -296,7 +293,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (listOfProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) {
-                projectManagementService.toggleProjectVisibility(projectID);
+                projectManagementController.toggleProjectVisibility(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -318,7 +315,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (listOfProjects.containsKey(projectID)) {
-                projectService.viewProjectByID(projectID);
+                projectController.viewProjectByID(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -337,7 +334,7 @@ public class HDBManagerView {
             String projectIDString = appContext.getScanner().nextLine();
             int projectID = Integer.parseInt(projectIDString); // Convert to Integer
             if (managerProjects.stream().anyMatch(project -> project.getProjectID() == projectID)) {
-                projectService.viewProjectByID(projectID);
+                projectController.viewProjectByID(projectID);
             } else {
                 System.out.println("Invalid Project ID. Please try again.");
             }
@@ -349,7 +346,7 @@ public class HDBManagerView {
     }
 
     private void getAllEnquiryMenu(AppContext appContext) {
-        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
+        List<EnquiryModel> enquiries = enquiryController.getAllEnquiries();
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {
@@ -364,7 +361,7 @@ public class HDBManagerView {
     }
 
     private void editEnquiryMenu(AppContext appContext) {
-        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
+        List<EnquiryModel> enquiries = enquiryController.getAllEnquiries();
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {
@@ -378,7 +375,7 @@ public class HDBManagerView {
                 int index = Integer.parseInt(appContext.getScanner().nextLine());
                 if (index >= 0 && index < enquiries.size()) {
                     // View the selected enquiry to print, returns if no project found
-                    if (!enquiryService.viewEnquiry(index)) {
+                    if (!enquiryController.viewEnquiry(index)) {
                         return;
                     };
                     // Gather new response
@@ -386,7 +383,7 @@ public class HDBManagerView {
                     String response = appContext.getScanner().nextLine();
 
                     // Edit the enquiry with the new response
-                    enquiryService.editEnquiryResponse(index, response);
+                    enquiryController.editEnquiryResponse(index, response);
                 } else {
                     System.out.println("Invalid index. Please try again.");
                 }
@@ -431,7 +428,7 @@ public class HDBManagerView {
                 if (index <= listOfRegistration.size() && index >= 0) {
                     // approve registration
                     OfficerRegistrationModel registration = listOfRegistration.get(index);
-                    if (officerRegistrationService.approveRegistration(registration)) {
+                    if (officerRegistrationController.approveRegistration(registration)) {
                         System.out.println("Officer added.");
                     }
                 }
@@ -476,7 +473,7 @@ public class HDBManagerView {
                 if (index <= listOfRegistration.size() && index >= 0) {
                     // reject registration
                     OfficerRegistrationModel registration = listOfRegistration.get(index);
-                    if (officerRegistrationService.rejectRegistration(registration)) {
+                    if (officerRegistrationController.rejectRegistration(registration)) {
                         System.out.println("Officer removed successfully.");
                     }
                 }
@@ -527,7 +524,7 @@ public class HDBManagerView {
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
             if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
-                applicationService.approveApplicantApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
+                applicationController.approveApplicantApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("Application approved successfully.");
             } else {
                 System.out.println("Invalid index.");
@@ -576,7 +573,7 @@ public class HDBManagerView {
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
             if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
-                applicationService.rejectApplicantApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
+                applicationController.rejectApplicantApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("Application rejected successfully.");
             } else {
                 System.out.println("Invalid index.");
@@ -625,7 +622,7 @@ public class HDBManagerView {
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
             if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
-                applicationService.approveApplicantWithdrawalApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
+                applicationController.approveApplicantWithdrawalApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("BTO Application successfully withdrawn.");
             } else {
                 System.out.println("Invalid index.");
@@ -674,7 +671,7 @@ public class HDBManagerView {
         try {
             int appChoice = Integer.parseInt(appContext.getScanner().nextLine());
             if (appChoice >= 1 && appChoice < listOfApplications.size() + 1) {
-                applicationService.rejectApplicantWithdrawalApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
+                applicationController.rejectApplicantWithdrawalApplication(listOfApplications.get(appChoice - 1)); // we start with index 1
                 System.out.println("BTO Application to withdraw rejected successfully.");
             } else {
                 System.out.println("Invalid index.");
@@ -726,7 +723,7 @@ public class HDBManagerView {
             System.out.println("Error: Please enter a valid integer for the report type.");
             return;
         }
-        reportingService.generateProjectReport(project, generateType);
+        reportingController.generateProjectReport(project, generateType);
 
     }
 }

@@ -3,12 +3,6 @@ package com.sc2002.view;
 import java.util.List;
 import java.util.Optional;
 
-import com.sc2002.controller.AppContext;
-import com.sc2002.controller.ApplicationService;
-import com.sc2002.controller.EnquiryService;
-import com.sc2002.controller.OfficerRegistrationService;
-import com.sc2002.controller.ProjectService;
-import com.sc2002.controller.UserService;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.OfficerRegistrationStatus;
@@ -17,26 +11,32 @@ import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
+import com.sc2002.services.UserService;
 import com.sc2002.utilities.Receipt;
+
+import com.sc2002.controllers.ApplicationController;
+import com.sc2002.controllers.ProjectController;
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.*;
 
 public class HDBOfficerView {
 
     //Service Declaration
-    private EnquiryService enquiryService = null;
-    private ApplicationService applicationService = null;
-    private OfficerRegistrationService officerRegistrationService = null;
-    private ProjectService projectService = null;
-    private UserService userService = null;
+    private EnquiryController enquiryController = null;
+    private ApplicationController applicationController = null;
+    private OfficerRegistrationController officerRegistrationController = null;
+    private ProjectController projectController = null;
+    private UserController userController = null;
     // Initialize other views
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
-        this.enquiryService = new EnquiryService(appContext);
-        this.applicationService = new ApplicationService(appContext);
-        this.officerRegistrationService = new OfficerRegistrationService(appContext);
-        this.projectService = new ProjectService(appContext);
-        this.userService = new UserService();
+        this.enquiryController = new EnquiryController(appContext);
+        this.applicationController = new ApplicationController(appContext);
+        this.officerRegistrationController = new OfficerRegistrationController(appContext);
+        this.projectController = new ProjectController(appContext);
+        this.userController = new UserController();
 
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
@@ -99,7 +99,7 @@ public class HDBOfficerView {
             }
             case "12" -> {
                 // Option 12: Reset Password
-                userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                userController.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
             }
             case "13" -> {
                 // Option 13: Logout
@@ -124,9 +124,9 @@ public class HDBOfficerView {
 
         // display eligible projects 
         System.out.println("Available Projects: ");
-        applicationService.viewAvailableProjectsForApplicant();
+        applicationController.viewAvailableProjectsForApplicant();
 
-        Boolean application = applicationService.applyToProject(
+        Boolean application = applicationController.applyToProject(
                 appContext.getProjectRepo(),
                 appContext.getScanner(),
                 appContext.getCurrentUser()
@@ -196,7 +196,7 @@ public class HDBOfficerView {
 
         // Display eligible projects for the applicant
         System.out.println("Eligible Projects for Enquiry: ");
-        applicationService.viewAvailableProjectsForApplicant();
+        applicationController.viewAvailableProjectsForApplicant();
 
         // ask applicant to select project
         System.out.print("Enter Project ID to submit an enquiry: ");
@@ -213,9 +213,9 @@ public class HDBOfficerView {
         System.out.print("Enter your enquiry: ");
         String enquiryText = appContext.getScanner().nextLine();
 
-        // submit using EnquiryService
+        // submit using EnquiryController
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-        boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+        boolean isSubmitted = enquiryController.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
 
         if (!isSubmitted) {
             System.out.println("There was an issue submitting your enquiry. Please try again");
@@ -290,7 +290,7 @@ public class HDBOfficerView {
                 break;
             case "3":
                 //delete
-                boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getID());
+                boolean isDeleted = enquiryController.deleteEnquiry(selectedEnquiry.getID());
                 if (isDeleted) {
                     System.out.println("Your enquiry has been deleted.");
                 } else {
@@ -324,7 +324,7 @@ public class HDBOfficerView {
         }
 
         // Check if the user is already registered for a project
-        OfficerRegistrationModel registration = officerRegistrationService.registerForProject();
+        OfficerRegistrationModel registration = officerRegistrationController.registerForProject();
         if (registration == null) {
             System.out.println("There was an error in registration.");
             return;
@@ -347,7 +347,7 @@ public class HDBOfficerView {
 
         if (reg.getStatus() == OfficerRegistrationStatus.APPROVED) {
             int projectID = reg.getProjectID();
-            projectService.viewProjectByID(projectID);
+            projectController.viewProjectByID(projectID);
         }
         System.out.println("Application Status: " + reg.getStatus());
     }
@@ -369,7 +369,7 @@ public class HDBOfficerView {
 
         // Check if the applicant's application exists for the managed project
         BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
-        boolean found = applicationService.viewApplicationByNRIC(managedProject.getProjectID(), inputNric, outputApplication);
+        boolean found = applicationController.viewApplicationByNRIC(managedProject.getProjectID(), inputNric, outputApplication);
         System.out.println(managedProject.getProjectID());
         System.out.println("NRIC: " + inputNric);
 
@@ -397,7 +397,7 @@ public class HDBOfficerView {
             switch (subOption) {
                 case "1" -> {
                     // Option 1: Update Booking Status
-                    boolean updated = applicationService.updateApplicationStatusToBooked(applicationID);
+                    boolean updated = applicationController.updateApplicationStatusToBooked(applicationID);
 
                     if (updated) {
                         System.out.println("Booking status updated successfully to 'BOOKED'.");
@@ -426,7 +426,7 @@ public class HDBOfficerView {
                         FlatType newFlatType = FlatType.valueOf(newFlatTypeInput.toUpperCase());
 
                         // Call the service to update the flat type
-                        boolean updated = applicationService.updateApplicationFlatType(applicationID, newFlatType, availableFlatTypes);
+                        boolean updated = applicationController.updateApplicationFlatType(applicationID, newFlatType, availableFlatTypes);
 
                         if (updated) {
                             System.out.println("Flat type updated successfully.");
@@ -463,7 +463,7 @@ public class HDBOfficerView {
         int officerProjectID = managedProjects.get(0).getProjectID();
 
         BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
-        boolean found = applicationService.viewApplicationByNRIC(officerProjectID, inputNric, outputApplication);
+        boolean found = applicationController.viewApplicationByNRIC(officerProjectID, inputNric, outputApplication);
 
         if (found) {
             BTOApplicationModel application = outputApplication[0];
@@ -488,7 +488,7 @@ public class HDBOfficerView {
         }
 
         // Retrieve all enquiries
-        List<EnquiryModel> enquiries = enquiryService.getAllEnquiries();
+        List<EnquiryModel> enquiries = enquiryController.getAllEnquiries();
 
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
@@ -517,7 +517,7 @@ public class HDBOfficerView {
             }
 
             // Display the selected enquiry details
-            enquiryService.viewEnquiry(enquiryIndex);
+            enquiryController.viewEnquiry(enquiryIndex);
             System.out.println("What would you like to do?");
             System.out.println("1. Create/Edit Reply");
             System.out.println("2. Exit to Menu");
@@ -534,7 +534,7 @@ public class HDBOfficerView {
                         System.out.println("Edit your reply:");
                         reply = appContext.getScanner().nextLine();
 
-                        enquiryService.editEnquiryResponse(enquiryIndex, reply);
+                        enquiryController.editEnquiryResponse(enquiryIndex, reply);
                         System.out.println("Reply edited successfully.");
                         return;
                     }

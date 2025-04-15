@@ -1,9 +1,10 @@
-package com.sc2002.controller;
+package com.sc2002.services;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.sc2002.config.AppContext;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.UserRole;

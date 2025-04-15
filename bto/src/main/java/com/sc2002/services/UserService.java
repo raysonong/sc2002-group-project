@@ -1,4 +1,4 @@
-package com.sc2002.controller;
+package com.sc2002.services;
 
 import java.util.Scanner;
 

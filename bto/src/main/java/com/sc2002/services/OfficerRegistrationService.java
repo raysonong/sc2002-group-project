@@ -1,7 +1,8 @@
-package com.sc2002.controller;
+package com.sc2002.services;
 
 import java.util.Scanner;
 
+import com.sc2002.config.AppContext;
 import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.BTOProjectModel;

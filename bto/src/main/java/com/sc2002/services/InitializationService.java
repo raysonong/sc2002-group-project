@@ -1,9 +1,10 @@
-package com.sc2002.controller;
+package com.sc2002.services;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sc2002.controllers.AuthController;
 import com.sc2002.enums.Neighborhood;
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.ApplicantModel;
@@ -86,13 +87,13 @@ public class InitializationService {
         }
     }
 
-    public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthService authService) {
+    public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthController authController) {
         String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
         ArrayList<List<Object>> projectData = CSVReader.readProjectList(projectDir + "/ProjectList.csv");
-        addProjectByArrayList(projectData, projectList, userList, authService);
+        addProjectByArrayList(projectData, projectList, userList, authController);
     }
 
-    private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, AuthService authService) {
+    private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, AuthController authController) {
         for (List<Object> project : projectData) { // Loop the ArrayList for the lists
             try {
                 // Extract project details for XLSX file
@@ -156,7 +157,7 @@ public class InitializationService {
                     }
 
                     UserModel officer = userList.getUserByName(officerName.trim().replace("\"", ""));
-                    if (officer != null && authService.isOfficer(officer)) {
+                    if (officer != null && authController.isOfficer(officer)) {
                         newProject.addManagingOfficerUser(officer);
                         addedOfficers++;
                     }

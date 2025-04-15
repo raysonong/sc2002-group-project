@@ -2,16 +2,17 @@ package com.sc2002.view;
 
 import java.util.Scanner;
 
-import com.sc2002.controller.AppContext;
-import com.sc2002.controller.UserService;
 import com.sc2002.model.UserModel;
 import com.sc2002.repositories.UserRepo;
+import com.sc2002.services.UserService;
 import com.sc2002.utilities.NRICValidator;
 import com.sc2002.utilities.PasswordValidator;
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.UserController;
 
 public class mainAppView {
 
-    private final UserService userService = new UserService();
+    private final UserController userController = new UserController();
 
     public void startMenu(AppContext appContext) {
         System.out.println("Welcome to the BTO Project Management System!");
@@ -100,14 +101,14 @@ public class mainAppView {
             System.out.print("Please enter your password: ");
             password = scanner.nextLine();
 
-            currentUser = userService.authenticateUser(nric, password, userList);
+            currentUser = userController.authenticateUser(nric, password, userList);
 
             if (currentUser != null) {
                 System.out.println("Login successful!");
 
                 if ("password".equals(password.toLowerCase())) { // check if it is 1st login
                     System.out.println("Please reset your password");
-                    userService.resetPassword(currentUser, scanner);
+                    userController.resetPassword(currentUser, scanner);
                 }
 
                 return currentUser;
@@ -225,7 +226,7 @@ public class mainAppView {
         } while (!PasswordValidator.isValid(password) || !password.equals(confirmPassword));
 
         // Register user using service
-        UserModel newUser = userService.registerApplicant(nric, name, age, maritalStatus, password, userList);
+        UserModel newUser = userController.registerApplicant(nric, name, age, maritalStatus, password, userList);
 
         if (newUser != null) {
             System.out.println("Registration successful! You are now logged in.");

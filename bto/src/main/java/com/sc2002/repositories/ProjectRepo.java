@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.sc2002.controller.AppContext;
+import com.sc2002.config.AppContext;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 import com.sc2002.interfaces.RepoInterface;

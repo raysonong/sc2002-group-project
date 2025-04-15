@@ -2,11 +2,11 @@ package com.sc2002.view;
 
 import java.util.List;
 
-import com.sc2002.controller.AppContext;
-import com.sc2002.controller.ProjectService;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.Neighborhood;
 import com.sc2002.model.BTOProjectModel;
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.ProjectController;
 
 // Primary to view Projects with filterable options
 public class ProjectView {
@@ -33,8 +33,8 @@ public class ProjectView {
     }
 
     public void projectManagingMenu(AppContext appContext) { // handling printing of which project officer is currently handling
-        ProjectService projectService = new ProjectService(appContext);
-        BTOProjectModel project = projectService.viewManagingProject();
+        ProjectController projectController = new ProjectController(appContext);
+        BTOProjectModel project = projectController.viewManagingProject();
         if (project != null) {
             System.out.printf("%s Currently Managing \"%s\" Project ID: %d\n", appContext.getCurrentUser().getUsersRole(), project.getProjectName(), project.getProjectID());
         } else {

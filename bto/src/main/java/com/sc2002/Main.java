@@ -2,15 +2,16 @@ package com.sc2002;
 
 import java.util.Scanner;
 
-import com.sc2002.controller.AppContext;
-import com.sc2002.controller.AuthService;
-import com.sc2002.controller.InitializationService;
 import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ApplicationRepo;
 import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.AuthController;
+import com.sc2002.controllers.InitializationController;
+import com.sc2002.services.InitializationService;
 import com.sc2002.view.mainAppView;
 
 
@@ -29,11 +30,11 @@ public class Main {
         // Declaring Scanner
         Scanner scanner = new Scanner(System.in);
         // Declaring AuthService
-        AuthService authService = new AuthService();
+        AuthController authController = new AuthController();
         // Declaring MenuManagerService
         mainAppView mainAppView = new mainAppView();
         // Declaring InitilizationService
-        InitializationService initialService = new InitializationService();
+        InitializationController initController = new InitializationController();
         // Declaring the repositories
         EnquiryRepo enquiryList = new EnquiryRepo();
         UserRepo userList = new UserRepo();
@@ -41,12 +42,12 @@ public class Main {
         ApplicationRepo applicationList = new ApplicationRepo();
         OfficerRegistrationRepo officerRegistrationList = new OfficerRegistrationRepo();
         // Initialize userList
-        initialService.initializeUsers(userList);
-        initialService.initializeProjects(projectList,userList,authService);
+        initController.initializeUsers(userList);
+        initController.initializeProjects(projectList,userList,authController);
         // Declaring variables
         UserModel currentUser = null;
         // AppContext service, To make things less clustered, improving readibility
-        AppContext appContext = new AppContext(scanner,authService,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
+        AppContext appContext = new AppContext(scanner,authController,currentUser,userList,projectList,enquiryList,applicationList, officerRegistrationList);
         // Project
         try{
             mainAppView.startMenu(appContext);

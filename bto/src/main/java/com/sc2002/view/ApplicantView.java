@@ -3,35 +3,35 @@ package com.sc2002.view;
 import java.util.List;
 import java.util.Optional;
 
-import com.sc2002.controller.AppContext;
-import com.sc2002.controller.ApplicationService;
-import com.sc2002.controller.EnquiryService;
-import com.sc2002.controller.ProjectService;
-import com.sc2002.controller.UserService;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.utilities.Receipt;
+import com.sc2002.controllers.ApplicationController;
+import com.sc2002.controllers.ProjectController;
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.*;
 
 public class ApplicantView {
 
-    // declare all the services required by Applicant
-    private EnquiryService enquiryService = null;
-    private ProjectService projectService = null;
-    private ApplicationService applicationService = null;
-    private UserService userService = null;
+    // declare all the services required by Applicant (By right view should go through controller then services)
+    private EnquiryController enquiryController = null;
+    private ProjectController projectController = null;
+    private ApplicationController applicationController = null;
+
+    private UserController userController = null;
     // Initialize other views
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     public void ApplicantMenu(AppContext appContext) {
 
         // Initialize Services with context
-        enquiryService = new EnquiryService(appContext);
-        projectService = new ProjectService(appContext);
-        applicationService = new ApplicationService(appContext);
-        userService = new UserService();
+        enquiryController = new EnquiryController(appContext);
+        projectController = new ProjectController(appContext);
+        applicationController = new ApplicationController(appContext);
+        userController = new UserController();
         String userInput = "";
         List<String> menus = appContext.getCurrentUser().getMenuOptions();
 
@@ -72,7 +72,7 @@ public class ApplicantView {
                 }
                 case "7" -> {
                     // Option 7: Reset Password
-                    userService.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
+                    userController.resetPassword(appContext.getCurrentUser(), appContext.getScanner());
                 }
                 case "8" -> {
                     // Option 8: Logout
@@ -100,9 +100,9 @@ public class ApplicantView {
 
         // display eligible projects 
         System.out.println("Available Projects: ");
-        applicationService.viewAvailableProjectsForApplicant();
+        applicationController.viewAvailableProjectsForApplicant();
 
-        Boolean application = applicationService.applyToProject(
+        Boolean application = applicationController.applyToProject(
                 appContext.getProjectRepo(),
                 appContext.getScanner(),
                 appContext.getCurrentUser()
@@ -166,7 +166,7 @@ public class ApplicantView {
     private void submitEnquiryMenu(AppContext appContext) {
         // Display eligible projects for the applicant
         System.out.println("Eligible Projects for Enquiry: ");
-        applicationService.viewAvailableProjectsForApplicant();
+        applicationController.viewAvailableProjectsForApplicant();
 
         // ask applicant to select project
         System.out.print("Enter Project ID to submit an enquiry: ");
@@ -185,7 +185,7 @@ public class ApplicantView {
 
         // submit using EnquiryService
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-        boolean isSubmitted = enquiryService.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+        boolean isSubmitted = enquiryController.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
 
         if (!isSubmitted) {
             System.out.println("There was an issue submitting your enquiry. Please try again");
@@ -253,7 +253,7 @@ public class ApplicantView {
                 break;
             case "3":
                 //delete
-                boolean isDeleted = enquiryService.deleteEnquiry(selectedEnquiry.getID());
+                boolean isDeleted = enquiryController.deleteEnquiry(selectedEnquiry.getID());
                 if (isDeleted) {
                     System.out.println("Your enquiry has been deleted.");
                 } else {
