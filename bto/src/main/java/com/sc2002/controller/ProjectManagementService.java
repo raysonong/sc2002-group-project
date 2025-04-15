@@ -23,11 +23,11 @@ public class ProjectManagementService {
      * @param scanner The Scanner object for user input.
      * @return A new BTOProjectModel object with the specified details.
      */
-    public BTOProjectModel createProject() {
+    public void createProject() {
         // Check if have the right permission
         if (!this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
             System.out.println("You do not have permission to create a project.");
-            return null;
+            return;
         }
 
         // check if currently are managing other project
@@ -41,7 +41,7 @@ public class ProjectManagementService {
                 System.out.println("Today's Date: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy")));
                 System.out.println("------------------------------\nPress enter to continue...");
                 appContext.getScanner().nextLine();
-                return null;
+                return;
 
             }
         }
@@ -58,6 +58,9 @@ public class ProjectManagementService {
         do {
             System.out.printf("Enter the Project Name: ");
             projectName = appContext.getScanner().nextLine().trim();
+            if (projectName.equals("-1")) {
+                return; // Return to the main menu
+            }
             if (projectName.isEmpty()) {
                 System.out.println("Project Name cannot be empty. Please try again.");
             }
@@ -78,6 +81,8 @@ public class ProjectManagementService {
                     // Set location filter to selected enum value
                     neighborhoodEnum = neighborhoods[choice - 1];
                     System.out.println("Neighborhood choice: " + neighborhoods[choice - 1]);
+                } else if (choice == -1) {
+                    return; // Return to the main menu
                 } else {
                     System.out.println("Invalid Neighborhood choice.");
                 }
@@ -92,6 +97,9 @@ public class ProjectManagementService {
             if (this.appContext.getScanner().hasNextInt()) {
                 twoRoomCount = this.appContext.getScanner().nextInt();
                 appContext.getScanner().nextLine(); // Consume the leftover newline
+                if (twoRoomCount == -1) {
+                    return; // Return to the main menu
+                }
                 if (twoRoomCount < 0) {
                     System.out.println("The number of 2-room flats cannot be negative. Please try again.");
                 }
@@ -106,6 +114,9 @@ public class ProjectManagementService {
             if (this.appContext.getScanner().hasNextInt()) {
                 twoRoomPrice = this.appContext.getScanner().nextInt();
                 this.appContext.getScanner().nextLine(); // Consume the leftover newline
+                if (twoRoomPrice == -1) {
+                    return; // Return to the main menu
+                }
                 if (twoRoomPrice < 0) {
                     System.out.println("The price of 2-room flats cannot be negative. Please try again.");
                 }
@@ -120,6 +131,10 @@ public class ProjectManagementService {
             if (this.appContext.getScanner().hasNextInt()) {
                 threeRoomCount = this.appContext.getScanner().nextInt();
                 this.appContext.getScanner().nextLine(); // Consume the leftover newline
+                if (threeRoomCount == -1) {
+                    return; // Return to the main menu
+                }
+
                 if (threeRoomCount < 0) {
                     System.out.println("The number of 3-room flats cannot be negative. Please try again.");
                 }
@@ -134,6 +149,9 @@ public class ProjectManagementService {
             if (this.appContext.getScanner().hasNextInt()) {
                 threeRoomPrice = this.appContext.getScanner().nextInt();
                 this.appContext.getScanner().nextLine(); // Consume the leftover newline
+                if (threeRoomPrice == -1) {
+                    return; // Return to the main menu
+                }
                 if (threeRoomPrice < 0) {
                     System.out.println("The price of 3-room flats cannot be negative. Please try again.");
                 }
@@ -146,6 +164,9 @@ public class ProjectManagementService {
         while (!isValidDate) {
             System.out.printf("Enter the application opening date in DD-MM-YYYY format (e.g. 31-12-2025): ");
             tempDate = this.appContext.getScanner().nextLine();
+            if (tempDate.equals("-1")) {
+                return;
+            }
             try {
                 openingDate = LocalDate.parse(tempDate, formatter);
                 isValidDate = true;
@@ -159,6 +180,9 @@ public class ProjectManagementService {
         while (!isValidDate) {
             System.out.printf("Enter the application closing date in DD-MM-YYYY format (e.g. 31-12-2025): ");
             tempDate = this.appContext.getScanner().nextLine();
+            if (tempDate.equals("-1")) {
+                return;
+            }
             try {
                 closingDate = LocalDate.parse(tempDate, formatter);
                 if (!closingDate.isAfter(openingDate)) {
@@ -181,6 +205,8 @@ public class ProjectManagementService {
                     System.out.println("The number of maximum HDB Officer Slots cannot be negative. Please try again.");
                 } else if (maxOfficer > 10) {
                     System.out.println("The number of maximum HDB Officer Slots cannot be more than 10. Please try again.");
+                } else if (maxOfficer == -1) {
+                    return;
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid integer.");
@@ -188,7 +214,7 @@ public class ProjectManagementService {
             }
         } while (maxOfficer < 0 || maxOfficer > 10);
 
-        return new BTOProjectModel(projectName, neighborhoodEnum, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID());
+        this.appContext.getProjectRepo().save(new BTOProjectModel(projectName, neighborhoodEnum, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID()));
     }
 
     public void editProject(String userOption, String valueToChange, int projectID) {

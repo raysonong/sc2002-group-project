@@ -147,10 +147,11 @@ public class HDBManagerView {
     }
 
     private void createProjectMenu(AppContext appContext) {
-        appContext.getProjectRepo().save(projectManagementService.createProject());
+        projectManagementService.createProject();
     }
 
     private void editBTOProjectMenu(AppContext appContext) {
+        System.out.println(appContext.getCurrentUser().getUserID());
         // print all project
         printProjectsManagedByUser(appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID()));
         // select the project
