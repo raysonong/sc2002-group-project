@@ -3,15 +3,18 @@ package com.sc2002;
 import java.util.Scanner;
 
 import com.sc2002.model.UserModel;
+
 import com.sc2002.repositories.ApplicationRepo;
 import com.sc2002.repositories.EnquiryRepo;
 import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
+
 import com.sc2002.config.AppContext;
+
 import com.sc2002.controllers.AuthController;
 import com.sc2002.controllers.InitializationController;
-import com.sc2002.services.InitializationService;
+
 import com.sc2002.view.mainAppView;
 
 

@@ -4,10 +4,12 @@ import java.util.Scanner;
 
 import com.sc2002.model.UserModel;
 import com.sc2002.repositories.UserRepo;
-import com.sc2002.services.UserService;
+
 import com.sc2002.utilities.NRICValidator;
 import com.sc2002.utilities.PasswordValidator;
+
 import com.sc2002.config.AppContext;
+
 import com.sc2002.controllers.UserController;
 
 public class mainAppView {

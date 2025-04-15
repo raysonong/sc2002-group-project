@@ -4,8 +4,11 @@ import java.util.List;
 
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.Neighborhood;
+
 import com.sc2002.model.BTOProjectModel;
+
 import com.sc2002.config.AppContext;
+
 import com.sc2002.controllers.ProjectController;
 
 // Primary to view Projects with filterable options
@@ -14,7 +17,11 @@ public class ProjectView {
     public void viewProjectFilterableMenu(AppContext appContext) {
         System.out.println("BTO Project View Options:");
         System.out.println("1. Change filters");
-        System.out.println("2. View projects");
+        System.out.println("2. View projects (filtered)");
+        // Only show option 3 if the user is a manager
+        if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+            System.out.println("3. View Your Projects (filtered)");
+        }
         System.out.print("Enter your choice: ");
 
         String input = appContext.getScanner().nextLine();
@@ -25,6 +32,12 @@ public class ProjectView {
                 break;
             case "2":
                 printProjectMenu(appContext);
+                break;
+            case "3":
+                if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+                    printPersonalProjectMenu(appContext);
+                }
+                // if not manager, return without doing anything
                 break;
             default:
                 // Return without doing anything
@@ -44,6 +57,24 @@ public class ProjectView {
 
     private void printProjectMenu(AppContext appContext) {
         List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().findByFilter(appContext);
+        System.out.println("\n-- All BTO Projects --");
+        System.out.printf("%-10s %-20s %-15s %-15s %-15s%n",
+                "Project ID", "Project Name", "2-Room Count", "3-Room Count", "Location");
+        System.out.println("---------------------------------------------------------------------------------");
+        for (BTOProjectModel project : listOfProjects) {
+            System.out.printf("%-10d %-20s %-15d %-15d %-15s%n",
+                    project.getProjectID(),
+                    project.getProjectName(),
+                    project.getTwoRoomCount(),
+                    project.getThreeRoomCount(),
+                    project.getNeighborhood());
+        }
+        System.out.println("\nPress Enter to continue...");
+        appContext.getScanner().nextLine();
+    }
+
+    private void printPersonalProjectMenu(AppContext appContext){
+        List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().findPersonalByFilter(appContext);
         System.out.println("\n-- All BTO Projects --");
         System.out.printf("%-10s %-20s %-15s %-15s %-15s%n",
                 "Project ID", "Project Name", "2-Room Count", "3-Room Count", "Location");

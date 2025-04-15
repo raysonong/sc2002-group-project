@@ -1,18 +1,24 @@
 package com.sc2002.view;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import com.sc2002.enums.ApplicationStatus;
+
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
+
 import com.sc2002.utilities.Receipt;
+
 import com.sc2002.controllers.ApplicationController;
 import com.sc2002.controllers.ProjectController;
+import com.sc2002.controllers.EnquiryController;
+import com.sc2002.controllers.UserController;
+
 import com.sc2002.config.AppContext;
-import com.sc2002.controllers.*;
 
 public class ApplicantView {
 
