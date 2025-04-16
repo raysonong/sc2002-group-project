@@ -49,9 +49,9 @@ public class ProjectView {
         ProjectController projectController = new ProjectController(appContext);
         BTOProjectModel project = projectController.viewManagingProject();
         if (project != null) {
-            System.out.printf("%s Currently Managing \"%s\" Project ID: %d\n", appContext.getCurrentUser().getUsersRole(), project.getProjectName(), project.getProjectID());
+            System.out.printf("%s INFO: Currently Managing \"%s\" Project ID: %d\n", appContext.getCurrentUser().getUsersRole(), project.getProjectName(), project.getProjectID());
         } else {
-            System.out.println("Current not managing Project");
+            System.out.println("INFO: Currently not managing Project");
         }
     }
 

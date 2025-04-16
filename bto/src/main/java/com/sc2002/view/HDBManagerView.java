@@ -52,10 +52,11 @@ public class HDBManagerView {
         this.reportingController = new ReportingController(appContext);
         this.applicationController = new ApplicationController(appContext);
         this.userController = new UserController();
-        // View which project Managing is currently Managing
-        projectView.projectManagingMenu(appContext);
+
 
         System.out.println("\n--HDB Manager Menu--");
+        // View which project Managing is currently Managing
+        projectView.projectManagingMenu(appContext);
         // Loop variable `i` is used to generate menu numbers starting from 1
         for (int i = 0; i < menus.size(); i++) {
             System.out.println("Option " + (i + 1) + ": " + menus.get(i));
