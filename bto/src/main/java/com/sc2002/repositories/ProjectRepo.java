@@ -1,5 +1,6 @@
 package com.sc2002.repositories;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.sc2002.interfaces.RepoInterface;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.ProjectViewFilterModel;
 import com.sc2002.model.UserModel;
+
 
 public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
 
@@ -156,5 +158,25 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
      */
     public int getLastProjectID() {
         return this.projects.getLast().getProjectID();
+    }
+    /**
+     * Checks if there is a date conflict between the specified opening and closing dates
+     * and the existing projects managed by the current user.
+     *
+     * @param newOpeningDate The proposed opening date for the new project.
+     * @param newClosingDate The proposed closing date for the new project.
+     * @param appContext The application context containing the current user and other services.
+     * @return {@code true} if there is a date conflict with an existing project managed by the current user,
+     *         {@code false} otherwise.
+     */
+    public boolean hasDateConflict(LocalDate newOpeningDate,LocalDate newClosingDate,AppContext appContext) {
+        for (BTOProjectModel project : projects) {
+            if (newOpeningDate.isBefore(project.getClosingDate()) &&
+                newClosingDate.isAfter(project.getOpeningDate()) &&
+                project.getManagerUserID() == appContext.getCurrentUser().getUserID()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

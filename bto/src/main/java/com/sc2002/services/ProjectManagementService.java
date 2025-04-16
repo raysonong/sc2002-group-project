@@ -36,7 +36,7 @@ public class ProjectManagementService {
         int twoRoomCount = 0, twoRoomPrice = 0, threeRoomCount = 0, threeRoomPrice = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
         String tempDate;
-        boolean isValidDate = false;
+        boolean isValidDate = false,noConflictDate=false;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         // Validate project name
@@ -145,40 +145,50 @@ public class ProjectManagementService {
                 appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (threeRoomPrice < 0);
-        // Validate opening date
-        while (!isValidDate) {
-            System.out.printf("Enter the application opening date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-            tempDate = this.appContext.getScanner().nextLine();
-            if (tempDate.equals("-1")) {
-                return;
+        while(!noConflictDate){
+            // Validate opening date
+            isValidDate = false;
+            while (!isValidDate) {
+                System.out.printf("Enter the application opening date in DD-MM-YYYY format (e.g. 31-12-2025): ");
+                tempDate = this.appContext.getScanner().nextLine();
+                if (tempDate.equals("-1")) {
+                    return;
+                }
+                try {
+                    openingDate = LocalDate.parse(tempDate, formatter);
+                    isValidDate = true;
+                } catch (DateTimeParseException e) {
+                    System.out.println("Invalid date format. Please use DD-MM-YYYY (e.g. 31-12-2025)");
+                }
             }
-            try {
-                openingDate = LocalDate.parse(tempDate, formatter);
-                isValidDate = true;
-            } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Please use DD-MM-YYYY (e.g. 31-12-2025)");
+
+            // Validate closing date
+            isValidDate = false;
+            while (!isValidDate) {
+                System.out.printf("Enter the application closing date in DD-MM-YYYY format (e.g. 31-12-2025): ");
+                tempDate = this.appContext.getScanner().nextLine();
+                if (tempDate.equals("-1")) {
+                    return;
+                }
+                try {
+                    closingDate = LocalDate.parse(tempDate, formatter);
+                    if (!closingDate.isAfter(openingDate)) {
+                        System.out.println("Closing date must be later than the opening date. Please try again.");
+                    } else {
+                        isValidDate = true;
+                    }
+                } catch (DateTimeParseException e) {
+                    System.out.println("Invalid date format. Please use DD-MM-YYYY (e.g. 31-12-2025)");
+                }
+            }
+            if(appContext.getProjectRepo().hasDateConflict(openingDate, closingDate, appContext)){
+                noConflictDate=false;
+                System.out.println("Date conflicted with existing projects. Please try again.");
+            }else{
+                noConflictDate=true;
             }
         }
 
-        // Validate closing date
-        isValidDate = false;
-        while (!isValidDate) {
-            System.out.printf("Enter the application closing date in DD-MM-YYYY format (e.g. 31-12-2025): ");
-            tempDate = this.appContext.getScanner().nextLine();
-            if (tempDate.equals("-1")) {
-                return;
-            }
-            try {
-                closingDate = LocalDate.parse(tempDate, formatter);
-                if (!closingDate.isAfter(openingDate)) {
-                    System.out.println("Closing date must be later than the opening date. Please try again.");
-                } else {
-                    isValidDate = true;
-                }
-            } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format. Please use DD-MM-YYYY (e.g. 31-12-2025)");
-            }
-        }
 
         // Validate max Officer
         do {
@@ -205,13 +215,15 @@ public class ProjectManagementService {
     public void editProject(String userOption, String valueToChange, int projectID, boolean managingProject) {
         try {
             if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
-                // @HS TODO IF YOU ARE IMPLEMENTING A NEW WAY TO CHECK MANAGINGPROJECT
-                // int projectID = ((HDBManagerModel) this.appContext.getCurrentUser()).getProjectID();
-                // BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
+                // We check if the currentUser is the manager of the project he wishes to edit
+                if(project.getManagerUserID()!=appContext.getCurrentUser().getUserID()){
+                    throw new RuntimeException("User is not manager of project");
+                }
+                
                 switch (userOption) {
                     case "1" ->
                         project.setProjectName(valueToChange);
