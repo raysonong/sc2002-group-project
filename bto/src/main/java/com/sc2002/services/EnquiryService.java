@@ -98,7 +98,9 @@ public class EnquiryService {
         try{
             EnquiryModel enquiry = this.appContext.getEnquiryRepo().findByID(enquiryID);
             if(this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())){
-                // Manager can reply any so no need to do extra checking
+                if(appContext.getProjectRepo().findByID(enquiry.getProjectID()).getManagerUserID()!=appContext.getCurrentUser().getUserID()){
+                    throw new RuntimeException("You are not Project Manager of this enquiry's project.");
+                }
                 if (enquiry!=null) {
                     enquiry.replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
                     return true;
@@ -112,7 +114,7 @@ public class EnquiryService {
                 // 2) viewEnquiry(index) to view the exact enquiry
                 // 3) editEnquiry(index) to edit that exact enquiry
                 if (enquiry!=null) {
-                    if(appContext.getProjectRepo().findByID(enquiry.getID()).isManagingOfficer(appContext.getCurrentUser())){
+                    if(appContext.getProjectRepo().findByID(enquiry.getProjectID()).isManagingOfficer(appContext.getCurrentUser())){
                         enquiry.replyEnquiry(response, this.appContext.getCurrentUser().getUserID());
                         return true;
                     }else{

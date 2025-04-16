@@ -374,10 +374,10 @@ public class HDBManagerView {
         if (enquiries.isEmpty()) {
             System.out.println("No enquiries found.");
         } else {
-            System.out.println("-- All Enquiries --");
+            System.out.println("-- All Your Enquiries --");
             for (int i = 0; i < enquiries.size(); i++) {
-                System.out.printf("Index: %d, Subject: %s, Status: %s%n",
-                        i, enquiries.get(i).getEnquiryText(), enquiries.get(i).getStatus());
+                System.out.printf("Index: %d, Subject: %s, Status: %s, YourProject:%s%n",
+                        i, enquiries.get(i).getEnquiryText(), enquiries.get(i).getStatus(), (appContext.getProjectRepo().findByID(enquiries.get(i).getProjectID()).getManagerUserID()==appContext.getCurrentUser().getUserID())?"Yes":"No");
             }
             System.out.print("Enter the index of the enquiry you wish to view: ");
             try {
