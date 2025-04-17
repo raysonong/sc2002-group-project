@@ -24,9 +24,9 @@ public class OfficerRegistrationController {
     /**
      * Registers the current officer for a project.
      * 
-     * @return The created registration model, or null if registration failed
+     * @return true if successfull, or false if registration failed
      */
-    public OfficerRegistrationModel registerForProject() {
+    public Boolean registerForProject() {
         return officerRegistrationService.registerForProject();
     }
     

@@ -6,8 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.sc2002.enums.ApplicationStatus;
-import com.sc2002.model.BTOApplicationModel;
-import com.sc2002.interfaces.RepoInterface; // Ensure this is the correct package for RepoInterface
+import com.sc2002.interfaces.RepoInterface;
+import com.sc2002.model.BTOApplicationModel; // Ensure this is the correct package for RepoInterface
 
 public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integer> {
 
@@ -139,5 +139,15 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
         }
 
         return true;
+    }
+
+    public BTOApplicationModel findByUserAndProject(int userId, int projectId) {
+        for (BTOApplicationModel application : applications) {
+            if (application.getApplicantUserID() == userId && application.getProjectID() == projectId 
+            && application.getStatus() != ApplicationStatus.WITHDRAWN && application.getStatus() != ApplicationStatus.UNSUCCESSFUL) {
+                return application;
+            }
+        }
+        return null;
     }
 }

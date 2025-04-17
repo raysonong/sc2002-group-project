@@ -8,6 +8,8 @@ import com.sc2002.enums.UserRole;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.model.UserModel;
+import com.sc2002.repositories.ApplicationRepo;
+import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 
 public class OfficerRegistrationService {
@@ -16,15 +18,18 @@ public class OfficerRegistrationService {
     public OfficerRegistrationService(AppContext appContext) {
         this.appContext = appContext;
     }
-    public OfficerRegistrationModel registerForProject() {
+    public boolean registerForProject() {
         // Initialize appContext required
         ProjectRepo projectRepo = this.appContext.getProjectRepo();
+        ApplicationRepo applicationRepo = this.appContext.getApplicationRepo();
+        OfficerRegistrationRepo officerRegistrationRepo = this.appContext.getOfficerRegistrationRepo();
+
         Scanner scanner = this.appContext.getScanner();
         UserModel currentUser = this.appContext.getCurrentUser();
         // Check role
         if(currentUser.getUsersRole() != UserRole.HDB_OFFICER) {
             System.out.println("You do not have permission to apply an application to join a project.");
-            return null;
+            return false;
         }
 
         int input_projectId = 0;
@@ -37,24 +42,32 @@ public class OfficerRegistrationService {
 
                 // Return back to menu
                 if (input_projectId == -1) {
-                    return null;
+                    return false;
                 }
 
                 // Validate input
                 if (projectRepo.findByID(input_projectId)==null) {
                     System.out.println("This project ID does not exist. Please enter a valid ID.");
+                    return false;
                 }
-                else {
-                    break;
+
+                // Check if the officer has already applied as an applicant
+                if (applicationRepo.findByUserAndProject(currentUser.getUserID(), input_projectId) != null) {
+                    System.out.println("You cannot register for a project you have already applied to as an applicant.");
+                    return false;
                 }
+
+                break;
             } else {
                 System.out.println("Invalid input. Please enter a valid ID.");
                 scanner.nextLine(); // Consume invalid input
             }
         }
 
-        System.out.println("Your application has been created successfully and is pending approval from the project manager!");
-        return new OfficerRegistrationModel(currentUser, input_projectId);
+        // save in repository
+        officerRegistrationRepo.save(new OfficerRegistrationModel(currentUser, input_projectId));
+
+        return true;
     }
 
     public boolean approveRegistration(OfficerRegistrationModel registration){

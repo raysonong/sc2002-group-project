@@ -3,6 +3,12 @@ package com.sc2002.view;
 import java.util.List;
 import java.util.Optional;
 
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.ApplicationController;
+import com.sc2002.controllers.EnquiryController;
+import com.sc2002.controllers.OfficerRegistrationController;
+import com.sc2002.controllers.ProjectController;
+import com.sc2002.controllers.UserController;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.OfficerRegistrationStatus;
@@ -11,15 +17,7 @@ import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
-
 import com.sc2002.utilities.Receipt;
-
-import com.sc2002.controllers.ApplicationController;
-import com.sc2002.controllers.EnquiryController;
-import com.sc2002.controllers.OfficerRegistrationController;
-import com.sc2002.controllers.ProjectController;
-import com.sc2002.controllers.UserController;
-import com.sc2002.config.AppContext;
 
 
 public class HDBOfficerView {
@@ -307,17 +305,6 @@ public class HDBOfficerView {
     }
 
     private void registerForProjectMenu(AppContext appContext) {
-        ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
-
-        // retrieve the application 
-        Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
-
-        //check if the application exists
-        if (applicationOpt.isPresent()) {
-            System.out.println("You cannot register for a project team as you have already applied for a BTO project.");
-            return;
-        }
-
         // Retrieve the projects managed by the officer
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
@@ -327,14 +314,13 @@ public class HDBOfficerView {
         }
 
         // Check if the user is already registered for a project
-        OfficerRegistrationModel registration = officerRegistrationController.registerForProject();
-        if (registration == null) {
-            System.out.println("There was an error in registration.");
+        boolean registration = officerRegistrationController.registerForProject();
+
+        if (!registration) {
             return;
         }
 
-        appContext.getOfficerRegistrationRepo().save(registration);
-        System.out.println("You have successfully registered for the project.");
+        System.out.println("Your application has been created successfully and is pending approval from the project manager!");
     }
 
     private void viewRegistrationStatusMenu(AppContext appContext) {
@@ -367,14 +353,12 @@ public class HDBOfficerView {
         // Assuming an officer can manage only one project at a time
         BTOProjectModel managedProject = managedProjects.get(0);
 
-        System.out.println("Enter applicant's NRIC:");
+        System.out.print("Enter applicant's NRIC:");
         String inputNric = appContext.getScanner().nextLine();
 
         // Check if the applicant's application exists for the managed project
         BTOApplicationModel[] outputApplication = new BTOApplicationModel[1];
         boolean found = applicationController.viewApplicationByNRIC(managedProject.getProjectID(), inputNric, outputApplication);
-        System.out.println(managedProject.getProjectID());
-        System.out.println("NRIC: " + inputNric);
 
         if (found) {
             BTOApplicationModel application = outputApplication[0];
