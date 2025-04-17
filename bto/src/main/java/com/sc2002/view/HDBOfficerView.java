@@ -345,7 +345,7 @@ public class HDBOfficerView {
         // Assuming an officer can manage only one project at a time
         BTOProjectModel managedProject = managedProjects.get(0);
 
-        System.out.print("Enter applicant's NRIC:");
+        System.out.print("Enter applicant's NRIC: ");
         String inputNric = appContext.getScanner().nextLine();
 
         // Check if the applicant's application exists for the managed project
