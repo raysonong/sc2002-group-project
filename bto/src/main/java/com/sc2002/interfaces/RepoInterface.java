@@ -3,7 +3,7 @@ package com.sc2002.interfaces;
 import java.util.List;
 
 /**
- * Generic repository interface that defines common operations.
+ * Repository interface that defines common repo operations.
  * @param <T> The entity type this repository manages
  * @param <ID> The type of the entity's identifier
  */

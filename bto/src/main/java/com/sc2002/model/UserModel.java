@@ -54,7 +54,7 @@ public abstract class UserModel {
      */
     private int userID;
     /**
-     * The constructor
+     * The constructor, protected and only accessible by its subclasses.
      *
      * @param name The name of the user
      * @param nric The nric of the user
@@ -62,7 +62,7 @@ public abstract class UserModel {
      * @param isMarried Marital Status of the user
      * @param password The password of the account
      */
-    UserModel(String nric, String name, int age, String isMarried, String password, UserRole role) {
+    protected UserModel(String nric, String name, int age, String isMarried, String password, UserRole role) {
         this.password = hashPasswd(password);
         if (this.password == null) {
             System.out.println("User not created");

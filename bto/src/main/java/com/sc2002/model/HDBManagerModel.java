@@ -52,7 +52,7 @@ public class HDBManagerModel extends UserModel {
     }
 
     @Override
-    public List<String> getMenuOptions() {
+    public List<String> getMenuOptions() { // Handles the printing of menu options for applicant, each user has their own menu options
         List<String> options = new ArrayList<>();
         //options.addAll(super.getMenuOptions()); // Inherit HDBOfficer's options
         options.addAll(Arrays.asList("View Project (Filterable)","Create BTO Project", "Edit BTO Project",
