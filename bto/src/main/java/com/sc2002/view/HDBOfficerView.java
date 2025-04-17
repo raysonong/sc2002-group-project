@@ -305,14 +305,6 @@ public class HDBOfficerView {
     }
 
     private void registerForProjectMenu(AppContext appContext) {
-        // Retrieve the projects managed by the officer
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
-
-        if (!managedProjects.isEmpty()) {
-            System.out.println("You can no longer register for a project as you have already managing a project.");
-            return;
-        }
-
         // Check if the user is already registered for a project
         boolean registration = officerRegistrationController.registerForProject();
 

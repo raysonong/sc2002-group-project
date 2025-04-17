@@ -1,5 +1,6 @@
 package com.sc2002.services;
 
+import java.util.List;
 import java.util.Scanner;
 
 import com.sc2002.config.AppContext;
@@ -24,14 +25,22 @@ public class OfficerRegistrationService {
         ApplicationRepo applicationRepo = this.appContext.getApplicationRepo();
         OfficerRegistrationRepo officerRegistrationRepo = this.appContext.getOfficerRegistrationRepo();
 
-        Scanner scanner = this.appContext.getScanner();
-        UserModel currentUser = this.appContext.getCurrentUser();
         // Check role
+        UserModel currentUser = this.appContext.getCurrentUser();
         if(currentUser.getUsersRole() != UserRole.HDB_OFFICER) {
             System.out.println("You do not have permission to apply an application to join a project.");
             return false;
         }
 
+        // Retrieve the projects managed by the officer
+        List<BTOProjectModel> managedProjects = projectRepo.getProjectsByOfficer(appContext.getCurrentUser());
+
+        if (!managedProjects.isEmpty()) {
+            System.out.println("You can no longer register for a project as you are already managing a project.");
+            return false;
+        }
+
+        Scanner scanner = this.appContext.getScanner();
         int input_projectId = 0;
 
         while (true) { 
