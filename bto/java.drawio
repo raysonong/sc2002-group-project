@@ -1,11 +1,14 @@
 <mxfile host="65bd71144e">
     <diagram id="fJ4djnBpITY3yPH3W6va" name="Page-1">
-        <mxGraphModel dx="1514" dy="870" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+        <mxGraphModel dx="1781" dy="1138" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
+                <mxCell id="42" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+                    <mxGeometry x="3046" y="4900" width="230" height="200" as="geometry"/>
+                </mxCell>
                 <mxCell id="26" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" parent="1" vertex="1">
-                    <mxGeometry x="-199" y="4850" width="2440" height="790" as="geometry"/>
+                    <mxGeometry x="-230" y="4850" width="2471" height="790" as="geometry"/>
                 </mxCell>
                 <mxCell id="24" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
                     <mxGeometry x="-310" y="4250" width="4310" height="490" as="geometry"/>
@@ -14,13 +17,13 @@
                     <mxGeometry x="-280" y="3720" width="4260" height="490" as="geometry"/>
                 </mxCell>
                 <mxCell id="20" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
-                    <mxGeometry x="1340" y="3120" width="620" height="570" as="geometry"/>
+                    <mxGeometry x="1320" y="3120" width="790" height="570" as="geometry"/>
                 </mxCell>
                 <mxCell id="17" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0cee2;strokeColor=#56517e;" parent="1" vertex="1">
                     <mxGeometry x="1090" y="2560" width="2260" height="550" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
-                    <mxGeometry x="2139.5" y="2250" width="330" height="280" as="geometry"/>
+                    <mxGeometry x="2080" y="2250" width="389.5" height="280" as="geometry"/>
                 </mxCell>
                 <mxCell id="12" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
                     <mxGeometry x="3620" y="2130" width="450" height="820" as="geometry"/>
@@ -107,7 +110,7 @@
                     <mxGeometry x="3160" y="3894" width="472" height="196" as="geometry"/>
                 </mxCell>
                 <mxCell id="node29" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Main&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ Main(): &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ main(String[]): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;" parent="1" vertex="1">
-                    <mxGeometry x="-540" y="5038" width="166" height="110" as="geometry"/>
+                    <mxGeometry x="3078" y="4970" width="166" height="110" as="geometry"/>
                 </mxCell>
                 <mxCell id="node21" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;NRICValidator&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ NRICValidator(): &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ isValidNRIC(String): boolean&lt;br/&gt;+ formatNRIC(String): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;" parent="1" vertex="1">
                     <mxGeometry x="3742" y="2790" width="220" height="122" as="geometry"/>
@@ -169,8 +172,8 @@
                 <mxCell id="node16" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;UserController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ UserController(): &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- userService: UserService&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ resetPassword(UserModel, Scanner): void&lt;br/&gt;+ authenticateUser(String, String, UserRepo): UserModel&lt;br/&gt;+ registerApplicant(String, String, int, String, String, UserRepo): UserModel&lt;br/&gt;+ updatePassword(UserModel, String, String): boolean&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;" parent="1" vertex="1">
                     <mxGeometry x="-202" y="4371" width="472" height="199" as="geometry"/>
                 </mxCell>
-                <mxCell id="node23" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;UserModel&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# UserModel(String, String, int, String, String, UserRole): &lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- age: int&lt;br&gt;- usersRole: UserRole&lt;br&gt;- password: String&lt;br&gt;- isMarried: boolean&lt;br&gt;- nric: String&lt;br&gt;- nextUserId: int&lt;br&gt;- projectViewFilter: ProjectViewFilterModel&lt;br&gt;- name: String&lt;br&gt;- userID: int&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getUserID(): int&lt;br&gt;+ getUsersRole(): UserRole&lt;br&gt;+ setPassword(String): void&lt;br&gt;+ getMaritalStatus(): Boolean&lt;br&gt;+ authenticate(String): void&lt;br&gt;+ getAge(): int&lt;br&gt;+ getNRIC(): String&lt;br&gt;- hashPasswd(String): String?&lt;br&gt;+ getMenuOptions(): List&amp;lt;String&amp;gt;&lt;br&gt;+ getProjectViewFilter(): ProjectViewFilterModel&lt;br&gt;+ getName(): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;" parent="1" vertex="1">
-                    <mxGeometry x="1502" y="493" width="382" height="547" as="geometry"/>
+                <mxCell id="node23" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;&amp;lt;Abstract&amp;gt;&amp;gt;&lt;/b&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;UserModel&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# UserModel(String, String, int, String, String, UserRole): &lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- age: int&lt;br&gt;- usersRole: UserRole&lt;br&gt;- password: String&lt;br&gt;- isMarried: boolean&lt;br&gt;- nric: String&lt;br&gt;- nextUserId: int&lt;br&gt;- projectViewFilter: ProjectViewFilterModel&lt;br&gt;- name: String&lt;br&gt;- userID: int&lt;/p&gt;&lt;hr size=&quot;1&quot;&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getUserID(): int&lt;br&gt;+ getUsersRole(): UserRole&lt;br&gt;+ setPassword(String): void&lt;br&gt;+ getMaritalStatus(): Boolean&lt;br&gt;+ authenticate(String): void&lt;br&gt;+ getAge(): int&lt;br&gt;+ getNRIC(): String&lt;br&gt;- hashPasswd(String): String?&lt;br&gt;+ getMenuOptions(): List&amp;lt;String&amp;gt;&lt;br&gt;+ getProjectViewFilter(): ProjectViewFilterModel&lt;br&gt;+ getName(): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;" parent="1" vertex="1">
+                    <mxGeometry x="1502" y="493" width="382" height="557" as="geometry"/>
                 </mxCell>
                 <mxCell id="node36" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;UserRepo&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ UserRepo(): &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- users: List&amp;lt;UserModel&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ findAll(): List&amp;lt;UserModel&amp;gt;&lt;br/&gt;+ getUserByName(String): UserModel&lt;br/&gt;+ delete(Integer): boolean&lt;br/&gt;+ getUserByNRIC(String): UserModel&lt;br/&gt;+ findByID(Integer): UserModel&lt;br/&gt;+ save(UserModel): void&lt;br/&gt;+ getUserByUserID(int): UserModel&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;" parent="1" vertex="1">
                     <mxGeometry x="1173" y="2764" width="267" height="266" as="geometry"/>
@@ -249,13 +252,14 @@
                 <mxCell id="label190" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge31" vertex="1" connectable="0">
                     <mxGeometry x="2505" y="3100" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge66" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;entryX=0.000;entryY=0.449;entryDx=0;entryDy=0;" parent="1" target="node23" edge="1">
+                <mxCell id="edge66" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="1133" y="3441"/>
                             <mxPoint x="1133" y="739"/>
                         </Array>
                         <mxPoint x="1480" y="3441" as="sourcePoint"/>
+                        <mxPoint x="1502" y="739" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="label396" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge66" vertex="1" connectable="0">
@@ -300,7 +304,7 @@
                 <mxCell id="label286" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge47" vertex="1" connectable="0">
                     <mxGeometry x="3060" y="270" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge3" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=1.000;entryY=0.700;entryDx=0;entryDy=0;" parent="1" source="node32" target="node23" edge="1">
+                <mxCell id="edge3" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.997;entryY=0.688;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="node32" target="node23" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="2973" y="876"/>
@@ -503,7 +507,7 @@
                 <mxCell id="label112" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge18" vertex="1" connectable="0">
                     <mxGeometry x="2280" y="186" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge24" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=1.000;entryY=0.673;entryDx=0;entryDy=0;" parent="1" source="node31" target="node23" edge="1">
+                <mxCell id="edge24" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.999;entryY=0.66;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="node31" target="node23" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="2489" y="861"/>
@@ -1043,11 +1047,12 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="edge62" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.446;exitY=0.000;exitDx=0;exitDy=0;entryX=0.000;entryY=0.500;entryDx=0;entryDy=0;" parent="1" source="node36" target="node23" edge="1">
+                <mxCell id="edge62" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.446;exitY=0.000;exitDx=0;exitDy=0;" parent="1" source="node36" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="1292" y="766"/>
                         </Array>
+                        <mxPoint x="1502" y="766" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="label372" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge62" vertex="1" connectable="0">
@@ -1089,25 +1094,79 @@
                     <mxGeometry x="879" y="530" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="13" value="&lt;h1&gt;&lt;b&gt;Utilities&lt;/b&gt;&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="3832.5" y="2150" width="60" height="30" as="geometry"/>
+                    <mxGeometry x="3670" y="2160" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="16" value="&lt;h1&gt;Interface&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="2274.5" y="2275" width="60" height="30" as="geometry"/>
+                    <mxGeometry x="2120" y="2270" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" value="&lt;h1&gt;Repositories&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="1400" y="2581" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="&lt;h1&gt;Config&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="1382" y="3190" width="60" height="30" as="geometry"/>
+                    <mxGeometry x="1352" y="3180" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="23" value="&lt;h1&gt;Service&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                <mxCell id="23" value="&lt;h1&gt;Services&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="-190" y="3760" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="25" value="&lt;h1&gt;Controller&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="-220" y="4280" width="60" height="30" as="geometry"/>
+                    <mxGeometry x="90" y="4270" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="27" value="&lt;h1&gt;View&lt;/h1&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
-                    <mxGeometry x="-120" y="4890" width="60" height="30" as="geometry"/>
+                    <mxGeometry x="-150" y="4880" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="Defined a set of name constant to be used in the application" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1870" y="-20" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;Represent the core data and business entities for the application.&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;b&gt;Encapsulation&lt;/b&gt;: each of the atrributes are using private modifers to restricting direct access. It then can be accessed through public accessors like the getters and setters.&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="834" y="570" width="150" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="Helper classes and functions that provide common functionalities across different parts of the application" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="3763" y="2155" width="227" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="Define blueprints for classes that all repository classes should implement. This promotes consistency." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="2220" y="2270" width="210" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="Responsible for data access logic, like create, read, update and delete model objects. Also act as a database for the application" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1347" y="2630" width="250" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="A central place to manage and provide access to shared resources and services like database repositories, authentication service, and the current user session.&amp;nbsp;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1328" y="3210" width="142" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="Contain the main business logic of the application, interact with the databases" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="-220" y="3800" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="Act as the intermediary between View (user interface) and Service. The classes will handle the user input and process the data (calling methods in Services)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="60" y="4310" width="300" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="Handles all the user interfaces, like displaying menus, prompting for user input, and showing data to user." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="-202" y="4930" width="222.5" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="The main programme to run the application" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="3091" y="4920" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="&lt;div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;b&gt;Abstraction: &lt;/b&gt;UserModel defines the general concept and common features of a user but cannot be instantiated directly. It also define abstract methods (getMenuOptions) that must be implemented by concrete subclasses&lt;/font&gt;&lt;/div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;Inheritance&lt;/b&gt;: Applicant and HDB Manger is a type of User. Hence, it inherited basic attributes and authentication, and adding some specific features.&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(31, 31, 31);&quot;&gt;&lt;b&gt;Polymorphism: &lt;/b&gt;Each User&#39;s subclasses (Applicant, HDB Officer &amp;amp; Manager) override the getMenuOptions to display the correct menu for each user&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1310" y="831" width="185" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="&lt;b&gt;Inheritance: &lt;/b&gt;HDB Officer is a special type of user that also has the functionality of a Applicant. Hence, it inherit properties from Applicant, and therefore also inherit from User" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="3160" y="1850" width="230" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="&lt;b&gt;Encapsulation: &lt;/b&gt;hashPasswd is decleared as private method with hides the specific algorithm used to hadhing password, while the rest of the classes uses it via public methods like setPassword and authenticate." style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1895" y="900" width="310" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="&lt;b&gt;Encapsulation: &lt;/b&gt;Each Repositories class encapsulates its internal data structure like List&amp;lt;UserModel&amp;gt;, and provides public methods like findAll to interact with it&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;Polymorphism: &lt;/b&gt;Each Repositories classes implement the RepoInterface and provide concrete implementations for methods like save, findAll, findByID&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1702" y="2575" width="296" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="&lt;font&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Encapsulation: &lt;/font&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Shared application state like scanner, currentUser and various repositories are encapsulated, making them only accessible via public getter methods&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontColor=#1F1F1F;" vertex="1" parent="1">
+                    <mxGeometry x="1327.5" y="3480" width="150" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="&lt;b&gt;Encapsulation: &lt;/b&gt;private static methods like addProjectByArrayList and addUserbyArrayList encapsulate the logic for parsing lists of data and creating User/Project objects, hiding these details from the public methods" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="3175" y="3793" width="380" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;b style=&quot;&quot;&gt;Polymorphism:&amp;nbsp;&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;currentUser variable is of type UserModel. However, it can hold instances of ApplicantModel, HDBOfficerModel, or HDBManagerModel. Code that uses currentUser works polymorphically based on the actual object type assigned during login or registration&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1910" y="3240" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="&lt;font&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Polymorphism: &lt;/font&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;the method startMenu checks the role of currentUser and calls the appropriate view (ApplicantView, HDBOfficerView or HDBManagerView). When methods like getMenuOptions or getUserRole are called on currentUser, the version specific to the actual object&#39;s class is executed.&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="-129" y="5240" width="320" height="80" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
