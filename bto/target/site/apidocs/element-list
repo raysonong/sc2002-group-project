@@ -1,0 +1,10 @@
+com.sc2002
+com.sc2002.config
+com.sc2002.controllers
+com.sc2002.enums
+com.sc2002.interfaces
+com.sc2002.model
+com.sc2002.repositories
+com.sc2002.services
+com.sc2002.utilities
+com.sc2002.view

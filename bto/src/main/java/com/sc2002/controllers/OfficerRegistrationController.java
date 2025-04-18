@@ -10,6 +10,7 @@ import com.sc2002.services.OfficerRegistrationService;
  */
 public class OfficerRegistrationController {
     
+    /** The service layer handling core officer registration logic. */
     private OfficerRegistrationService officerRegistrationService;
     
     /**

@@ -9,6 +9,7 @@ import com.sc2002.services.ProjectManagementService;
  */
 public class ProjectManagementController {
     
+    /** The service layer handling core project management logic. */
     private ProjectManagementService projectManagementService;
     
     /**

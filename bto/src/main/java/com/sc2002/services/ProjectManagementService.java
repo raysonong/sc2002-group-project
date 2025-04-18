@@ -9,24 +9,33 @@ import com.sc2002.enums.Neighborhood;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 
+/**
+ * Service responsible for handling the business logic related to managing BTO projects,
+ * including creation, editing, deletion, and visibility toggling.
+ * Requires appropriate authorization (typically Manager role).
+ */
 public class ProjectManagementService {
 
+    /** The application context providing access to repositories and current user state. */
     private AppContext appContext;
 
+    /**
+     * Constructs a ProjectManagementService with the given application context.
+     *
+     * @param appContext The application context.
+     */
     public ProjectManagementService(AppContext appContext) {
         this.appContext = appContext;
     }
 
     /**
-     * Creates a new BTO project with user input.
-     *
-     * @param newProjectID The unique ID for the new project.
-     * @param scanner The Scanner object for user input.
-     * @return A new BTOProjectModel object with the specified details.
+     * Creates a new BTO project based on user input.
+     * Performs authorization checks (only Managers can create projects).
+     * Prompts the user for project details via the scanner.
      */
     public void createProject() {
         // Check if have the right permission
-        if (!this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+        if (!this.appContext.getAuthController().isManager(this.appContext.getCurrentUser())) {
             System.out.println("You do not have permission to create a project.");
             return;
         }
@@ -36,7 +45,7 @@ public class ProjectManagementService {
         int twoRoomCount = 0, twoRoomPrice = 0, threeRoomCount = 0, threeRoomPrice = 0, maxOfficer = 0;
         LocalDate openingDate = null, closingDate = null;
         String tempDate;
-        boolean isValidDate = false,noConflictDate=false;
+        boolean isValidDate = false, noConflictDate = false;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         // Validate project name
@@ -145,7 +154,7 @@ public class ProjectManagementService {
                 appContext.getScanner().nextLine(); // Consume invalid input
             }
         } while (threeRoomPrice < 0);
-        while(!noConflictDate){
+        while (!noConflictDate) {
             // Validate opening date
             isValidDate = false;
             while (!isValidDate) {
@@ -181,14 +190,13 @@ public class ProjectManagementService {
                     System.out.println("Invalid date format. Please use DD-MM-YYYY (e.g. 31-12-2025)");
                 }
             }
-            if(appContext.getProjectRepo().hasDateConflict(openingDate, closingDate, appContext)){
-                noConflictDate=false;
+            if (appContext.getProjectRepo().hasDateConflict(openingDate, closingDate, appContext)) {
+                noConflictDate = false;
                 System.out.println("Date conflicted with existing projects. Please try again.");
-            }else{
-                noConflictDate=true;
+            } else {
+                noConflictDate = true;
             }
         }
-
 
         // Validate max Officer
         do {
@@ -212,18 +220,28 @@ public class ProjectManagementService {
         this.appContext.getProjectRepo().save(new BTOProjectModel(projectName, neighborhoodEnum, twoRoomCount, twoRoomPrice, threeRoomCount, threeRoomPrice, openingDate, closingDate, maxOfficer, this.appContext.getCurrentUser().getUserID()));
     }
 
+    /**
+     * Edits a specific attribute of a project.
+     * Performs authorization checks (Manager or managing Officer).
+     * Handles different editable fields based on userOption.
+     *
+     * @param userOption The field to edit (e.g., "1" for name, "2" for neighborhood).
+     * @param valueToChange The new value for the field.
+     * @param projectID The ID of the project to edit.
+     * @param managingProject True if the current user is a managing officer (restricts editable fields), false otherwise (implies Manager).
+     */
     public void editProject(String userOption, String valueToChange, int projectID, boolean managingProject) {
         try {
-            if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+            if (this.appContext.getAuthController().isManager(this.appContext.getCurrentUser())) {
                 BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Current User has no project under it.");
                 }
                 // We check if the currentUser is the manager of the project he wishes to edit
-                if(project.getManagerUserID()!=appContext.getCurrentUser().getUserID()){
+                if (project.getManagerUserID() != appContext.getCurrentUser().getUserID()) {
                     throw new RuntimeException("User is not manager of project");
                 }
-                
+
                 switch (userOption) {
                     case "1" ->
                         project.setProjectName(valueToChange);
@@ -315,9 +333,16 @@ public class ProjectManagementService {
 
     }
 
+    /**
+     * Deletes a project from the repository.
+     * Performs authorization checks (only Managers can delete).
+     *
+     * @param projectID The ID of the project to delete.
+     * @return True if the project was successfully deleted, false otherwise (e.g., not found, unauthorized).
+     */
     public boolean deleteProject(int projectID) {
         try {
-            if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+            if (this.appContext.getAuthController().isManager(this.appContext.getCurrentUser())) {
                 HDBManagerModel currentUser = (HDBManagerModel) this.appContext.getCurrentUser();
                 BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project.getManagerUserID() == currentUser.getUserID()) {
@@ -338,9 +363,15 @@ public class ProjectManagementService {
         return false;
     }
 
+    /**
+     * Toggles the visibility status of a project between Visible and Not Visible.
+     * Performs authorization checks (only Managers can toggle visibility).
+     *
+     * @param projectID The ID of the project whose visibility to toggle.
+     */
     public void toggleProjectVisibility(Integer projectID) {
         try {
-            if (this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+            if (this.appContext.getAuthController().isManager(this.appContext.getCurrentUser())) {
                 BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project == null) {
                     throw new RuntimeException("Project with the given ID does not exist.");

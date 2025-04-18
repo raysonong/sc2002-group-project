@@ -15,9 +15,19 @@ import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.CSVReader;
-// THIS FILE CONTROLS UserService such as adding
 
+/**
+ * Service responsible for initializing application data from external sources (e.g., CSV files).
+ * Populates repositories with initial user and project data.
+ */
 public class InitializationService {
+
+    /**
+     * Default constructor for InitializationService.
+     */
+    public InitializationService() {
+        // Default constructor
+    }
 
     /**
      * The `initializeUsers` function reads user data from Excel files and adds
@@ -87,12 +97,30 @@ public class InitializationService {
         }
     }
 
+    /**
+     * Initializes the project repository by reading data from a CSV file.
+     * Uses the CSVReader utility and adds projects via addProjectByArrayList.
+     *
+     * @param projectList The ProjectRepo to populate.
+     * @param userList The UserRepo containing user data (needed for assigning managers/officers).
+     * @param authController An AuthController instance for role checks.
+     */
     public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthController authController) {
         String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
         ArrayList<List<Object>> projectData = CSVReader.readProjectList(projectDir + "/ProjectList.csv");
         addProjectByArrayList(projectData, projectList, userList, authController);
     }
 
+    /**
+     * Helper method to process project data read from CSV and add projects to the repository.
+     * Parses the raw data, creates BTOProjectModel instances, and assigns officers.
+     * Includes validation checks.
+     *
+     * @param projectData The raw project data read from CSV (List of Lists).
+     * @param projectList The ProjectRepo to add projects to.
+     * @param userList The UserRepo to find officer/manager users.
+     * @param authController An AuthController instance for role checks.
+     */
     private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, AuthController authController) {
         for (List<Object> project : projectData) { // Loop the ArrayList for the lists
             try {

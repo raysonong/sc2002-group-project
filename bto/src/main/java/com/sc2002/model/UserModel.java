@@ -10,57 +10,67 @@ import javax.naming.AuthenticationException;
 
 import com.sc2002.enums.UserRole;
 
-import com.sc2002.model.ProjectViewFilterModel;
 /**
- * Abstract class representing a user in the system. This class provides basic
- * user attributes and functionalities
+ * Abstract base class representing a user within the BTO Management System.
+ * This class encapsulates common attributes and behaviors shared by all user types (Applicant, HDB Officer, HDB Manager).
+ * It serves as a foundation for specific user roles, promoting code reuse and polymorphism.
+ * Utilizes abstraction for role-specific functionalities like menu options.
  */
 public abstract class UserModel {
     /**
-     * Contains user's Role, used for authentication.
+     * The role assigned to the user (e.g., APPLICANT, HDB_OFFICER, HDB_MANAGER).
+     * Determines the user's permissions and available actions within the system.
      */
     private UserRole usersRole; 
     /**
-     * Contains user's filter options, used to filter projectView in non-volatile manner.
+     * Encapsulates the user's preferences for filtering project views.
+     * Allows maintaining filter state specific to each user instance.
      */
     private ProjectViewFilterModel projectViewFilter;
     /**
-     * The National Registration Identity Card (NRIC) of the user.
+     * The user's unique NRIC number.
+     * Used for identification and login.
      */
     private String nric;
     /**
-     * The name of the user.
+     * The full name of the user.
      */
     private String name;
     /**
-     * The age of the user.
+     * The age of the user. Relevant for eligibility checks (e.g., BTO application).
      */
     private int age;
     /**
-     * The marital status, note that users will parse String "Married"/"Single"
-     * as params, ensure to handle it.
+     * The user's marital status (true for married, false for single/divorced/widowed).
+     * Relevant for BTO application eligibility and flat type restrictions.
      */
     private boolean isMarried;
     /**
-     * The hashed password of the user.
+     * The securely hashed password for user authentication.
+     * Plain text passwords are never stored.
      */
     private String password;
         /**
-     * Static counter for auto-incrementing IDs.
+     * Static counter to generate unique user IDs sequentially.
+     * Ensures each user instance has a distinct identifier.
      */
-    private static int nextUserId = 0;
+    private static int nextUserID = 0;
         /**
-     * The IDs of user unique to them.
+     * The unique identifier for this user instance.
+     * Auto-generated during object creation.
      */
     private int userID;
     /**
-     * The constructor, protected and only accessible by its subclasses.
+     * Protected constructor for initializing common user attributes.
+     * Called by constructors of concrete subclasses (ApplicantModel, HDBOfficerModel, HDBManagerModel).
+     * Enforces password hashing and initializes user state.
      *
-     * @param name The name of the user
-     * @param nric The nric of the user
-     * @param age The age of the user
-     * @param isMarried Marital Status of the user
-     * @param password The password of the account
+     * @param nric The user's NRIC number.
+     * @param name The user's name.
+     * @param age The user's age.
+     * @param isMarried A string indicating marital status ("Married" or "Single"). Case-insensitive.
+     * @param password The user's chosen password in plaintext (will be hashed).
+     * @param role The UserRole assigned to this user. Given by the subclasses.
      */
     protected UserModel(String nric, String name, int age, String isMarried, String password, UserRole role) {
         this.password = hashPasswd(password);
@@ -78,32 +88,32 @@ public abstract class UserModel {
         this.nric = nric;
         this.name = name;
         this.age = age;
-        this.userID = nextUserId++; // Assign current ID and increment for next use
+        this.userID = nextUserID++; // Assign current ID and increment for next use
         this.projectViewFilter=new ProjectViewFilterModel(); // Initialized as empty
     }
 
     /**
-     * Retrieves the NRIC of the user.
+     * Retrieves the user's NRIC number.
      *
-     * @return The NRIC of the user.
+     * @return The user's NRIC number.
      */
     public String getNRIC() {
         return this.nric;
     }
 
     /**
-     * Retrieves the name of the user.
+     * Retrieves the user's name.
      *
-     * @return The name of the user.
+     * @return The user's name string.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Retrieves the age of the user.
+     * Retrieves the user's age.
      *
-     * @return The age of the user.
+     * @return The user's age as an integer.
      */
 
     public int getAge() {
@@ -111,7 +121,7 @@ public abstract class UserModel {
     }
 
     /**
-     * Retrieves the marital status of the user.
+     * Retrieves the user's marital status.
      *
      * @return True if the user is married, false otherwise.
      */
@@ -119,17 +129,28 @@ public abstract class UserModel {
         return this.isMarried;
     }
 
+    /**
+     * Retrieves the user's assigned role.
+     *
+     * @return The UserRole enum value representing the user's role.
+     */
     public UserRole getUsersRole(){
         return this.usersRole;
     }
 
+    /**
+     * Retrieves the user's unique ID.
+     *
+     * @return The user's unique integer ID.
+     */
     public int getUserID() {
         return this.userID;
     }
     /**
-     * Sets the password of the user after hashing it.
+     * Sets the user's password. The provided plain text password will be securely hashed before storage.
+     * If hashing fails, the password remains unchanged.
      *
-     * @param password The new password to set.
+     * @param password The plain text password to set.
      */
     public void setPassword(String password) {
         String newpassword = hashPasswd(password); // we do this to prevent possibility of overwriting password if error
@@ -140,12 +161,10 @@ public abstract class UserModel {
     }
 
     /**
-     * Authenticates the user with the given NRIC and password.
+     * Authenticates the user by comparing the provided plain text password against the stored hash.
      *
-     * @param nric The NRIC of the user attempting to authenticate.
-     * @param password The password of the user attempting to authenticate.
-     * @throws AuthenticationException If the NRIC or password does not match
-     * the stored credentials.
+     * @param password The plain text password provided during login attempt.
+     * @throws AuthenticationException If the provided password does not match the stored hash.
      */
     public void authenticate(String password) throws AuthenticationException {
         if (!hashPasswd(password).equals(this.password)) { // very good tool for a lot of things!
@@ -154,10 +173,11 @@ public abstract class UserModel {
     }
 
     /**
-     * Hashes the given plaintext password using SHA-256 and Base64 encoding.
+     * Hashes a plain text password using the SHA-256 algorithm and encodes it using Base64.
+     * 
      *
-     * @param plaintext The password to hash.
-     * @return The hashed password, or null if an error occurs.
+     * @param plaintext The plain text password to hash.
+     * @return A Base64 encoded string representing the hashed password, or null if hashing fails.
      */
     private String hashPasswd(String plaintext) {
         try {
@@ -170,9 +190,21 @@ public abstract class UserModel {
         }
     }
 
+    /**
+     * Abstract method to be implemented by concrete subclasses.
+     * Defines the specific menu options available to a user based on their role.
+     * This promotes polymorphism, allowing different user types to present different interfaces.
+     *
+     * @return A List of strings, where each string represents a menu option available to the user.
+     */
     public abstract List<String> getMenuOptions();
 
-    
+    /**
+     * Retrieves the user's project view filter preferences.
+     * Allows access to the encapsulated filter settings for this user.
+     *
+     * @return The ProjectViewFilterModel object associated with this user.
+     */
     public ProjectViewFilterModel getProjectViewFilter(){
         return this.projectViewFilter;
     }

@@ -12,10 +12,30 @@ import com.sc2002.config.AppContext;
 
 import com.sc2002.controllers.UserController;
 
+/**
+ * The main view class responsible for the initial user interaction, including
+ * displaying the main menu, handling login, and registration.
+ * It acts as the entry point for the user interface flow.
+ */
 public class mainAppView {
 
+    /**
+     * Default constructor for mainAppView.
+     * Initializes view components and controllers used in the main application loop.
+     */
+    public mainAppView() {
+        // Default constructor
+    }
+
+    /** Controller for handling user authentication and registration. */
     private final UserController userController = new UserController();
 
+    /**
+     * Starts the main application loop, displaying the main menu and directing
+     * the user to login, registration, or role-specific menus based on their actions.
+     *
+     * @param appContext The application context containing shared resources and state.
+     */
     public void startMenu(AppContext appContext) {
         System.out.println("Welcome to the BTO Project Management System!");
         String userInput = null;
@@ -31,11 +51,11 @@ public class mainAppView {
             }
             while (appContext.getCurrentUser() != null) {
                 // Handle different user roles using a switch-case
-                if (appContext.getAuthService().isApplicant(appContext.getCurrentUser())) {
+                if (appContext.getAuthController().isApplicant(appContext.getCurrentUser())) {
                     applicantView.ApplicantMenu(appContext);
-                } else if (appContext.getAuthService().isOfficer(appContext.getCurrentUser())) {
+                } else if (appContext.getAuthController().isOfficer(appContext.getCurrentUser())) {
                     officerView.HDBOfficerMenu(appContext);
-                } else if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+                } else if (appContext.getAuthController().isManager(appContext.getCurrentUser())) {
                     managerView.HDBManagerMenu(appContext);
                 } else {
                     System.out.println("Unknown role. Logging out...");
@@ -45,6 +65,13 @@ public class mainAppView {
         }// while program is running
     }
 
+    /**
+     * Displays the main menu with options to Login, Register, or Exit.
+     * Prompts the user for input and returns the selected option.
+     *
+     * @param scanner The Scanner instance for reading user input.
+     * @return A string representing the user's choice ("1", "2", or exits if "3").
+     */
     public String MainMenu(Scanner scanner) {
         String userInput;
         while (true) {
@@ -70,19 +97,13 @@ public class mainAppView {
     }
 
     /**
-     * The `LoginMenu` function in Java takes user input for NRIC and password,
-     * authenticates the user, and returns the current user if successful.
+     * Handles the login process.
+     * Prompts the user for NRIC and password, validates the NRIC format,
+     * authenticates the user via the UserController, and handles initial password reset.
      *
-     * @param scanner The `Scanner` class in Java is used for obtaining user
-     * input from the console. It allows you to read different types of input
-     * such as strings, numbers, etc. In the `LoginMenu` method you provided,
-     * the `Scanner scanner` parameter is used to read user input for NRIC and
-     * @param userList The `userList` parameter in your `LoginMenu` method seems
-     * to be an instance of a `UserRepo` class, which likely contains a
-     * collection of user objects. This parameter is used to retrieve a user
-     * object based on the provided NRIC during the login process.
-     * @return The method `LoginMenu` is returning a `User` object, which
-     * represents the user who has successfully logged in.
+     * @param scanner The Scanner instance for reading user input.
+     * @param userList The UserRepo instance containing user data.
+     * @return The authenticated UserModel if login is successful, otherwise null.
      */
     public UserModel LoginMenu(Scanner scanner, UserRepo userList) {
         String nric;
@@ -124,6 +145,16 @@ public class mainAppView {
         }
     }
 
+    /**
+     * Handles the new user registration process for Applicants.
+     * Prompts for NRIC, name, age, marital status, and password.
+     * Validates input (NRIC format, age, password complexity, existing NRIC).
+     * Registers the user via the UserController.
+     *
+     * @param scanner The Scanner instance for reading user input.
+     * @param userList The UserRepo instance containing user data.
+     * @return The newly registered and logged-in UserModel if successful, otherwise null.
+     */
     public UserModel RegisterMenu(Scanner scanner, UserRepo userList) {
         System.out.println("\n--Register new user--");
 

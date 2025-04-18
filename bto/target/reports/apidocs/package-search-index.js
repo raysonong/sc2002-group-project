@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.sc2002"},{"l":"com.sc2002.config"},{"l":"com.sc2002.controllers"},{"l":"com.sc2002.enums"},{"l":"com.sc2002.interfaces"},{"l":"com.sc2002.model"},{"l":"com.sc2002.repositories"},{"l":"com.sc2002.services"},{"l":"com.sc2002.utilities"},{"l":"com.sc2002.view"}];updateSearchResults();

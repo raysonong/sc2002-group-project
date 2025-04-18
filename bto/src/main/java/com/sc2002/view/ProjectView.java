@@ -11,15 +11,33 @@ import com.sc2002.config.AppContext;
 
 import com.sc2002.controllers.ProjectController;
 
-// Primary to view Projects with filterable options
+/**
+ * Provides views related to BTO projects, primarily focusing on displaying
+ * projects with filtering capabilities and showing the project currently managed by a user.
+ */
 public class ProjectView {
 
+    /**
+     * Default constructor for ProjectView.
+     * Initializes controllers used for project viewing and filtering.
+     */
+    public ProjectView() {
+        // Default constructor
+    }
+
+    /**
+     * Displays the main menu for viewing projects, allowing users to change filters
+     * or view projects based on current filters. Managers have an additional option
+     * to view only the projects they manage.
+     *
+     * @param appContext The application context containing shared resources and state.
+     */
     public void viewProjectFilterableMenu(AppContext appContext) {
         System.out.println("BTO Project View Options:");
         System.out.println("1. Change filters");
         System.out.println("2. View projects (filtered)");
         // Only show option 3 if the user is a manager
-        if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+        if (appContext.getAuthController().isManager(appContext.getCurrentUser())) {
             System.out.println("3. View Your Projects (filtered)");
         }
         System.out.print("Enter your choice: ");
@@ -34,7 +52,7 @@ public class ProjectView {
                 printProjectMenu(appContext);
                 break;
             case "3":
-                if (appContext.getAuthService().isManager(appContext.getCurrentUser())) {
+                if (appContext.getAuthController().isManager(appContext.getCurrentUser())) {
                     printPersonalProjectMenu(appContext);
                 }
                 // if not manager, return without doing anything
@@ -45,6 +63,12 @@ public class ProjectView {
         }
     }
 
+    /**
+     * Displays information about the BTO project currently being managed by the logged-in
+     * HDB Officer or Manager.
+     *
+     * @param appContext The application context.
+     */
     public void projectManagingMenu(AppContext appContext) { // handling printing of which project officer is currently handling
         ProjectController projectController = new ProjectController(appContext);
         BTOProjectModel project = projectController.viewManagingProject();
@@ -55,6 +79,12 @@ public class ProjectView {
         }
     }
 
+    /**
+     * Prints a list of all BTO projects that match the filters currently set
+     * in the user's profile within the AppContext.
+     *
+     * @param appContext The application context.
+     */
     private void printProjectMenu(AppContext appContext) {
         List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().findByFilter(appContext);
         System.out.println("\n-- All BTO Projects --");
@@ -73,6 +103,12 @@ public class ProjectView {
         appContext.getScanner().nextLine();
     }
 
+    /**
+     * Prints a list of BTO projects managed by the current user (Manager)
+     * that match the filters currently set in the user's profile within the AppContext.
+     *
+     * @param appContext The application context.
+     */
     private void printPersonalProjectMenu(AppContext appContext){
         List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().findPersonalByFilter(appContext);
         System.out.println("\n-- All BTO Projects --");
@@ -91,6 +127,12 @@ public class ProjectView {
         appContext.getScanner().nextLine();
     }
 
+    /**
+     * Handles the menu flow for setting or resetting the Neighborhood and Flat Type filters
+     * used for viewing projects. Updates the filter settings in the user's profile.
+     *
+     * @param appContext The application context.
+     */
     private void setFilterMenu(AppContext appContext) {
         // Prompt user to select Neighborhood filter
         System.out.println("-- Select Neighbourhood Filter --");

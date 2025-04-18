@@ -11,6 +11,7 @@ import com.sc2002.services.ProjectService;
  */
 public class ProjectController {
     
+    /** The service layer handling core project viewing logic. */
     private ProjectService projectService;
     
     /**

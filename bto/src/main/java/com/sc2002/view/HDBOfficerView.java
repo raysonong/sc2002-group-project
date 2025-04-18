@@ -19,18 +19,42 @@ import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.utilities.Receipt;
 
-
+/**
+ * Handles the user interface and interactions for users with the HDB Officer role.
+ * Provides menu options for viewing projects, managing personal BTO applications (if applicable),
+ * registering for project teams, viewing registration status, managing applicant bookings,
+ * generating receipts, and handling enquiries for assigned projects.
+ */
 public class HDBOfficerView {
 
     //Service Declaration
+    /** Controller for handling enquiry-related actions. */
     private EnquiryController enquiryController = null;
+    /** Controller for handling application-related actions (both personal and applicant management). */
     private ApplicationController applicationController = null;
+    /** Controller for handling officer registration for projects. */
     private OfficerRegistrationController officerRegistrationController = null;
+    /** Controller for handling project viewing actions. */
     private ProjectController projectController = null;
+    /** Controller for handling user-related actions like password reset. */
     private UserController userController = null;
     // Initialize other views
+    /** View component for displaying project details and filters. */
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
+    /**
+     * Default constructor for HDBOfficerView.
+     * Initializes view components. Controllers are initialized within the HDBOfficerMenu method using the AppContext.
+     */
+    public HDBOfficerView() {
+        // Default constructor
+    }
+
+    /**
+     * Displays the main menu for the HDB Officer user and handles user input for navigation.
+     *
+     * @param appContext The application context containing shared resources and state.
+     */
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
         this.enquiryController = new EnquiryController(appContext);
@@ -114,6 +138,12 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer applying to a BTO project (as an applicant).
+     * Checks eligibility, displays available projects, and processes the application submission.
+     *
+     * @param appContext The application context.
+     */
     private void applyForProjectMenu(AppContext appContext) {
         // check if applicant is currently applying a project
         if (!appContext.getApplicationRepo().canApplyForProject(appContext.getCurrentUser().getUserID())) {
@@ -140,6 +170,12 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer viewing the status of their personal BTO application.
+     * Allows the officer (as an applicant) to request withdrawal if the application is in a suitable state.
+     *
+     * @param appContext The application context.
+     */
     private void viewApplicationStatusMenu(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
 
@@ -172,6 +208,12 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer generating and displaying a receipt for their personal
+     * successful application.
+     *
+     * @param appContext The application context.
+     */
     private void generateReceiptMenu(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
         Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
@@ -187,6 +229,12 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer submitting an enquiry about a specific BTO project
+     * (acting as an applicant). Checks if the officer is currently managing a project.
+     *
+     * @param appContext The application context.
+     */
     private void submitEnquiryMenu(AppContext appContext) {
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
@@ -201,11 +249,11 @@ public class HDBOfficerView {
 
         // ask applicant to select project
         System.out.print("Enter Project ID to submit an enquiry: ");
-        int selectedProjectId = appContext.getScanner().nextInt();
+        int selectedProjectID = appContext.getScanner().nextInt();
         appContext.getScanner().nextLine();
 
         // check project exists
-        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectId);
+        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectID);
         if (selectedProject == null) {
             System.out.println("Invalid Project ID. Please try again.");
             return;
@@ -216,13 +264,19 @@ public class HDBOfficerView {
 
         // submit using EnquiryController
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-        boolean isSubmitted = enquiryController.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+        boolean isSubmitted = enquiryController.submitEnquiry(applicantNRIC, selectedProjectID, enquiryText);
 
         if (!isSubmitted) {
             System.out.println("There was an issue submitting your enquiry. Please try again");
         }
     }
 
+    /**
+     * Handles the menu flow for an officer viewing, editing, or deleting their personal enquiries
+     * (acting as an applicant). Checks if the officer is currently managing a project.
+     *
+     * @param appContext The application context.
+     */
     private void viewMyEnquiriesMenu(AppContext appContext) {
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
@@ -304,6 +358,11 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer registering their interest to join a specific BTO project team.
+     *
+     * @param appContext The application context.
+     */
     private void registerForProjectMenu(AppContext appContext) {
         // Check if the user is already registered for a project
         boolean registration = officerRegistrationController.registerForProject();
@@ -315,6 +374,12 @@ public class HDBOfficerView {
         System.out.println("Your application has been created successfully and is pending approval from the project manager!");
     }
 
+    /**
+     * Handles the menu flow for an officer viewing the status of their registration request
+     * to join a project team. Displays project details if approved.
+     *
+     * @param appContext The application context.
+     */
     private void viewRegistrationStatusMenu(AppContext appContext) {
         Optional<OfficerRegistrationModel> registrationOpt = appContext.getOfficerRegistrationRepo()
                 .findbyUserID(appContext.getCurrentUser().getUserID());
@@ -333,6 +398,12 @@ public class HDBOfficerView {
         System.out.println("Application Status: " + reg.getStatus());
     }
 
+    /**
+     * Handles the menu flow for an officer to view and update bookings for applicants
+     * within the project they are managing. Allows booking confirmation and flat type updates.
+     *
+     * @param appContext The application context.
+     */
     private void viewAndUpdateBookings(AppContext appContext) {
         // Retrieve the projects managed by the officer
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
@@ -427,6 +498,12 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer to generate a receipt for a specific applicant's
+     * application within the project they are managing.
+     *
+     * @param appContext The application context.
+     */
     private void generateApplicationReceipt(AppContext appContext) {
         // Retrieve the projects managed by the officer
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
@@ -457,6 +534,12 @@ public class HDBOfficerView {
         }
     }
 
+    /**
+     * Handles the menu flow for an officer to view and reply to enquiries related to the
+     * project they are managing.
+     *
+     * @param appContext The application context.
+     */
     private void manageEnquiriesMenu(AppContext appContext) {
         // Retrieve the projects managed by the officer
         List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());

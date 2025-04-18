@@ -7,16 +7,28 @@ import java.util.stream.Collectors;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.interfaces.RepoInterface; // Ensure this is the correct package for RepoInterface
 
+/**
+ * Manages the storage and retrieval of enquiry data.
+ * Implements the RepoInterface for standard repository operations.
+ */
 public class EnquiryRepo implements RepoInterface<EnquiryModel, Integer> {
+    /** In-memory list to store all enquiry instances. */
     private List<EnquiryModel> enquiries;
     
     /**
-     * Constructor initializes an empty list of enquiries
+     * Constructor initializes an empty list of enquiries.
      */
     public EnquiryRepo() {
         this.enquiries = new ArrayList<>();
     }
     
+    /**
+     * Saves or updates an enquiry in the repository.
+     * If an enquiry with the same ID exists, it replaces the existing one.
+     * Otherwise, it adds the new enquiry to the list.
+     *
+     * @param enquiry The EnquiryModel object to save or update.
+     */
     @Override
     public void save(EnquiryModel enquiry) {
         // Check for existing enquiry with the same ID
@@ -30,11 +42,23 @@ public class EnquiryRepo implements RepoInterface<EnquiryModel, Integer> {
         enquiries.add(enquiry);
     }
     
+    /**
+     * Retrieves a list of all enquiries currently stored in the repository.
+     *
+     * @return A new ArrayList containing all EnquiryModel objects.
+     */
     @Override
     public List<EnquiryModel> findAll() {
         return new ArrayList<>(enquiries);
     }
     
+    /**
+     * Finds an enquiry by its unique Enquiry ID.
+     * Iterates through the list to find a match.
+     *
+     * @param enquiryID The ID of the enquiry to find.
+     * @return The found EnquiryModel object, or null if no enquiry matches the ID.
+     */
     @Override
     public EnquiryModel findByID(Integer enquiryID) {
         for (EnquiryModel enquiry : enquiries) {
@@ -56,10 +80,10 @@ public class EnquiryRepo implements RepoInterface<EnquiryModel, Integer> {
     }
     
     /**
-     * Find an enquiry by its ID
+     * Find an enquiry by its unique Enquiry ID.
      * 
-     * @param id The ID of the enquiry to find
-     * @return Optional containing the enquiry if found, empty otherwise
+     * @param enquiryID The ID of the enquiry to find.
+     * @return The found enquiry, or null if no enquiry has that ID.
      */
     public EnquiryModel findByID(int enquiryID) {
         return this.enquiries.stream()
@@ -103,12 +127,12 @@ public class EnquiryRepo implements RepoInterface<EnquiryModel, Integer> {
     /**
      * Find all enquiries by project ID
      * 
-     * @param projectId The ID of the project
+     * @param projectID The ID of the project
      * @return List of enquiries associated with the project
      */
-    public List<EnquiryModel> findByProjectId(int projectId) {
+    public List<EnquiryModel> findByProjectID(int projectID) {
         return enquiries.stream()
-                .filter(enquiry -> enquiry.getProjectID() == projectId)
+                .filter(enquiry -> enquiry.getProjectID() == projectID)
                 .collect(Collectors.toList());
     }
     

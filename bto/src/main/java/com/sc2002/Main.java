@@ -19,16 +19,23 @@ import com.sc2002.view.mainAppView;
 
 
 /**
- * The main entry point for the BTO project management application.
+ * The main entry point for the BTO Management System application.
+ * Initializes the application context, loads initial data, and starts the main application view loop.
  */
 public class Main {
+
+    /**
+     * Default constructor for the Main class.
+     */
+    public Main() {
+        // Default constructor
+    }
 
     /**
      * The main method to run the application.
      *
      * @param args Command-line arguments (not used).
      */
-    // private ArrayList<BTOProjectModel> btoProjectModels = new ArrayList<>();
     public static void main(String[] args) {
         // Declaring Scanner
         Scanner scanner = new Scanner(System.in);

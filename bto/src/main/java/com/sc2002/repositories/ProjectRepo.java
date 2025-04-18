@@ -15,10 +15,21 @@ import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.ProjectViewFilterModel;
 import com.sc2002.model.UserModel;
 
-
+/**
+ * Manages the storage and retrieval of BTO project data.
+ * Implements the RepoInterface for standard repository operations and adds project-specific finders.
+ */
 public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
 
+    /** In-memory list to store all BTO project instances. */
     private List<BTOProjectModel> projects = new ArrayList<>();
+
+    /**
+     * Default constructor for ProjectRepo. Initializes the project list.
+     */
+    public ProjectRepo() {
+        // Default constructor
+    }
 
     @Override
     public void save(BTOProjectModel project) {
@@ -45,6 +56,11 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
         return new ArrayList<>(projects);
     }
 
+    /**
+     * Retrieves all projects as a map of Project ID to Project Name.
+     *
+     * @return A Map where keys are project IDs and values are project names.
+     */
     public Map<Integer, String> getAllProject() {
         Map<Integer, String> toReturn = new HashMap<>();
         for (BTOProjectModel btoProjectModel : projects) {
@@ -53,6 +69,12 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
         return toReturn;
     }
 
+    /**
+     * Finds all projects managed by a specific Manager User ID.
+     *
+     * @param managerUserID The User ID of the manager.
+     * @return A list of BTO projects managed by the specified manager.
+     */
     public List<BTOProjectModel> getProjectsByManagerID(int managerUserID) {
         List<BTOProjectModel> toReturn = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
@@ -63,6 +85,12 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
         return toReturn;
     }
 
+    /**
+     * Finds all projects managed by a specific HDB Officer.
+     *
+     * @param currentUser The UserModel of the officer.
+     * @return A list of BTO projects managed by the specified officer.
+     */
     public List<BTOProjectModel> getProjectsByOfficer(UserModel currentUser) {
         List<BTOProjectModel> toReturn = new ArrayList<>();
         for (int i = 0; i < projects.size(); i++) {
@@ -72,7 +100,14 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
         }
         return toReturn;
     }
-    // Find projects by User's filter preferences
+
+    /**
+     * Finds projects based on the filter criteria set in the current user's ProjectViewFilterModel.
+     * Filters by neighborhood, flat type availability, and applicant eligibility (age, marital status).
+     *
+     * @param appContext The application context containing the current user and their filters.
+     * @return A list of BTO projects matching the filter criteria.
+     */
     public List<BTOProjectModel> findByFilter(AppContext appContext) { // we parse user since we need check all the age and stuff as well
         // Get user
         UserModel user = appContext.getCurrentUser();
@@ -90,7 +125,7 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
                 )
                 .collect(Collectors.toList());
 
-        if (appContext.getAuthService().isApplicant(user) || appContext.getAuthService().isOfficer(user)) {
+        if (appContext.getAuthController().isApplicant(user) || appContext.getAuthController().isOfficer(user)) {
             List<BTOProjectModel> secondFilteredProjects = new ArrayList<>();
             for (BTOProjectModel project : filteredProjects) { // we further filter the filteredProjects
                 boolean isVisible = project.isVisible();
@@ -121,7 +156,7 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
             // Sort secondFilteredProjects by project name alphabetically (case-insensitive)
             secondFilteredProjects.sort((p1, p2) -> p1.getProjectName().compareToIgnoreCase(p2.getProjectName()));
             return secondFilteredProjects;
-        } else if (appContext.getAuthService().isManager(user)) {
+        } else if (appContext.getAuthController().isManager(user)) {
             // No need to do buisness logic since manager
             // Sort filteredProjects by project name alphabetically (case-insensitive)
             filteredProjects.sort((p1, p2) -> p1.getProjectName().compareToIgnoreCase(p2.getProjectName()));
@@ -131,9 +166,17 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
         }
     }
 
+    /**
+     * Finds projects relevant to the current user (managed projects for officers/managers)
+     * based on the filter criteria set in their ProjectViewFilterModel.
+     * Filters by neighborhood and flat type availability.
+     *
+     * @param appContext The application context containing the current user and their filters.
+     * @return A list of relevant BTO projects matching the filter criteria.
+     */
     public List<BTOProjectModel> findPersonalByFilter(AppContext appContext){
         try{
-            if(appContext.getAuthService().isManager(appContext.getCurrentUser())){
+            if(appContext.getAuthController().isManager(appContext.getCurrentUser())){
                 List<BTOProjectModel> filteredProjects=findByFilter(appContext); // Get projects Filtered by Manager's preference
                 // Further filter the list to projects where manager ID lines up
                 return filteredProjects.stream()
@@ -146,9 +189,8 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
             System.out.println("An error occurred: " + e.getMessage());
             return null;
         }
-        
-
     }
+
     /**
      * This function returns the project ID of the last project in a list of
      * projects.
@@ -159,6 +201,7 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
     public int getLastProjectID() {
         return this.projects.getLast().getProjectID();
     }
+
     /**
      * Checks if there is a date conflict between the specified opening and closing dates
      * and the existing projects managed by the current user.

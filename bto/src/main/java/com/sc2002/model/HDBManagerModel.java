@@ -6,6 +6,11 @@ import java.util.List;
 
 import com.sc2002.enums.UserRole; // for FlatType enums
 
+/**
+ * Represents an HDB Manager user in the BTO Management System.
+ * Extends UserModel and provides manager-specific functionalities and menu options.
+ * Managers typically have higher privileges than HDB Officers, such as project creation/deletion.
+ */
 public class HDBManagerModel extends UserModel {
 
     /**

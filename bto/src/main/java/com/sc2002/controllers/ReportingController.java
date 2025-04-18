@@ -10,6 +10,7 @@ import com.sc2002.services.ReportingService;
  */
 public class ReportingController {
     
+    /** The service layer handling core report generation logic. */
     private ReportingService reportingService;
     
     /**

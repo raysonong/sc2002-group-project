@@ -10,12 +10,11 @@ import com.sc2002.services.AuthService;
  */
 public class AuthController {
     
+    /** The service layer handling core authentication logic. */
     private AuthService authService;
     
     /**
-     * Constructor for AuthController.
-     * 
-     * @param appContext The application context
+     * Constructor for AuthController. Initializes the AuthService.
      */
     public AuthController() {
         this.authService = new AuthService();

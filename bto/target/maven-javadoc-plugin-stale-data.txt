@@ -1,0 +1,54 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+-encoding
+'UTF-8'
+-private
+-source
+'17'
+-sourcepath
+'/Users/me/Github/sc2002-group-project/bto/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'bto 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'bto 1.0-SNAPSHOT API'
+com.sc2002.config
+com.sc2002.enums
+com.sc2002.repositories
+com.sc2002.utilities
+com.sc2002
+com.sc2002.model
+com.sc2002.view
+com.sc2002.controllers
+com.sc2002.services
+com.sc2002.interfaces
+/Users/me/Github/sc2002-group-project/bto/src/main/java/.DS_Store = 1745002277047
+/Users/me/Github/sc2002-group-project/bto/src/main/java = 1745002277046
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/constant-values.html = 1745007737878
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/tag-search-index.js = 1745007737959
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/overview-tree.html = 1745007737944
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/module-search-index.js = 1745007737958
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/index.html = 1745007737947
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/package-search-index.js = 1745007737958
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/index-all.html = 1745007737971
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/allpackages-index.html = 1745007737958
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/deprecated-list.html = 1745007737946
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/member-search-index.js = 1745007737959
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/overview-summary.html = 1745007737972
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/help-doc.html = 1745007737973
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/element-list = 1745007737863
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/search.html = 1745007737972
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/allclasses-index.html = 1745007737957
+/Users/me/Github/sc2002-group-project/bto/target/reports/apidocs/type-search-index.js = 1745007737958

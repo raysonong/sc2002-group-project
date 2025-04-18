@@ -9,16 +9,38 @@ import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ApplicationRepo;
 
+/**
+ * Service responsible for generating various reports based on application and project data.
+ * Typically used by Managers or Officers.
+ */
 public class ReportingService {
+    /** The application context providing access to repositories and current user state. */
     private AppContext appContext;
 
+    /**
+     * Constructs a ReportingService with the given application context.
+     *
+     * @param appContext The application context.
+     */
     public ReportingService(AppContext appContext) {
         this.appContext = appContext;
     }
+
+    /**
+     * Generates and prints a report listing applicants who have booked a flat for a specific project.
+     * The report includes applicant name, flat type, age, and marital status.
+     * Allows filtering the report based on marital status or flat type.
+     * Performs authorization check (only the project manager can generate the report).
+     *
+     * @param project The BTOProjectModel for which to generate the report.
+     * @param generateType An integer indicating the filter type:
+     *                     1: No filter
+     *                     2: Filter by Married applicants
+     *                     3: Filter by Single applicants
+     *                     4: Filter by TWO_ROOM flat type
+     *                     5: Filter by THREE_ROOM flat type
+     */
     public void generateProjectReport(BTOProjectModel project,int generateType){
-        // 1) List of Applicants and their respective flat booking - flat type, project name , age marital status.
-        // 2) There should be filters to generate a list based on various categories,
-        //      e.g. report of married applicants' choice of flat type
         UserModel currentUser = this.appContext.getCurrentUser();
         ApplicationRepo applicationRepo=this.appContext.getApplicationRepo();
 

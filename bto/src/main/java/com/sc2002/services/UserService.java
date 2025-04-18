@@ -11,7 +11,18 @@ import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.NRICValidator;
 import com.sc2002.utilities.PasswordValidator;
 
+/**
+ * Provides services related to user management, including authentication,
+ * registration, and password updates.
+ */
 public class UserService {
+
+    /**
+     * Default constructor for UserService.
+     */
+    public UserService() {
+        // Default constructor
+    }
 
     /**
      * Authenticates a user with NRIC and password
@@ -105,6 +116,15 @@ public class UserService {
         }
     }
 
+    /**
+     * Handles the password resetting.
+     * Prompts for the old password, new password, and confirmation.
+     * Validates the new password complexity and ensures confirmation matches.
+     * Calls `updatePassword` to perform the actual update after validation.
+     *
+     * @param user The UserModel of the user resetting their password.
+     * @param scanner A Scanner instance to read user input from the console.
+     */
     public void resetPassword(UserModel user, Scanner scanner) {
         String oldPassword = "";
         String password = "";

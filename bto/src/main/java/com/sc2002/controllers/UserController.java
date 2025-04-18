@@ -8,17 +8,17 @@ import com.sc2002.repositories.UserRepo;
 import com.sc2002.services.UserService;
 
 /**
- * Controller for handling user-related operations.
+ * Controller for handling user-related operations like login, registration, and password reset.
  * Acts as an intermediary between the view and the UserService.
  */
 public class UserController {
-    
+    /** The service layer handling core user logic. */
     private UserService userService;
     
     /**
      * Constructor for UserController.
-     * 
-     * @param appContext The application context
+     * Initializes the UserService.
+     *
      */
     public UserController() {
         this.userService = new UserService();

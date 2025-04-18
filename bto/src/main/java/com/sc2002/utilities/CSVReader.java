@@ -9,8 +9,30 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for reading data from CSV files.
+ * Provides methods to parse user and project data specifically formatted for this application.
+ * Includes basic validation and error handling during the reading process.
+ */
 public class CSVReader {
 
+    /**
+     * Default constructor for CSVReader.
+     * As this class only contains static methods, instantiation is generally not needed.
+     */
+    public CSVReader() {
+        // Default constructor
+    }
+
+    /**
+     * Reads user data from a specified CSV file path.
+     * Expects a CSV format: Name,NRIC,Age,MaritalStatus,Password.
+     * Skips the header row. Performs basic validation on cell count and data types.
+     * Exits the application if errors are found.
+     *
+     * @param filePath The path to the user data CSV file.
+     * @return An ArrayList where each inner List represents a user's data as Objects.
+     */
     public static ArrayList<List<Object>> readUserList(String filePath) {
         ArrayList<List<Object>> userList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -80,6 +102,15 @@ public class CSVReader {
         return userList;
     }
 
+    /**
+     * Reads project data from a specified CSV file path.
+     * Expects a specific CSV format including project details, flat types/counts/prices, dates, manager, and officers.
+     * Skips the header row. Performs basic validation on cell count and data types (integers, dates).
+     * Exits the application if errors are found.
+     *
+     * @param filePath The path to the project data CSV file.
+     * @return An ArrayList where each inner List represents a project's data as Objects.
+     */
     public static ArrayList<List<Object>> readProjectList(String filePath) {
         ArrayList<List<Object>> projectList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -201,6 +232,12 @@ public class CSVReader {
         return projectList;
     }
 
+    /**
+     * Prints the contents of a list read from a CSV file.
+     * Useful for debugging purposes to verify the parsed data.
+     *
+     * @param userList The list (e.g., userList or projectList) to print.
+     */
     public void printCSVFormat(ArrayList<List<Object>> userList) { // For debugging purposes
         for (List<Object> user : userList) {
             System.out.println(user);

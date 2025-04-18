@@ -3,14 +3,23 @@ package com.sc2002.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for validating password complexity requirements.
+ */
 public class PasswordValidator {
 
-    // Define the set of characters considered "special" for password validation.
-    // You can customize this string based on your specific requirements.
+    /** The set of allowed special characters in passwords. */
     private static final String SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{};:'\",.<>/?|`~";
-
-    // Minimum required length for a valid password.
+    /** The minimum required length for passwords. */
     private static final int MIN_LENGTH = 8;
+
+    /**
+     * Default constructor for PasswordValidator.
+     * As this class only contains static methods, instantiation is generally not needed.
+     */
+    public PasswordValidator() {
+        // Default constructor
+    }
 
     /**
      * Validates a password against predefined security criteria. Criteria: 1.

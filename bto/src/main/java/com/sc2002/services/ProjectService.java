@@ -8,17 +8,32 @@ import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.UserModel;
 
+/**
+ * Service responsible for handling logic related to viewing BTO project information.
+ */
 public class ProjectService {
 
+    /** The application context providing access to repositories and current user state. */
     private AppContext appContext;
 
+    /**
+     * Constructs a ProjectService with the given application context.
+     *
+     * @param appContext The application context.
+     */
     public ProjectService(AppContext appContext) {
         this.appContext = appContext;
     }
 
+    /**
+     * Retrieves and prints the details of a specific project by its ID.
+     * Handles cases where the project is not found.
+     *
+     * @param projectID The ID of the project to view.
+     */
     public void viewProjectByID(int projectID) {
         try {
-            if (this.appContext.getAuthService().isApplicant(this.appContext.getCurrentUser())) {
+            if (this.appContext.getAuthController().isApplicant(this.appContext.getCurrentUser())) {
                 // viewProject for applicant, cannot view if not visible
                 BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project != null) {
@@ -33,7 +48,7 @@ public class ProjectService {
                 } else {
                     throw new RuntimeException("No Project Found.");
                 }
-            } else if (this.appContext.getAuthService().isOfficer(this.appContext.getCurrentUser()) || this.appContext.getAuthService().isManager(this.appContext.getCurrentUser())) {
+            } else if (this.appContext.getAuthController().isOfficer(this.appContext.getCurrentUser()) || this.appContext.getAuthController().isManager(this.appContext.getCurrentUser())) {
                 // viewProject for Officer/Manager, view regardless of visilibty
                 BTOProjectModel project = this.appContext.getProjectRepo().findByID(projectID);
                 if (project != null) {
@@ -50,6 +65,13 @@ public class ProjectService {
         }
     }
 
+    /**
+     * Retrieves the project that the current user (Officer or Manager) is managing.
+     * For Managers, it returns the first project they manage (if any).
+     * For Officers, it returns the project they are assigned to via HDBOfficerModel.
+     *
+     * @return The BTOProjectModel the user is managing, or null if none or not applicable.
+     */
     public BTOProjectModel viewManagingProject() { // Returns the project user is managing
         UserModel currentUser = appContext.getCurrentUser();
         LocalDate today = LocalDate.now();
@@ -57,10 +79,10 @@ public class ProjectService {
 
         // 1. Get the list of projects managed by the user based on their role
         try {
-            if (appContext.getAuthService().isManager(currentUser)) {
+            if (appContext.getAuthController().isManager(currentUser)) {
                 // Assuming getProjectsByManagerID exists and takes String ID
                 managedProjects = appContext.getProjectRepo().getProjectsByManagerID(currentUser.getUserID());
-            } else if (appContext.getAuthService().isOfficer(currentUser)) {
+            } else if (appContext.getAuthController().isOfficer(currentUser)) {
                 // *** Verify this call ***
                 // Assuming getProjectsByOfficer exists and takes UserModel.
                 // Adjust parameter if it expects ID/NRIC (e.g., currentUser.getUserID())

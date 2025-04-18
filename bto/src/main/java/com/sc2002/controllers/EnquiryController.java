@@ -11,7 +11,7 @@ import com.sc2002.services.EnquiryService;
  * Acts as an intermediary between the view and the EnquiryService.
  */
 public class EnquiryController {
-    
+    /** The service layer handling core enquiry logic. */
     private EnquiryService enquiryService;
     
     /**
@@ -27,12 +27,12 @@ public class EnquiryController {
      * Submits a new enquiry.
      * 
      * @param applicantNRIC The NRIC of the applicant
-     * @param projectId The ID of the project
+     * @param projectID The ID of the project
      * @param enquiryText The enquiry text
      * @return true if successful, false otherwise
      */
-    public boolean submitEnquiry(String applicantNRIC, int projectId, String enquiryText) {
-        return enquiryService.submitEnquiry(applicantNRIC, projectId, enquiryText);
+    public boolean submitEnquiry(String applicantNRIC, int projectID, String enquiryText) {
+        return enquiryService.submitEnquiry(applicantNRIC, projectID, enquiryText);
     }
     
     /**
@@ -68,10 +68,10 @@ public class EnquiryController {
     /**
      * Deletes an enquiry.
      * 
-     * @param enquiryId The ID of the enquiry to delete
+     * @param enquiryID The ID of the enquiry to delete
      * @return true if successful, false otherwise
      */
-    public boolean deleteEnquiry(int enquiryId) {
-        return enquiryService.deleteEnquiry(enquiryId);
+    public boolean deleteEnquiry(int enquiryID) {
+        return enquiryService.deleteEnquiry(enquiryID);
     }
 }

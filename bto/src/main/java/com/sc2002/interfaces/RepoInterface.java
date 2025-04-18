@@ -3,37 +3,44 @@ package com.sc2002.interfaces;
 import java.util.List;
 
 /**
- * Repository interface that defines common repo operations.
- * @param <T> The entity type this repository manages
- * @param <ID> The type of the entity's identifier
+ * A blueprint for repository classes, defining standard ways to manage data.
+ * Repositories handle storing, finding, and deleting items (like users or projects).
+ *
+ * @param <T> The type of item this repository works with (e.g., UserModel).
+ * @param <ID> The type of the item's unique identifier (e.g., Integer for userID).
  */
 public interface RepoInterface<T, ID> {
     
     /**
-     * Save a new entity or update an existing one
-     * @param entity Entity to save
+     * Saves an item. If it's new, it adds it. If it already exists, it might update it.
+     *
+     * @param entity The item to save.
      */
     void save(T entity);
     
     /**
-     * Retrieve all entities
-     * @return List of all entities
+     * Gets a list of all items stored in the repository.
+     *
+     * @return A list containing all items.
      */
     List<T> findAll();
     
     /**
-     * Find an entity by its ID - default implementation makes this optional
-     * @param id The entity identifier
-     * @return The entity if found, or null
+     * Finds a specific item using its unique ID.
+     * This is optional for repositories to implement fully.
+     *
+     * @param ID The unique ID of the item to find.
+     * @return The found item, or null if no item has that ID.
      */
     default T findByID(ID ID) {
         return null;
     }
     
     /**
-     * Delete an entity by its ID
-     * @param id The entity identifier
-     * @return true if deleted successfully, false otherwise
+     * Deletes an item from the repository using its unique ID.
+     *
+     * @param ID The unique ID of the item to delete.
+     * @return True if the item was found and deleted, false otherwise.
      */
-    boolean delete(ID id);
+    boolean delete(ID ID);
 }

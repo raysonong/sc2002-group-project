@@ -1,0 +1,22 @@
+-encoding
+'UTF-8'
+-private
+-source
+'17'
+-sourcepath
+'/Users/me/Github/sc2002-group-project/bto/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/me/Github/sc2002-group-project/bto/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'bto 1.0-SNAPSHOT API'
+-use
+-version
+-windowtitle
+'bto 1.0-SNAPSHOT API'

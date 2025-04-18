@@ -23,20 +23,46 @@ import com.sc2002.controllers.OfficerRegistrationController;
 
 import com.sc2002.config.AppContext;
 
+/**
+ * Handles the user interface and interactions for users with the HDB Manager role.
+ * Provides menu options for managing BTO projects (create, edit, delete, toggle visibility),
+ * managing officer registrations, handling BTO applications (approve, reject, withdrawal),
+ * managing enquiries, and generating reports.
+ */
 public class HDBManagerView {
 
     // declare all the services required by Manager
+    /** Controller for handling project viewing actions. */
     private ProjectController projectController = null;
+    /** Controller for handling project creation, editing, and deletion. */
     private ProjectManagementController projectManagementController = null;
+    /** Controller for handling enquiry-related actions. */
     private EnquiryController enquiryController = null;
-    
+    /** Controller for handling officer registration approvals/rejections. */
     private OfficerRegistrationController officerRegistrationController = null;
+    /** Controller for generating project reports. */
     private ReportingController reportingController = null;
+    /** Controller for handling application approvals/rejections. */
     private ApplicationController applicationController = null;
+    /** Controller for handling user-related actions like password reset. */
     private UserController userController = null;
     // Initialize other views
+    /** View component for displaying project details and filters. */
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
+    /**
+     * Default constructor for HDBManagerView.
+     * Initializes view components. Controllers are initialized within the HDBManagerMenu method using the AppContext.
+     */
+    public HDBManagerView() {
+        // Default constructor
+    }
+
+    /**
+     * Displays the main menu for the HDB Manager user and handles user input for navigation.
+     *
+     * @param appContext The application context containing shared resources and state.
+     */
     public void HDBManagerMenu(AppContext appContext) {
         // Initializing variables & services,
         // we did services 2 ways, 1 where we have repo as attribute.
@@ -146,6 +172,11 @@ public class HDBManagerView {
         }
     }// End of HDBManagerMenu
 
+    /**
+     * Prints a list of projects currently managed by the logged-in manager.
+     *
+     * @param managerProjects A list of BTOProjectModel objects managed by the user.
+     */
     private void printProjectsManagedByUser(List<BTOProjectModel> managerProjects) {
         System.out.println("-- Projects Managed by You --");
         System.out.println("Project ID\tProject Name");
@@ -155,6 +186,12 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for creating a new BTO project.
+     * Checks if the manager is already managing a project before proceeding.
+     *
+     * @param appContext The application context.
+     */
     private void createProjectMenu(AppContext appContext) {
         BTOProjectModel btoProjectModel = this.projectController.viewManagingProject();
         if (btoProjectModel != null) {
@@ -169,6 +206,11 @@ public class HDBManagerView {
         this.projectManagementController.createProject();
     }
 
+    /**
+     * Handles the menu flow for editing details of an existing BTO project managed by the user.
+     *
+     * @param appContext The application context.
+     */
     private void editBTOProjectMenu(AppContext appContext) {
         // check if currently managing any project
         boolean managingAnyActiveProject = projectController.viewManagingProject() != null;
@@ -263,6 +305,12 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for deleting a BTO project managed by the user.
+     * Requires confirmation before proceeding with deletion.
+     *
+     * @param appContext The application context.
+     */
     private void deleteBTOProjectMenu(AppContext appContext) { // REDO THIS PART< THE LOGIC IS WRONG #TODO
         // print all project
         printProjectsManagedByUser(appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID()));
@@ -286,6 +334,12 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for toggling the visibility (public/private) of a BTO project
+     * managed by the user.
+     *
+     * @param appContext The application context.
+     */
     private void toggleProjectVisibilityMenu(AppContext appContext) {
 
         List<BTOProjectModel> listOfProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
@@ -311,6 +365,12 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for viewing all BTO projects (regardless of manager)
+     * and allowing the manager to select one to view details.
+     *
+     * @param appContext The application context.
+     */
     private void getAllBTOProjectMenu(AppContext appContext) {
         Map<Integer, String> listOfProjects = appContext.getProjectRepo().getAllProject();
         System.out.println("-- All BTO Projects --");
@@ -335,6 +395,11 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for viewing details of a specific BTO project managed by the user.
+     *
+     * @param appContext The application context.
+     */
     private void getBTOProjectByUserIDMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -354,6 +419,11 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for viewing all enquiries across all projects.
+     *
+     * @param appContext The application context.
+     */
     private void getAllEnquiryMenu(AppContext appContext) {
         List<EnquiryModel> enquiries = enquiryController.getAllEnquiries();
         if (enquiries.isEmpty()) {
@@ -369,6 +439,12 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
+    /**
+     * Handles the menu flow for viewing and replying to enquiries, prioritizing those
+     * related to projects managed by the current user.
+     *
+     * @param appContext The application context.
+     */
     private void editEnquiryMenu(AppContext appContext) {
         List<EnquiryModel> enquiries = enquiryController.getAllEnquiries();
         if (enquiries.isEmpty()) {
@@ -404,6 +480,11 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
+    /**
+     * Handles the menu flow for approving officer registration requests for a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void approveOfficerRegistrationMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -449,6 +530,11 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
+    /**
+     * Handles the menu flow for rejecting officer registration requests for a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void rejectOfficerRegistrationMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -494,6 +580,11 @@ public class HDBManagerView {
         appContext.getScanner().nextLine();
     }
 
+    /**
+     * Handles the menu flow for approving pending BTO applications for a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void approveBTOApplicationMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -543,6 +634,11 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for rejecting pending BTO applications for a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void rejectBTOApplicationMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -592,6 +688,12 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for approving pending withdrawal requests for BTO applications
+     * within a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void approveApplicationWithdrawalMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -641,6 +743,12 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for rejecting pending withdrawal requests for BTO applications
+     * within a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void rejectApplicationWithdrawalMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);
@@ -690,6 +798,11 @@ public class HDBManagerView {
         }
     }
 
+    /**
+     * Handles the menu flow for generating various filtered reports for a specific project.
+     *
+     * @param appContext The application context.
+     */
     private void generateReportMenu(AppContext appContext) {
         List<BTOProjectModel> managerProjects = appContext.getProjectRepo().getProjectsByManagerID(appContext.getCurrentUser().getUserID());
         printProjectsManagedByUser(managerProjects);

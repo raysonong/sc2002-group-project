@@ -4,6 +4,14 @@ package com.sc2002.utilities;
  * Utility class for validating NRIC numbers
  */
 public class NRICValidator {
+
+    /**
+     * Default constructor for NRICValidator.
+     * As this class only contains static methods, instantiation is generally not needed.
+     */
+    public NRICValidator() {
+        // Default constructor
+    }
     
     /**
      * Validates if a string is a valid NRIC

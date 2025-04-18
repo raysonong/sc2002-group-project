@@ -8,22 +8,32 @@ import com.sc2002.repositories.UserRepo;
 import com.sc2002.services.InitializationService;
 
 /**
- * Controller for handling initialization operations.
- * Acts as an intermediary between the view and the InitializationService.
+ * Controller responsible for initializing the application state,
+ * such as loading data from CSV files into repositories.
  */
 public class InitializationController {
-    
+
+    /** The service layer handling the core initialization logic. */
     private InitializationService initializationService;
-    
+
     /**
-     * Constructor for InitializationController with an existing InitializationService.
-     * 
-     * @param initializationService The initialization service to use
+     * Constructor for InitializationController.
+     * Initializes the InitializationService.
      */
     public InitializationController() {
         this.initializationService = new InitializationService();
     }
-    
+
+    /**
+     * Constructor for InitializationController with an existing InitializationService.
+     * Useful for testing or specific dependency injection scenarios.
+     *
+     * @param initializationService The initialization service to use
+     */
+    public InitializationController(InitializationService initializationService) {
+        this.initializationService = initializationService;
+    }
+
     /**
      * Initializes the user repository with default users.
      * 
@@ -32,7 +42,7 @@ public class InitializationController {
     public void initializeUsers(UserRepo userList) {
         initializationService.initializeUsers(userList);
     }
-    
+
     /**
      * Initializes the project repository with default projects.
      * 

@@ -85,8 +85,8 @@ public class BTOProjectModel {
 
     /**
      * Constructs a new BTOProjectModel with the specified details.
+     * Assigns a unique project ID automatically.
      *
-     * @param projectID The unique ID of the project.
      * @param projectName The name of the project.
      * @param neighborhood The neighborhood where the project is located.
      * @param twoRoomCount The number of 2-room flats available.
@@ -95,8 +95,8 @@ public class BTOProjectModel {
      * @param threeRoomPrice The price for 1 3-room flat.
      * @param openingDate The application opening date.
      * @param closingDate The application closing date.
-     * @param maxManagingOfficer The maximum number of managing officers
-     * allowed.
+     * @param maxManagingOfficer The maximum number of managing officers allowed.
+     * @param managerUserID The User ID of the manager assigned to this project.
      */
     public BTOProjectModel(String projectName, Neighborhood neighborhood, int twoRoomCount, int twoRoomPrice, int threeRoomCount, int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
 
@@ -309,8 +309,8 @@ public class BTOProjectModel {
      * Adds a managing officer User to the list. Returns Boolean base on
      * success.
      *
-     * @param managingOfficerUser The User object of the managing officer to
-     * add.
+     * @param managingOfficerUser The User object of the managing officer to add.
+     * @return True if the officer was added successfully, false if the maximum limit was reached.
      */
     public boolean addManagingOfficerUser(UserModel managingOfficerUser) {
         if (this.managingOfficerUsers.size() >= this.maxManagingOfficer) {
@@ -324,7 +324,8 @@ public class BTOProjectModel {
      * Removes a managing officer User object from the list.
      *
      * @param currentUser The User object of the managing officer to remove.
-     * @throws NoSuchElementException If the User object is not found in the
+     * @return True if the officer was found and removed, false otherwise.
+     * 
      * list.
      */
     public boolean removeManagingOfficerUser(UserModel currentUser) {
@@ -338,7 +339,7 @@ public class BTOProjectModel {
     /**
      * Checks if a given User is in the list of managing officers.
      *
-     * @param user The User object to check.
+     * @param currentUser The User object to check.
      * @return True if the User is in the list, false otherwise.
      */
     public boolean isManagingOfficer(UserModel currentUser) {
@@ -369,6 +370,10 @@ public class BTOProjectModel {
         System.out.println("---------------------");
     }
 
+    /**
+     * Gets a list of flat types currently available (count > 0) in this project.
+     * @return A list of available FlatType enums.
+     */
     public List<FlatType> getAvailableFlatTypes() {
         List<FlatType> availableFlatTypes = new ArrayList<>();
         if (this.twoRoomCount > 0) {

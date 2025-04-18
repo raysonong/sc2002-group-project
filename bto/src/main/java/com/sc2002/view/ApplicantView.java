@@ -20,17 +20,37 @@ import com.sc2002.controllers.UserController;
 
 import com.sc2002.config.AppContext;
 
+/**
+ * Handles the user interface and interactions for users with the Applicant role.
+ * Provides menu options for viewing projects, applying for projects, managing applications,
+ * and handling enquiries.
+ */
 public class ApplicantView {
 
-    // declare all the services required by Applicant (By right view should go through controller then services)
+    /** Controller for handling enquiry-related actions. */
     private EnquiryController enquiryController = null;
+    /** Controller for handling project viewing actions. */
     private ProjectController projectController = null;
+    /** Controller for handling application-related actions. */
     private ApplicationController applicationController = null;
-
+    /** Controller for handling user-related actions like password reset. */
     private UserController userController = null;
-    // Initialize other views
+    /** View component for displaying project details and filters. */
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
+    /**
+     * Default constructor for ApplicantView.
+     * Initializes the view components. Controllers are initialized within the ApplicantMenu method using the AppContext.
+     */
+    public ApplicantView() {
+        // Default constructor - controllers are initialized later with AppContext
+    }
+
+    /**
+     * Displays the main menu for the Applicant user and handles user input for navigation.
+     *
+     * @param appContext The application context containing shared resources and state.
+     */
     public void ApplicantMenu(AppContext appContext) {
 
         // Initialize Services with context
@@ -95,6 +115,12 @@ public class ApplicantView {
 
     }
 
+    /**
+     * Handles the menu flow for applying to a BTO project.
+     * Checks eligibility, displays available projects, and processes the application submission.
+     *
+     * @param appContext The application context.
+     */
     private void applyForProjectMenu(AppContext appContext) {
         // check if applicant is currently applying a project
         if (!appContext.getApplicationRepo().canApplyForProject(appContext.getCurrentUser().getUserID())) {
@@ -122,6 +148,12 @@ public class ApplicantView {
 
     }
 
+    /**
+     * Handles the menu flow for viewing the status of the applicant's BTO application.
+     * Allows the applicant to request withdrawal if the application is in a suitable state.
+     *
+     * @param appContext The application context.
+     */
     private void viewApplicationStatusMenu(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
 
@@ -154,6 +186,12 @@ public class ApplicantView {
         }
     }
 
+    /**
+     * Handles the menu flow for generating and displaying a receipt for a successful application
+     * (typically after flat selection, although current implementation checks only for application existence).
+     *
+     * @param appContext The application context.
+     */
     private void generateReceiptMenu(AppContext appContext) {
         ApplicantModel applicant = (ApplicantModel) appContext.getCurrentUser();
         Optional<BTOApplicationModel> applicationOpt = appContext.getApplicationRepo().findbyUserID(applicant.getUserID());
@@ -169,6 +207,11 @@ public class ApplicantView {
         }
     }
 
+    /**
+     * Handles the menu flow for submitting an enquiry about a specific BTO project.
+     *
+     * @param appContext The application context.
+     */
     private void submitEnquiryMenu(AppContext appContext) {
         // Display eligible projects for the applicant
         System.out.println("Eligible Projects for Enquiry: ");
@@ -176,11 +219,11 @@ public class ApplicantView {
 
         // ask applicant to select project
         System.out.print("Enter Project ID to submit an enquiry: ");
-        int selectedProjectId = appContext.getScanner().nextInt();
+        int selectedProjectID = appContext.getScanner().nextInt();
         appContext.getScanner().nextLine();
 
         // check project exists
-        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectId);
+        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectID);
         if (selectedProject == null) {
             System.out.println("Invalid Project ID. Please try again.");
             return;
@@ -191,13 +234,18 @@ public class ApplicantView {
 
         // submit using EnquiryService
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
-        boolean isSubmitted = enquiryController.submitEnquiry(applicantNRIC, selectedProjectId, enquiryText);
+        boolean isSubmitted = enquiryController.submitEnquiry(applicantNRIC, selectedProjectID, enquiryText);
 
         if (!isSubmitted) {
             System.out.println("There was an issue submitting your enquiry. Please try again");
         }
     }
 
+    /**
+     * Handles the menu flow for viewing, editing, or deleting enquiries submitted by the applicant.
+     *
+     * @param appContext The application context.
+     */
     private void viewMyEnquiriesMenu(AppContext appContext) {
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
 
