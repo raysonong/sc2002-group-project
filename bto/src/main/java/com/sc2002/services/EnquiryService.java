@@ -19,8 +19,11 @@ public class EnquiryService {
 
     public boolean submitEnquiry(String applicantNRIC, int projectId, String enquiryText) {
         // create a new enquiry
-        EnquiryModel newEnquiry = new EnquiryModel(applicantNRIC, projectId, enquiryText);
+        if (applicantNRIC == null || enquiryText == null || enquiryText.isBlank()) {
+            return false;
+        }
 
+        EnquiryModel newEnquiry = new EnquiryModel(applicantNRIC, projectId, enquiryText);
         // save the new enquiry
         appContext.getEnquiryRepo().saveEnquiry(newEnquiry);
         System.out.println("Your enquiry has been submitted successfully!");
