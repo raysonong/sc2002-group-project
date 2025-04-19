@@ -10,23 +10,27 @@ import com.sc2002.interfaces.RepoInterface;
 import com.sc2002.model.BTOApplicationModel; // Ensure this is the correct package for RepoInterface
 
 /**
- * Manages the storage and retrieval of BTO application data.
- * Implements the RepoInterface for standard repository operations.
+ * Manages the storage and retrieval of BTO application data. Implements the
+ * RepoInterface for standard repository operations.
  */
 public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integer> {
 
-    /** In-memory list to store all BTO application instances. */
+    /**
+     * In-memory list to store all BTO application instances.
+     */
     private List<BTOApplicationModel> applications;
 
     /**
-     * Constructs an ApplicationRepo, initializing an empty list to hold applications.
+     * Constructs an ApplicationRepo, initializing an empty list to hold
+     * applications.
      */
     public ApplicationRepo() {
         this.applications = new ArrayList<>();
     }
 
     /**
-     * Saves or updates an application. If an application with the same ID exists, it's replaced.
+     * Saves or updates an application. If an application with the same ID
+     * exists, it's replaced.
      *
      * @param application The application to save.
      */
@@ -78,15 +82,18 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Finds an application associated with a specific User ID.
-     * Assumes a user can only have one active application at a time (returns the first found).
+     * Finds an application associated with a specific User ID. Assumes a user
+     * can only have one active application at a time (returns the last found).
      *
      * @param userID The User ID of the applicant.
      * @return An Optional containing the application if found, otherwise empty.
      */
     public Optional<BTOApplicationModel> findbyUserID(long userID) {
-        for (BTOApplicationModel application : this.applications) {
+        // Iterate from the last index down to the first (index 0)
+        for (int i = this.applications.size() - 1; i >= 0; i--) {
+            BTOApplicationModel application = this.applications.get(i); // Get application at index i
             if (application.getApplicantUserID() == userID) {
+                // The first match found when iterating backwards is the last one overall
                 return Optional.of(application);
             }
         }
@@ -94,10 +101,12 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Finds the first active (non-withdrawn, non-unsuccessful) application for a given User ID (provided as String).
+     * Finds the first active (non-withdrawn, non-unsuccessful) application for
+     * a given User ID (provided as String).
      *
      * @param userID The User ID of the applicant as a String.
-     * @return An Optional containing the active application if found, otherwise empty.
+     * @return An Optional containing the active application if found, otherwise
+     * empty.
      */
     public Optional<BTOApplicationModel> findActiveByApplicantID(String userID) { // returns a Optional, to tell whether the user has an active Application
         return applications.stream()
@@ -156,10 +165,12 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Finds all applications within a project where a withdrawal has been requested.
+     * Finds all applications within a project where a withdrawal has been
+     * requested.
      *
      * @param projectID The ID of the project.
-     * @return A list of applications with pending withdrawal requests for the specified project.
+     * @return A list of applications with pending withdrawal requests for the
+     * specified project.
      */
     public List<BTOApplicationModel> findPendingWithDrawalByProjectID(int projectID) {
         return applications.stream()
@@ -181,8 +192,8 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Finds an application by the applicant's NRIC.
-     * Assumes NRIC is unique across applications (returns the first found).
+     * Finds an application by the applicant's NRIC. Assumes NRIC is unique
+     * across applications (returns the first found).
      *
      * @param nric The NRIC of the applicant.
      * @return An Optional containing the application if found, otherwise empty.
@@ -194,11 +205,13 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Checks if a user has ever submitted an application for a specific project, regardless of status.
+     * Checks if a user has ever submitted an application for a specific
+     * project, regardless of status.
      *
      * @param userID The User ID of the applicant.
      * @param projectID The ID of the project.
-     * @return True if any application exists for this user and project, false otherwise.
+     * @return True if any application exists for this user and project, false
+     * otherwise.
      */
     public boolean hasUserAppliedForProject(int userID, int projectID) {
         for (BTOApplicationModel application : applications) {
@@ -210,11 +223,13 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Gets the status of a specific application identified by User ID and Project ID.
+     * Gets the status of a specific application identified by User ID and
+     * Project ID.
      *
      * @param userID The User ID of the applicant.
      * @param projectID The ID of the project.
-     * @return The ApplicationStatus if found, or null if no matching application exists.
+     * @return The ApplicationStatus if found, or null if no matching
+     * application exists.
      */
     public ApplicationStatus getApplicationStatus(int userID, int projectID) {
         for (BTOApplicationModel application : applications) {
@@ -226,8 +241,9 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Checks if a user is allowed to apply for a new project.
-     * A user can apply if they have no existing applications or if all their existing applications are WITHDRAWN.
+     * Checks if a user is allowed to apply for a new project. A user can apply
+     * if they have no existing applications or if all their existing
+     * applications are WITHDRAWN.
      *
      * @param userID The User ID of the applicant.
      * @return True if the user can apply for a new project, false otherwise.
@@ -236,7 +252,7 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
         List<BTOApplicationModel> applications = findApplicationByApplicantID(userID);
 
         for (BTOApplicationModel application : applications) {
-            if (application.getStatus() != ApplicationStatus.WITHDRAWN) {
+            if (application.getStatus() != ApplicationStatus.WITHDRAWN && application.getStatus() != ApplicationStatus.UNSUCCESSFUL) {
                 return false;
             }
         }
@@ -245,7 +261,8 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
     }
 
     /**
-     * Finds an active (not WITHDRAWN or UNSUCCESSFUL) application for a specific user and project.
+     * Finds an active (not WITHDRAWN or UNSUCCESSFUL) application for a
+     * specific user and project.
      *
      * @param userID The User ID of the applicant.
      * @param projectID The ID of the project.
@@ -253,8 +270,8 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
      */
     public BTOApplicationModel findByUserAndProject(int userID, int projectID) {
         for (BTOApplicationModel application : applications) {
-            if (application.getApplicantUserID() == userID && application.getProjectID() == projectID 
-            && application.getStatus() != ApplicationStatus.WITHDRAWN && application.getStatus() != ApplicationStatus.UNSUCCESSFUL) {
+            if (application.getApplicantUserID() == userID && application.getProjectID() == projectID
+                    && application.getStatus() != ApplicationStatus.WITHDRAWN && application.getStatus() != ApplicationStatus.UNSUCCESSFUL) {
                 return application;
             }
         }
