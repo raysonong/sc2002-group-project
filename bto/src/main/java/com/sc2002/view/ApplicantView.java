@@ -222,7 +222,7 @@ public class ApplicantView {
 
 
         //check project selected is available for applicant
-        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
+        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();
 
         BTOProjectModel selectedProject = null;
         for (BTOProjectModel project : availableProjects) {
@@ -236,7 +236,7 @@ public class ApplicantView {
             System.out.println("Invalid Project ID or project is not available for your profile.");
             return;
         }
-        
+
         System.out.print("Enter your enquiry: ");
         String enquiryText = appContext.getScanner().nextLine();
 
