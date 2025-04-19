@@ -16,12 +16,15 @@ import com.sc2002.model.ProjectViewFilterModel;
 import com.sc2002.model.UserModel;
 
 /**
- * Manages the storage and retrieval of BTO project data.
- * Implements the RepoInterface for standard repository operations and adds project-specific finders.
+ * Manages the storage and retrieval of BTO project data. Implements the
+ * RepoInterface for standard repository operations and adds project-specific
+ * finders.
  */
 public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
 
-    /** In-memory list to store all BTO project instances. */
+    /**
+     * In-memory list to store all BTO project instances.
+     */
     private List<BTOProjectModel> projects = new ArrayList<>();
 
     /**
@@ -93,7 +96,7 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
      */
     public List<BTOProjectModel> getProjectsByOfficer(UserModel currentUser) {
         List<BTOProjectModel> toReturn = new ArrayList<>();
-        for (int i = 0; i < projects.size(); i++) {
+        for (int i = projects.size() - 1; i >= 0; i--) {
             if (projects.get(i).isManagingOfficer(currentUser)) {
                 toReturn.add(projects.get(i));
             }
@@ -102,10 +105,12 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
     }
 
     /**
-     * Finds projects based on the filter criteria set in the current user's ProjectViewFilterModel.
-     * Filters by neighborhood, flat type availability, and applicant eligibility (age, marital status).
+     * Finds projects based on the filter criteria set in the current user's
+     * ProjectViewFilterModel. Filters by neighborhood, flat type availability,
+     * and applicant eligibility (age, marital status).
      *
-     * @param appContext The application context containing the current user and their filters.
+     * @param appContext The application context containing the current user and
+     * their filters.
      * @return A list of BTO projects matching the filter criteria.
      */
     public List<BTOProjectModel> findByFilter(AppContext appContext) { // we parse user since we need check all the age and stuff as well
@@ -167,25 +172,27 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
     }
 
     /**
-     * Finds projects relevant to the current user (managed projects for officers/managers)
-     * based on the filter criteria set in their ProjectViewFilterModel.
-     * Filters by neighborhood and flat type availability.
+     * Finds projects relevant to the current user (managed projects for
+     * officers/managers) based on the filter criteria set in their
+     * ProjectViewFilterModel. Filters by neighborhood and flat type
+     * availability.
      *
-     * @param appContext The application context containing the current user and their filters.
+     * @param appContext The application context containing the current user and
+     * their filters.
      * @return A list of relevant BTO projects matching the filter criteria.
      */
-    public List<BTOProjectModel> findPersonalByFilter(AppContext appContext){
-        try{
-            if(appContext.getAuthController().isManager(appContext.getCurrentUser())){
-                List<BTOProjectModel> filteredProjects=findByFilter(appContext); // Get projects Filtered by Manager's preference
+    public List<BTOProjectModel> findPersonalByFilter(AppContext appContext) {
+        try {
+            if (appContext.getAuthController().isManager(appContext.getCurrentUser())) {
+                List<BTOProjectModel> filteredProjects = findByFilter(appContext); // Get projects Filtered by Manager's preference
                 // Further filter the list to projects where manager ID lines up
                 return filteredProjects.stream()
-                    .filter(project -> project.getManagerUserID() == appContext.getCurrentUser().getUserID())
-                    .collect(Collectors.toList());
-            }else{
+                        .filter(project -> project.getManagerUserID() == appContext.getCurrentUser().getUserID())
+                        .collect(Collectors.toList());
+            } else {
                 throw new RuntimeException("User is not authorized to perform this action.");
             }
-        }catch(RuntimeException e){
+        } catch (RuntimeException e) {
             System.out.println("An error occurred: " + e.getMessage());
             return null;
         }
@@ -203,20 +210,21 @@ public class ProjectRepo implements RepoInterface<BTOProjectModel, Integer> {
     }
 
     /**
-     * Checks if there is a date conflict between the specified opening and closing dates
-     * and the existing projects managed by the current user.
+     * Checks if there is a date conflict between the specified opening and
+     * closing dates and the existing projects managed by the current user.
      *
      * @param newOpeningDate The proposed opening date for the new project.
      * @param newClosingDate The proposed closing date for the new project.
-     * @param appContext The application context containing the current user and other services.
-     * @return {@code true} if there is a date conflict with an existing project managed by the current user,
-     *         {@code false} otherwise.
+     * @param appContext The application context containing the current user and
+     * other services.
+     * @return {@code true} if there is a date conflict with an existing project
+     * managed by the current user, {@code false} otherwise.
      */
-    public boolean hasDateConflict(LocalDate newOpeningDate,LocalDate newClosingDate,AppContext appContext) {
+    public boolean hasDateConflict(LocalDate newOpeningDate, LocalDate newClosingDate, AppContext appContext) {
         for (BTOProjectModel project : projects) {
-            if (newOpeningDate.isBefore(project.getClosingDate()) &&
-                newClosingDate.isAfter(project.getOpeningDate()) &&
-                project.getManagerUserID() == appContext.getCurrentUser().getUserID()) {
+            if (newOpeningDate.isBefore(project.getClosingDate())
+                    && newClosingDate.isAfter(project.getOpeningDate())
+                    && project.getManagerUserID() == appContext.getCurrentUser().getUserID()) {
                 return true;
             }
         }

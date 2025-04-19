@@ -20,40 +20,57 @@ import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.utilities.Receipt;
 
 /**
- * Handles the user interface and interactions for users with the HDB Officer role.
- * Provides menu options for viewing projects, managing personal BTO applications (if applicable),
- * registering for project teams, viewing registration status, managing applicant bookings,
- * generating receipts, and handling enquiries for assigned projects.
+ * Handles the user interface and interactions for users with the HDB Officer
+ * role. Provides menu options for viewing projects, managing personal BTO
+ * applications (if applicable), registering for project teams, viewing
+ * registration status, managing applicant bookings, generating receipts, and
+ * handling enquiries for assigned projects.
  */
 public class HDBOfficerView {
 
     //Service Declaration
-    /** Controller for handling enquiry-related actions. */
+    /**
+     * Controller for handling enquiry-related actions.
+     */
     private EnquiryController enquiryController = null;
-    /** Controller for handling application-related actions (both personal and applicant management). */
+    /**
+     * Controller for handling application-related actions (both personal and
+     * applicant management).
+     */
     private ApplicationController applicationController = null;
-    /** Controller for handling officer registration for projects. */
+    /**
+     * Controller for handling officer registration for projects.
+     */
     private OfficerRegistrationController officerRegistrationController = null;
-    /** Controller for handling project viewing actions. */
+    /**
+     * Controller for handling project viewing actions.
+     */
     private ProjectController projectController = null;
-    /** Controller for handling user-related actions like password reset. */
+    /**
+     * Controller for handling user-related actions like password reset.
+     */
     private UserController userController = null;
     // Initialize other views
-    /** View component for displaying project details and filters. */
+    /**
+     * View component for displaying project details and filters.
+     */
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     /**
-     * Default constructor for HDBOfficerView.
-     * Initializes view components. Controllers are initialized within the HDBOfficerMenu method using the AppContext.
+     * Default constructor for HDBOfficerView. Initializes view components.
+     * Controllers are initialized within the HDBOfficerMenu method using the
+     * AppContext.
      */
     public HDBOfficerView() {
         // Default constructor
     }
 
     /**
-     * Displays the main menu for the HDB Officer user and handles user input for navigation.
+     * Displays the main menu for the HDB Officer user and handles user input
+     * for navigation.
      *
-     * @param appContext The application context containing shared resources and state.
+     * @param appContext The application context containing shared resources and
+     * state.
      */
     public void HDBOfficerMenu(AppContext appContext) {
         // Initialize services
@@ -139,8 +156,9 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer applying to a BTO project (as an applicant).
-     * Checks eligibility, displays available projects, and processes the application submission.
+     * Handles the menu flow for an officer applying to a BTO project (as an
+     * applicant). Checks eligibility, displays available projects, and
+     * processes the application submission.
      *
      * @param appContext The application context.
      */
@@ -171,8 +189,9 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer viewing the status of their personal BTO application.
-     * Allows the officer (as an applicant) to request withdrawal if the application is in a suitable state.
+     * Handles the menu flow for an officer viewing the status of their personal
+     * BTO application. Allows the officer (as an applicant) to request
+     * withdrawal if the application is in a suitable state.
      *
      * @param appContext The application context.
      */
@@ -209,8 +228,8 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer generating and displaying a receipt for their personal
-     * successful application.
+     * Handles the menu flow for an officer generating and displaying a receipt
+     * for their personal successful application.
      *
      * @param appContext The application context.
      */
@@ -230,8 +249,9 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer submitting an enquiry about a specific BTO project
-     * (acting as an applicant). Checks if the officer is currently managing a project.
+     * Handles the menu flow for an officer submitting an enquiry about a
+     * specific BTO project (acting as an applicant). Checks if the officer is
+     * currently managing a project.
      *
      * @param appContext The application context.
      */
@@ -272,8 +292,9 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer viewing, editing, or deleting their personal enquiries
-     * (acting as an applicant). Checks if the officer is currently managing a project.
+     * Handles the menu flow for an officer viewing, editing, or deleting their
+     * personal enquiries (acting as an applicant). Checks if the officer is
+     * currently managing a project.
      *
      * @param appContext The application context.
      */
@@ -359,7 +380,8 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer registering their interest to join a specific BTO project team.
+     * Handles the menu flow for an officer registering their interest to join a
+     * specific BTO project team.
      *
      * @param appContext The application context.
      */
@@ -375,8 +397,9 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer viewing the status of their registration request
-     * to join a project team. Displays project details if approved.
+     * Handles the menu flow for an officer viewing the status of their
+     * registration request to join a project team. Displays project details if
+     * approved.
      *
      * @param appContext The application context.
      */
@@ -399,8 +422,9 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer to view and update bookings for applicants
-     * within the project they are managing. Allows booking confirmation and flat type updates.
+     * Handles the menu flow for an officer to view and update bookings for
+     * applicants within the project they are managing. Allows booking
+     * confirmation and flat type updates.
      *
      * @param appContext The application context.
      */
@@ -415,6 +439,8 @@ public class HDBOfficerView {
 
         // Assuming an officer can manage only one project at a time
         BTOProjectModel managedProject = managedProjects.get(0);
+
+        System.out.println("Managing Project: " + managedProject.getProjectName());
 
         System.out.print("Enter applicant's NRIC: ");
         String inputNric = appContext.getScanner().nextLine();
@@ -499,8 +525,8 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer to generate a receipt for a specific applicant's
-     * application within the project they are managing.
+     * Handles the menu flow for an officer to generate a receipt for a specific
+     * applicant's application within the project they are managing.
      *
      * @param appContext The application context.
      */
@@ -535,8 +561,8 @@ public class HDBOfficerView {
     }
 
     /**
-     * Handles the menu flow for an officer to view and reply to enquiries related to the
-     * project they are managing.
+     * Handles the menu flow for an officer to view and reply to enquiries
+     * related to the project they are managing.
      *
      * @param appContext The application context.
      */

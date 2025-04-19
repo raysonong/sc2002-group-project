@@ -199,9 +199,16 @@ public class ApplicationRepo implements RepoInterface<BTOApplicationModel, Integ
      * @return An Optional containing the application if found, otherwise empty.
      */
     public Optional<BTOApplicationModel> findByNRIC(String nric) {
-        return applications.stream()
-                .filter(app -> app.getApplicantNRIC().equals(nric))
-                .findFirst();
+        for (int i = applications.size() - 1; i >= 0; i--) {
+            BTOApplicationModel app = applications.get(i);
+            // Check if the current application's NRIC matches
+            if (app.getApplicantNRIC().equals(nric)) {
+                // Return the first match found during backward iteration (which is the last overall)
+                return Optional.of(app);
+            }
+        }
+        // If no match is found after checking the whole list
+        return Optional.empty();
     }
 
     /**
