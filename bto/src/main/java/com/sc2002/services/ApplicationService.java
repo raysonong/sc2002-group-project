@@ -1,5 +1,6 @@
 package com.sc2002.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -40,17 +41,26 @@ public class ApplicationService {
      * It filters projects based on visibility, applicant eligibility, and whether they've already applied.
      */
     public void viewAvailableProjectsForApplicant() {
-        UserModel currentUser = this.appContext.getCurrentUser();
-
-        // get the list of available projects from the project repository
-        List<BTOProjectModel> allProjects = this.appContext.getProjectRepo().findAll();
-
-        for (BTOProjectModel project : allProjects) {
-            if (isProjectVisibleForApplicant(currentUser, project)) {
-                project.printAll();
-            }
+        List<BTOProjectModel> availableProjects = getAvailableProjectsForApplicant();
+    
+        for (BTOProjectModel project : availableProjects) {
+            project.printAll();
         }
     }
+
+    public List<BTOProjectModel> getAvailableProjectsForApplicant() {
+    UserModel currentUser = this.appContext.getCurrentUser();
+    List<BTOProjectModel> allProjects = this.appContext.getProjectRepo().findAll();
+    List<BTOProjectModel> availableProjects = new ArrayList<>();
+
+    for (BTOProjectModel project : allProjects) {
+        if (isProjectVisibleForApplicant(currentUser, project)) {
+            availableProjects.add(project);
+        }
+    }
+
+    return availableProjects;
+}
 
     /**
      * Checks if a specific project should be visible to an applicant.
@@ -68,7 +78,7 @@ public class ApplicationService {
 
         // if user have applied for this project before
         if (this.appContext.getApplicationRepo().hasUserAppliedForProject(currentUser.getUserID(), project.getProjectID())) {
-            return false;
+            return true;
         }
 
         // criteria for single 35 years old and above can only apply for 2-Room flats, hence we only allow viewing if

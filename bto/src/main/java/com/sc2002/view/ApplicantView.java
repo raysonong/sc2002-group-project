@@ -1,24 +1,19 @@
 package com.sc2002.view;
 
 import java.util.List;
-
 import java.util.Optional;
 
+import com.sc2002.config.AppContext;
+import com.sc2002.controllers.ApplicationController;
+import com.sc2002.controllers.EnquiryController;
+import com.sc2002.controllers.ProjectController;
+import com.sc2002.controllers.UserController;
 import com.sc2002.enums.ApplicationStatus;
-
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
-
 import com.sc2002.utilities.Receipt;
-
-import com.sc2002.controllers.ApplicationController;
-import com.sc2002.controllers.ProjectController;
-import com.sc2002.controllers.EnquiryController;
-import com.sc2002.controllers.UserController;
-
-import com.sc2002.config.AppContext;
 
 /**
  * Handles the user interface and interactions for users with the Applicant role.
@@ -184,6 +179,9 @@ public class ApplicantView {
                 } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
             }
         }
+        else{
+            System.out.println("You have not applied to any projects.");
+        }
     }
 
     /**
@@ -222,13 +220,23 @@ public class ApplicantView {
         int selectedProjectID = appContext.getScanner().nextInt();
         appContext.getScanner().nextLine();
 
-        // check project exists
-        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectID);
+
+        //check project selected is available for applicant
+        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
+
+        BTOProjectModel selectedProject = null;
+        for (BTOProjectModel project : availableProjects) {
+            if (project.getProjectID() == selectedProjectID) {
+                selectedProject = project;
+                break;
+            }
+        }
+        
         if (selectedProject == null) {
-            System.out.println("Invalid Project ID. Please try again.");
+            System.out.println("Invalid Project ID or project is not available for your profile.");
             return;
         }
-
+        
         System.out.print("Enter your enquiry: ");
         String enquiryText = appContext.getScanner().nextLine();
 
@@ -262,7 +270,7 @@ public class ApplicantView {
         System.out.println("Your Enquiries:");
         for (int i = 0; i < applicantEnquiries.size(); i++) {
             EnquiryModel enquiry = applicantEnquiries.get(i);
-            System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getID() + " | Enquiry: " + enquiry.getEnquiryText());
+            System.out.println((i + 1) + ". " + "Enquiry ID: " + enquiry.getID() + " | Enquiry: " + enquiry.getEnquiryText());
         }
 
         //ask user to select enquiry
@@ -299,6 +307,10 @@ public class ApplicantView {
                 break;
             case "2":
                 //edit
+                if (selectedEnquiry.getStatus()) {
+                    System.out.println("This enquiry has already been replied to and cannot be edited.");
+                    break;
+                }
                 System.out.print("Enter the new enquiry text: ");
                 String newEnquiryText = appContext.getScanner().nextLine();
                 selectedEnquiry.editEnquiry(newEnquiryText);
@@ -307,10 +319,15 @@ public class ApplicantView {
                 break;
             case "3":
                 //delete
+                if (selectedEnquiry.getStatus()) {
+                    System.out.println("This enquiry has already been replied to and cannot be deleted.");
+                    break;
+                }
                 boolean isDeleted = enquiryController.deleteEnquiry(selectedEnquiry.getID());
                 if (isDeleted) {
                     System.out.println("Your enquiry has been deleted.");
-                } else {
+                } 
+                else {
                     System.out.println("There was an issue deleting your enquiry.");
                 }
                 break;

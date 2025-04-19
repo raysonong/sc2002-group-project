@@ -225,6 +225,9 @@ public class HDBOfficerView {
                 } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
             }
         }
+        else{
+            System.out.println("You have not applied to any projects.");
+        }
     }
 
     /**
@@ -272,10 +275,19 @@ public class HDBOfficerView {
         int selectedProjectID = appContext.getScanner().nextInt();
         appContext.getScanner().nextLine();
 
-        // check project exists
-        BTOProjectModel selectedProject = appContext.getProjectRepo().findByID(selectedProjectID);
+        // check project selected is available for applicant
+        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
+
+        BTOProjectModel selectedProject = null;
+        for (BTOProjectModel project : availableProjects) {
+            if (project.getProjectID() == selectedProjectID) {
+                selectedProject = project;
+                break;
+            }
+        }
+        
         if (selectedProject == null) {
-            System.out.println("Invalid Project ID. Please try again.");
+            System.out.println("Invalid Project ID or project is not available for your profile.");
             return;
         }
 
@@ -321,7 +333,7 @@ public class HDBOfficerView {
         System.out.println("Your Enquiries:");
         for (int i = 0; i < applicantEnquiries.size(); i++) {
             EnquiryModel enquiry = applicantEnquiries.get(i);
-            System.out.println((i + 1) + ". " + "Project ID: " + enquiry.getID() + " | Enquiry: " + enquiry.getEnquiryText());
+            System.out.println((i + 1) + ". " + "Enquiry ID: " + enquiry.getID() + " | Enquiry: " + enquiry.getEnquiryText());
         }
 
         //ask user to select enquiry
@@ -358,6 +370,10 @@ public class HDBOfficerView {
                 break;
             case "2":
                 //edit
+                if (selectedEnquiry.getStatus()) {
+                    System.out.println("You cannot edit a replied enquiry.");
+                    break;
+                }
                 System.out.print("Enter the new enquiry text: ");
                 String newEnquiryText = appContext.getScanner().nextLine();
                 selectedEnquiry.editEnquiry(newEnquiryText);
@@ -366,10 +382,15 @@ public class HDBOfficerView {
                 break;
             case "3":
                 //delete
+                if (selectedEnquiry.getStatus()) {
+                    System.out.println("You cannot delete a replied enquiry.");
+                    break;
+                }
                 boolean isDeleted = enquiryController.deleteEnquiry(selectedEnquiry.getID());
                 if (isDeleted) {
                     System.out.println("Your enquiry has been deleted.");
-                } else {
+                } 
+                else {
                     System.out.println("There was an issue deleting your enquiry.");
                 }
                 break;

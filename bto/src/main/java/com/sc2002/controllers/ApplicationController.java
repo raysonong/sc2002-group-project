@@ -7,6 +7,7 @@ import com.sc2002.config.AppContext;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.enums.FlatType;
 import com.sc2002.model.BTOApplicationModel;
+import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.UserModel;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.services.ApplicationService;
@@ -57,6 +58,10 @@ public class ApplicationController {
      */
     public void viewAvailableProjectsForApplicant() {
         applicationService.viewAvailableProjectsForApplicant();
+    }
+
+    public List<BTOProjectModel> getAvailableProjectsForApplicant() {
+        return applicationService.getAvailableProjectsForApplicant();
     }
     
     /**
