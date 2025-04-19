@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.sc2002.enums.FlatType;
 import com.sc2002.enums.Neighborhood;
@@ -84,8 +83,8 @@ public class BTOProjectModel {
     private ArrayList<UserModel> managingOfficerUsers;
 
     /**
-     * Constructs a new BTOProjectModel with the specified details.
-     * Assigns a unique project ID automatically.
+     * Constructs a new BTOProjectModel with the specified details. Assigns a
+     * unique project ID automatically.
      *
      * @param projectName The name of the project.
      * @param neighborhood The neighborhood where the project is located.
@@ -95,7 +94,8 @@ public class BTOProjectModel {
      * @param threeRoomPrice The price for 1 3-room flat.
      * @param openingDate The application opening date.
      * @param closingDate The application closing date.
-     * @param maxManagingOfficer The maximum number of managing officers allowed.
+     * @param maxManagingOfficer The maximum number of managing officers
+     * allowed.
      * @param managerUserID The User ID of the manager assigned to this project.
      */
     public BTOProjectModel(String projectName, Neighborhood neighborhood, int twoRoomCount, int twoRoomPrice, int threeRoomCount, int threeRoomPrice, LocalDate openingDate, LocalDate closingDate, int maxManagingOfficer, int managerUserID) {
@@ -285,11 +285,11 @@ public class BTOProjectModel {
      * @param maxManagingOfficer The maximum number to set.
      */
     public void setMaxManagingOfficer(int maxManagingOfficer) {
-        if(maxManagingOfficer>10){
-            this.maxManagingOfficer=10;
+        if (maxManagingOfficer > 10) {
+            this.maxManagingOfficer = 10;
             System.out.println("Limit hit, setting to 10");
         }
-        if(maxManagingOfficer<0){
+        if (maxManagingOfficer < 0) {
             System.out.println("Out of range.");
             return;
         }
@@ -309,8 +309,10 @@ public class BTOProjectModel {
      * Adds a managing officer User to the list. Returns Boolean base on
      * success.
      *
-     * @param managingOfficerUser The User object of the managing officer to add.
-     * @return True if the officer was added successfully, false if the maximum limit was reached.
+     * @param managingOfficerUser The User object of the managing officer to
+     * add.
+     * @return True if the officer was added successfully, false if the maximum
+     * limit was reached.
      */
     public boolean addManagingOfficerUser(UserModel managingOfficerUser) {
         if (this.managingOfficerUsers.size() >= this.maxManagingOfficer) {
@@ -325,7 +327,7 @@ public class BTOProjectModel {
      *
      * @param currentUser The User object of the managing officer to remove.
      * @return True if the officer was found and removed, false otherwise.
-     * 
+     *
      * list.
      */
     public boolean removeManagingOfficerUser(UserModel currentUser) {
@@ -359,7 +361,7 @@ public class BTOProjectModel {
         System.out.println("3-Room Flats Count: " + this.threeRoomCount);
         System.out.println("3-Room Flat Price: $" + this.threeRoomPrice);
         System.out.println("Opening Date: " + this.openingDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
-        System.out.println("Closing Date: " + this.closingDate);
+        System.out.println("Closing Date: " + this.closingDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")));
         System.out.println("Manager ID: " + (this.managerUserID));
         System.out.println("Visibility: " + (this.isVisible ? "Visible" : "Not Visible"));
         System.out.println("Max Managing Officers: " + this.maxManagingOfficer);
@@ -371,7 +373,9 @@ public class BTOProjectModel {
     }
 
     /**
-     * Gets a list of flat types currently available (count > 0) in this project.
+     * Gets a list of flat types currently available (count > 0) in this
+     * project.
+     *
      * @return A list of available FlatType enums.
      */
     public List<FlatType> getAvailableFlatTypes() {

@@ -17,8 +17,8 @@ import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.CSVReader;
 
 /**
- * Service responsible for initializing application data from external sources (e.g., CSV files).
- * Populates repositories with initial user and project data.
+ * Service responsible for initializing application data from external sources
+ * (e.g., CSV files). Populates repositories with initial user and project data.
  */
 public class InitializationService {
 
@@ -98,11 +98,12 @@ public class InitializationService {
     }
 
     /**
-     * Initializes the project repository by reading data from a CSV file.
-     * Uses the CSVReader utility and adds projects via addProjectByArrayList.
+     * Initializes the project repository by reading data from a CSV file. Uses
+     * the CSVReader utility and adds projects via addProjectByArrayList.
      *
      * @param projectList The ProjectRepo to populate.
-     * @param userList The UserRepo containing user data (needed for assigning managers/officers).
+     * @param userList The UserRepo containing user data (needed for assigning
+     * managers/officers).
      * @param authController An AuthController instance for role checks.
      */
     public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthController authController) {
@@ -112,9 +113,9 @@ public class InitializationService {
     }
 
     /**
-     * Helper method to process project data read from CSV and add projects to the repository.
-     * Parses the raw data, creates BTOProjectModel instances, and assigns officers.
-     * Includes validation checks.
+     * Helper method to process project data read from CSV and add projects to
+     * the repository. Parses the raw data, creates BTOProjectModel instances,
+     * and assigns officers. Includes validation checks.
      *
      * @param projectData The raw project data read from CSV (List of Lists).
      * @param projectList The ProjectRepo to add projects to.
@@ -190,6 +191,16 @@ public class InitializationService {
                         addedOfficers++;
                     }
                 }
+
+                // check if today is still within application date
+                LocalDate today = LocalDate.now();
+
+                if (today.isBefore(openingDate) || today.isAfter(closingDate)) {
+                    // Today is outside the application period (either too early or too late)
+                    // Set visibility to false
+                    newProject.setVisible(false);
+                }
+
             } catch (Exception e) {
                 System.err.println("Error processing project: " + e.getMessage());
             }
