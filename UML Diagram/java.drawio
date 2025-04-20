@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="fJ4djnBpITY3yPH3W6va" name="Page-1">
-        <mxGraphModel dx="965" dy="1738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+        <mxGraphModel dx="1297" dy="913" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -449,7 +449,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="label420" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge70" vertex="1" connectable="0">
-                    <mxGeometry x="3245" y="1574" as="geometry"/>
+                    <mxGeometry x="3310" y="1590" as="geometry"/>
                 </mxCell>
                 <mxCell id="label424" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge70" vertex="1" connectable="0">
                     <mxGeometry x="2700" y="1560" as="geometry"/>
@@ -463,7 +463,7 @@
                     <mxGeometry x="3415" y="1061" as="geometry"/>
                 </mxCell>
                 <mxCell id="label292" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge48" vertex="1" connectable="0">
-                    <mxGeometry x="3418" y="935" as="geometry"/>
+                    <mxGeometry x="3410" y="940" as="geometry"/>
                 </mxCell>
                 <mxCell id="edge44" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;" parent="1" source="node39" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -509,18 +509,20 @@
                 <mxCell id="label112" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge18" vertex="1" connectable="0">
                     <mxGeometry x="2280" y="186" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge24" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.999;entryY=0.66;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="node31" target="node23" edge="1">
+                <mxCell id="edge24" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.999;entryY=0.66;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="2489" y="861"/>
+                            <mxPoint x="2489.38" y="860.01"/>
                         </Array>
+                        <mxPoint x="2489.38" y="1090.0100000000002" as="sourcePoint"/>
+                        <mxPoint x="1883.998" y="859.6300000000001" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="label144" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge24" vertex="1" connectable="0">
                     <mxGeometry x="2477" y="1068" as="geometry"/>
                 </mxCell>
-                <mxCell id="label148" value="*" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge24" vertex="1" connectable="0">
-                    <mxGeometry x="1900" y="840" as="geometry"/>
+                <mxCell id="label148" value="1...10" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge24" vertex="1" connectable="0">
+                    <mxGeometry x="1920" y="840" as="geometry"/>
                 </mxCell>
                 <mxCell id="edge32" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;" parent="1" source="node41" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -556,7 +558,7 @@
                     <mxGeometry x="1635" y="1621" as="geometry"/>
                 </mxCell>
                 <mxCell id="label382" value="1" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" parent="edge63" vertex="1" connectable="0">
-                    <mxGeometry x="1635" y="1538" as="geometry"/>
+                    <mxGeometry x="1620" y="1550" as="geometry"/>
                 </mxCell>
                 <mxCell id="edge30" value="" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=diamondThinstartSize=12;endArrow=openThin;endSize=12;strokeColor=#595959;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;" parent="1" source="node33" target="node8" edge="1">
                     <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -1170,6 +1172,36 @@
                 </mxCell>
                 <mxCell id="50" value="&lt;font&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;Polymorphism: &lt;/font&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;the method startMenu checks the role of currentUser and calls the appropriate view (ApplicantView, HDBOfficerView or HDBManagerView). When methods like getMenuOptions or getUserRole are called on currentUser, the version specific to the actual object&#39;s class is executed.&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
                     <mxGeometry x="-129" y="5240" width="320" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="2413" y="840" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="Relationship is &lt;b&gt;&quot;Has-a&quot; &lt;/b&gt;specifically &lt;b&gt;Aggregation&lt;/b&gt;,&lt;div&gt;where BTOProjectModel can only have 1-10 UserModel that are managing the Project&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="2325.5" y="798" width="175" height="33" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="" style="html=1;whiteSpace=wrap;aspect=fixed;shape=isoRectangle;" vertex="1" parent="1">
+                    <mxGeometry x="1884" y="850" width="33.33" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="" style="html=1;whiteSpace=wrap;aspect=fixed;shape=isoRectangle;" vertex="1" parent="1">
+                    <mxGeometry x="2683" y="1581.4" width="37" height="22.2" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;strokeColor=default;" vertex="1" connectable="0" parent="1">
+                    <mxGeometry x="2710" y="1570" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="&lt;b&gt;BTOApplicationModel &quot;Has-a&quot; BTOProjectModel&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="2771" y="1561.4" width="209" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="" style="html=1;whiteSpace=wrap;aspect=fixed;shape=isoRectangle;rotation=-90;fillColor=#2E2E2E;" vertex="1" parent="1">
+                    <mxGeometry x="3415.87" y="940.35" width="27.25" height="16.35" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="&lt;b&gt;BTOApplicationModel &quot;Has-a&quot; BookingDetailModel (Composition)&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="3244" y="990" width="165.88" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="" style="html=1;whiteSpace=wrap;aspect=fixed;shape=isoRectangle;rotation=90;fillColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="1630.34" y="1541.3999999999999" width="33.33" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="Relationship is &lt;b&gt;&quot;Has-a&quot; &lt;/b&gt;specifically &lt;b&gt;Composition&lt;/b&gt;,&lt;div&gt;Each enquiry has its own enquiryResponse that isn&#39;t shared&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1670" y="1581.3999999999999" width="175" height="33" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
