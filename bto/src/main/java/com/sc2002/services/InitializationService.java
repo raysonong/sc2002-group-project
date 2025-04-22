@@ -6,12 +6,15 @@ import java.util.List;
 
 import com.sc2002.controllers.AuthController;
 import com.sc2002.enums.Neighborhood;
+import com.sc2002.enums.OfficerRegistrationStatus;
 import com.sc2002.enums.UserRole;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.HDBManagerModel;
 import com.sc2002.model.HDBOfficerModel;
+import com.sc2002.model.OfficerRegistrationModel;
 import com.sc2002.model.UserModel;
+import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.utilities.CSVReader;
@@ -106,10 +109,10 @@ public class InitializationService {
      * managers/officers).
      * @param authController An AuthController instance for role checks.
      */
-    public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthController authController) {
+    public void initializeProjects(ProjectRepo projectList, UserRepo userList, OfficerRegistrationRepo officerRegistrationList, AuthController authController) {
         String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
         ArrayList<List<Object>> projectData = CSVReader.readProjectList(projectDir + "/ProjectList.csv");
-        addProjectByArrayList(projectData, projectList, userList, authController);
+        addProjectByArrayList(projectData, projectList, userList, officerRegistrationList, authController);
     }
 
     /**
@@ -122,7 +125,7 @@ public class InitializationService {
      * @param userList The UserRepo to find officer/manager users.
      * @param authController An AuthController instance for role checks.
      */
-    private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, AuthController authController) {
+    private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, OfficerRegistrationRepo officerRegistrationlist, AuthController authController) {
         for (List<Object> project : projectData) { // Loop the ArrayList for the lists
             try {
                 // Extract project details for XLSX file
@@ -187,8 +190,17 @@ public class InitializationService {
 
                     UserModel officer = userList.getUserByName(officerName.trim().replace("\"", ""));
                     if (officer != null && authController.isOfficer(officer)) {
-                        newProject.addManagingOfficerUser(officer);
-                        addedOfficers++;
+                        if(newProject.addManagingOfficerUser(officer)){
+                            // Successfully added
+                            addedOfficers++; // increment added officer
+                            // Create OfficerRegistationModel entry
+                            OfficerRegistrationModel registration = new OfficerRegistrationModel(officer,newProject.getProjectID());
+                            registration.setStatus(OfficerRegistrationStatus.APPROVED);
+                            // now push the registration to the repo
+                            officerRegistrationlist.save(registration);
+
+                        }
+                        
                     }
                 }
 

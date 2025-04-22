@@ -3,6 +3,7 @@ package com.sc2002.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sc2002.repositories.OfficerRegistrationRepo;
 import com.sc2002.repositories.ProjectRepo;
 import com.sc2002.repositories.UserRepo;
 import com.sc2002.services.InitializationService;
@@ -50,7 +51,7 @@ public class InitializationController {
      * @param userList The user repository
      * @param authController The authentication controller
      */
-    public void initializeProjects(ProjectRepo projectList, UserRepo userList, AuthController authController) {
-        initializationService.initializeProjects(projectList, userList, authController);
+    public void initializeProjects(ProjectRepo projectList, UserRepo userList, OfficerRegistrationRepo officerRegistrationList,AuthController authController) {
+        initializationService.initializeProjects(projectList, userList, officerRegistrationList,authController);
     }
 }
