@@ -721,7 +721,7 @@ public class HDBManagerView {
                 System.out.printf("%d\t%s\t\t%s\t\t%d\t%s%n",
                         index++,
                         application.getApplicantName(),
-                        application.getApplicantMaritalStatus(),
+                        application.getApplicantMaritalStatus() ? "Married" : "Single",
                         application.getApplicantAge(),
                         application.getFlatType());
             }
@@ -776,7 +776,7 @@ public class HDBManagerView {
                 System.out.printf("%d\t%s\t\t%s\t\t%d\t%s%n",
                         index++,
                         application.getApplicantName(),
-                        application.getApplicantMaritalStatus(),
+                        application.getApplicantMaritalStatus() ? "Married" : "Single",
                         application.getApplicantAge(),
                         application.getFlatType());
             }
