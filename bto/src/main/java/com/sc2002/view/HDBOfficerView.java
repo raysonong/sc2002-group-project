@@ -224,8 +224,7 @@ public class HDBOfficerView {
                     }
                 } while (!withdrawChoice.equals("yes") && !withdrawChoice.equals("no"));
             }
-        }
-        else{
+        } else {
             System.out.println("You have not applied to any projects.");
         }
     }
@@ -285,7 +284,7 @@ public class HDBOfficerView {
                 break;
             }
         }
-        
+
         if (selectedProject == null) {
             System.out.println("Invalid Project ID or project is not available for your profile.");
             return;
@@ -389,8 +388,7 @@ public class HDBOfficerView {
                 boolean isDeleted = enquiryController.deleteEnquiry(selectedEnquiry.getID());
                 if (isDeleted) {
                     System.out.println("Your enquiry has been deleted.");
-                } 
-                else {
+                } else {
                     System.out.println("There was an issue deleting your enquiry.");
                 }
                 break;
@@ -462,6 +460,21 @@ public class HDBOfficerView {
         BTOProjectModel managedProject = managedProjects.get(0);
 
         System.out.println("Managing Project: " + managedProject.getProjectName());
+
+        List<BTOApplicationModel> applicants = appContext.getApplicationRepo().findByProjectID(managedProject.getProjectID());
+
+        for (int i = 0; i < applicants.size(); i++) {
+            if (applicants.get(i).getStatus() == ApplicationStatus.SUCCESSFUL) {
+                System.out.println((i + 1) + ". " + applicants.get(i).getApplicantNRIC());
+            } else {
+                applicants.remove(i);
+            }
+        }
+
+        if (applicants.isEmpty()) {
+            System.out.println("There are no applicants!");
+            return;
+        }
 
         System.out.print("Enter applicant's NRIC: ");
         String inputNric = appContext.getScanner().nextLine();
