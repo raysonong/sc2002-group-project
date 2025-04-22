@@ -42,9 +42,10 @@ This project is a console-based application designed to manage various aspects o
 
 ## How to Run
 
-1.  Clone Github Repository to your preferred directory
+1.  Clone Github Repository to your preferred directory:
+    `https://github.com/raysonong/sc2002-group-project.git`
    
-2.  **Using Command Line:**
+3.  **Using Command Line:**
     From the `sc2002-group-project` directory, run:
     ```bash
      java ./bto/src/main/java/com/sc2002/Main.java

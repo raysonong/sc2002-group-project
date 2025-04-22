@@ -101,13 +101,18 @@ public class InitializationService {
     }
 
     /**
-     * Initializes the project repository by reading data from a CSV file. Uses
-     * the CSVReader utility and adds projects via addProjectByArrayList.
+     * Initializes the project repository by reading data from a CSV file. This
+     * method uses the CSVReader utility to parse project data and populates the
+     * repository by invoking the addProjectByArrayList method.
      *
-     * @param projectList The ProjectRepo to populate.
-     * @param userList The UserRepo containing user data (needed for assigning
-     * managers/officers).
-     * @param authController An AuthController instance for role checks.
+     * @param projectList The ProjectRepo instance where the project data will
+     * be stored.
+     * @param userList The UserRepo instance containing user data, used for
+     * assigning managers and officers.
+     * @param officerRegistrationList The OfficerRegistrationRepo instance for
+     * managing officer registrations.
+     * @param authController An AuthController instance used for validating
+     * officer roles.
      */
     public void initializeProjects(ProjectRepo projectList, UserRepo userList, OfficerRegistrationRepo officerRegistrationList, AuthController authController) {
         String projectDir = System.getProperty("user.dir") + "/bto/src/main/data";
@@ -116,14 +121,21 @@ public class InitializationService {
     }
 
     /**
-     * Helper method to process project data read from CSV and add projects to
-     * the repository. Parses the raw data, creates BTOProjectModel instances,
-     * and assigns officers. Includes validation checks.
+     * Processes project data read from a CSV file and adds projects to the
+     * repository. This method parses raw data, creates BTOProjectModel
+     * instances, assigns officers, and performs validation checks to ensure
+     * data integrity.
      *
-     * @param projectData The raw project data read from CSV (List of Lists).
-     * @param projectList The ProjectRepo to add projects to.
-     * @param userList The UserRepo to find officer/manager users.
-     * @param authController An AuthController instance for role checks.
+     * @param projectData The raw project data read from the CSV file,
+     * represented as a list of lists.
+     * @param projectList The ProjectRepo instance where the parsed project data
+     * will be stored.
+     * @param userList The UserRepo instance used to retrieve manager and
+     * officer user details.
+     * @param officerRegistrationlist The OfficerRegistrationRepo instance for
+     * managing officer registrations.
+     * @param authController An AuthController instance used to validate officer
+     * roles and permissions.
      */
     private static void addProjectByArrayList(ArrayList<List<Object>> projectData, ProjectRepo projectList, UserRepo userList, OfficerRegistrationRepo officerRegistrationlist, AuthController authController) {
         for (List<Object> project : projectData) { // Loop the ArrayList for the lists
@@ -190,17 +202,17 @@ public class InitializationService {
 
                     UserModel officer = userList.getUserByName(officerName.trim().replace("\"", ""));
                     if (officer != null && authController.isOfficer(officer)) {
-                        if(newProject.addManagingOfficerUser(officer)){
+                        if (newProject.addManagingOfficerUser(officer)) {
                             // Successfully added
                             addedOfficers++; // increment added officer
                             // Create OfficerRegistationModel entry
-                            OfficerRegistrationModel registration = new OfficerRegistrationModel(officer,newProject.getProjectID());
+                            OfficerRegistrationModel registration = new OfficerRegistrationModel(officer, newProject.getProjectID());
                             registration.setStatus(OfficerRegistrationStatus.APPROVED);
                             // now push the registration to the repo
                             officerRegistrationlist.save(registration);
 
                         }
-                        
+
                     }
                 }
 
