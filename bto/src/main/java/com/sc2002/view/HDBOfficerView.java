@@ -654,11 +654,11 @@ public class HDBOfficerView {
                     // Reply to the enquiry
                     selectedEnquiry.replyEnquiry(reply, appContext.getCurrentUser().getUserID());
                     System.out.println("Reply sent successfully.");
-                    return;
+                    break;
                 }
                 case "2" -> {
                     System.out.println("Exiting to menu...");
-                    return;
+                    break;
                 }
                 default ->
                     System.out.println("Invalid option selected.");
