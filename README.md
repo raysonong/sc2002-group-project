@@ -43,12 +43,16 @@ This project is a console-based application designed to manage various aspects o
 ## How to Run
 
 1.  Clone Github Repository to your preferred directory
-
+   
 2.  **Using Command Line:**
     From the `sc2002-group-project` directory, run:
     ```bash
      java ./bto/src/main/java/com/sc2002/Main.java
     ```
+    NOTE: CSV files containing User login at `./bto/src/main/data/*.csv`, ignore the XLSX files.
+    *    `ApplicantList.csv`
+    *    `OfficerList.csv`
+    *    `ManagerList.csv`
 
 ## Project Structure
 
