@@ -155,7 +155,6 @@ public class ApplicationService {
             if (userInput2.equals("2-room")) {
                 // no need check married people since user can only register if >=21
                 if (!currentUser.getMaritalStatus() && currentUser.getAge() < 35) { // if is single and younger then 35
-                    System.out.println(currentUser.getMaritalStatus());
                     System.out.println("User is single, can't apply for any projects.");
                     return false;
                 }
@@ -420,6 +419,14 @@ public class ApplicationService {
         if (applicationOpt.isPresent()) {
             BTOApplicationModel application = applicationOpt.get();
             BTOProjectModel project = appContext.getProjectRepo().findByID(application.getProjectID());
+
+            // if applicant is single and 35 years old and above, can only apply for 2-room flats
+            if (!application.getApplicantMaritalStatus() && application.getApplicantAge() >= 35) {
+                if (newFlatType == FlatType.THREE_ROOM) {
+                    System.out.println("This applicant is single and 35 years old and above, can only apply for 2-room flats.");
+                    return false;
+                }
+            }
 
             if (newFlatType == FlatType.TWO_ROOM) {
                 // System.out.println("old 2 room count: " + project.getTwoRoomCount());
