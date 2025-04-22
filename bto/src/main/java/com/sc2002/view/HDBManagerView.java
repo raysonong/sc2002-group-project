@@ -21,44 +21,63 @@ import com.sc2002.model.EnquiryModel;
 import com.sc2002.model.OfficerRegistrationModel;
 
 /**
- * Handles the user interface and interactions for users with the HDB Manager role.
- * Provides menu options for managing BTO projects (create, edit, delete, toggle visibility),
- * managing officer registrations, handling BTO applications (approve, reject, withdrawal),
- * managing enquiries, and generating reports.
+ * Handles the user interface and interactions for users with the HDB Manager
+ * role. Provides menu options for managing BTO projects (create, edit, delete,
+ * toggle visibility), managing officer registrations, handling BTO applications
+ * (approve, reject, withdrawal), managing enquiries, and generating reports.
  */
 public class HDBManagerView {
 
     // declare all the services required by Manager
-    /** Controller for handling project viewing actions. */
+    /**
+     * Controller for handling project viewing actions.
+     */
     private ProjectController projectController = null;
-    /** Controller for handling project creation, editing, and deletion. */
+    /**
+     * Controller for handling project creation, editing, and deletion.
+     */
     private ProjectManagementController projectManagementController = null;
-    /** Controller for handling enquiry-related actions. */
+    /**
+     * Controller for handling enquiry-related actions.
+     */
     private EnquiryController enquiryController = null;
-    /** Controller for handling officer registration approvals/rejections. */
+    /**
+     * Controller for handling officer registration approvals/rejections.
+     */
     private OfficerRegistrationController officerRegistrationController = null;
-    /** Controller for generating project reports. */
+    /**
+     * Controller for generating project reports.
+     */
     private ReportingController reportingController = null;
-    /** Controller for handling application approvals/rejections. */
+    /**
+     * Controller for handling application approvals/rejections.
+     */
     private ApplicationController applicationController = null;
-    /** Controller for handling user-related actions like password reset. */
+    /**
+     * Controller for handling user-related actions like password reset.
+     */
     private UserController userController = null;
     // Initialize other views
-    /** View component for displaying project details and filters. */
+    /**
+     * View component for displaying project details and filters.
+     */
     private ProjectView projectView = new ProjectView(); // used to print filtered projectView
 
     /**
-     * Default constructor for HDBManagerView.
-     * Initializes view components. Controllers are initialized within the HDBManagerMenu method using the AppContext.
+     * Default constructor for HDBManagerView. Initializes view components.
+     * Controllers are initialized within the HDBManagerMenu method using the
+     * AppContext.
      */
     public HDBManagerView() {
         // Default constructor
     }
 
     /**
-     * Displays the main menu for the HDB Manager user and handles user input for navigation.
+     * Displays the main menu for the HDB Manager user and handles user input
+     * for navigation.
      *
-     * @param appContext The application context containing shared resources and state.
+     * @param appContext The application context containing shared resources and
+     * state.
      */
     public void HDBManagerMenu(AppContext appContext) {
         // Initializing variables & services,
@@ -75,7 +94,6 @@ public class HDBManagerView {
         this.reportingController = new ReportingController(appContext);
         this.applicationController = new ApplicationController(appContext);
         this.userController = new UserController();
-
 
         System.out.println("\n--HDB Manager Menu--");
         // View which project Managing is currently Managing
@@ -172,7 +190,8 @@ public class HDBManagerView {
     /**
      * Prints a list of projects currently managed by the logged-in manager.
      *
-     * @param managerProjects A list of BTOProjectModel objects managed by the user.
+     * @param managerProjects A list of BTOProjectModel objects managed by the
+     * user.
      */
     private void printProjectsManagedByUser(List<BTOProjectModel> managerProjects) {
         System.out.println("-- Projects Managed by You --");
@@ -184,8 +203,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for creating a new BTO project.
-     * Checks if the manager is already managing a project before proceeding.
+     * Handles the menu flow for creating a new BTO project. Checks if the
+     * manager is already managing a project before proceeding.
      *
      * @param appContext The application context.
      */
@@ -204,7 +223,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for editing details of an existing BTO project managed by the user.
+     * Handles the menu flow for editing details of an existing BTO project
+     * managed by the user.
      *
      * @param appContext The application context.
      */
@@ -332,8 +352,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for toggling the visibility (public/private) of a BTO project
-     * managed by the user.
+     * Handles the menu flow for toggling the visibility (public/private) of a
+     * BTO project managed by the user.
      *
      * @param appContext The application context.
      */
@@ -363,8 +383,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for viewing all BTO projects (regardless of manager)
-     * and allowing the manager to select one to view details.
+     * Handles the menu flow for viewing all BTO projects (regardless of
+     * manager) and allowing the manager to select one to view details.
      *
      * @param appContext The application context.
      */
@@ -393,7 +413,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for viewing details of a specific BTO project managed by the user.
+     * Handles the menu flow for viewing details of a specific BTO project
+     * managed by the user.
      *
      * @param appContext The application context.
      */
@@ -437,8 +458,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for viewing and replying to enquiries, prioritizing those
-     * related to projects managed by the current user.
+     * Handles the menu flow for viewing and replying to enquiries, prioritizing
+     * those related to projects managed by the current user.
      *
      * @param appContext The application context.
      */
@@ -450,7 +471,7 @@ public class HDBManagerView {
             System.out.println("-- All Your Enquiries --");
             for (int i = 0; i < enquiries.size(); i++) {
                 System.out.printf("Index: %d, Subject: %s, Status: %s, YourProject:%s%n",
-                        i, enquiries.get(i).getEnquiryText(), enquiries.get(i).getStatus(), (appContext.getProjectRepo().findByID(enquiries.get(i).getProjectID()).getManagerUserID()==appContext.getCurrentUser().getUserID())?"Yes":"No");
+                        i, enquiries.get(i).getEnquiryText(), enquiries.get(i).getStatus(), (appContext.getProjectRepo().findByID(enquiries.get(i).getProjectID()).getManagerUserID() == appContext.getCurrentUser().getUserID()) ? "Yes" : "No");
             }
             System.out.print("Enter the index of the enquiry you wish to view: ");
             try {
@@ -478,7 +499,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for approving officer registration requests for a specific project.
+     * Handles the menu flow for approving officer registration requests for a
+     * specific project.
      *
      * @param appContext The application context.
      */
@@ -528,7 +550,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for rejecting officer registration requests for a specific project.
+     * Handles the menu flow for rejecting officer registration requests for a
+     * specific project.
      *
      * @param appContext The application context.
      */
@@ -578,7 +601,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for approving pending BTO applications for a specific project.
+     * Handles the menu flow for approving pending BTO applications for a
+     * specific project.
      *
      * @param appContext The application context.
      */
@@ -632,7 +656,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for rejecting pending BTO applications for a specific project.
+     * Handles the menu flow for rejecting pending BTO applications for a
+     * specific project.
      *
      * @param appContext The application context.
      */
@@ -686,8 +711,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for approving pending withdrawal requests for BTO applications
-     * within a specific project.
+     * Handles the menu flow for approving pending withdrawal requests for BTO
+     * applications within a specific project.
      *
      * @param appContext The application context.
      */
@@ -741,8 +766,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for rejecting pending withdrawal requests for BTO applications
-     * within a specific project.
+     * Handles the menu flow for rejecting pending withdrawal requests for BTO
+     * applications within a specific project.
      *
      * @param appContext The application context.
      */
@@ -767,6 +792,7 @@ public class HDBManagerView {
         List<BTOApplicationModel> listOfApplications = appContext.getApplicationRepo().findPendingWithDrawalByProjectID(projectID);
         if (listOfApplications.isEmpty()) {
             System.out.println("No applications found for this project.");
+            return;
         } else {
             System.out.println("-- Withdrawal Applications --");
             System.out.println("Index\tApplicant Name\tMarital Status\tAge\tRoom Type");
@@ -796,7 +822,8 @@ public class HDBManagerView {
     }
 
     /**
-     * Handles the menu flow for generating various filtered reports for a specific project.
+     * Handles the menu flow for generating various filtered reports for a
+     * specific project.
      *
      * @param appContext The application context.
      */
