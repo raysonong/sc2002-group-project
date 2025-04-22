@@ -53,13 +53,16 @@ public class ApplicationController {
     }
     
     /**
-     * Initiates the process to display BTO projects that the current applicant is eligible to apply for.
-     * Delegates the logic to the ApplicationService.
+     * Uses getAvailableProjectsForApplicant() to print, just a depriciated method.
+     * Delegates the calling getAvailableProjectsForApplicant() logic to the ApplicationService. 
      */
     public void viewAvailableProjectsForApplicant() {
         applicationService.viewAvailableProjectsForApplicant();
     }
-
+    /**
+     * Initiates the process to display BTO projects that the current applicant is eligible to apply for.
+     * Delegates the logic to the ApplicationService.
+     */
     public List<BTOProjectModel> getAvailableProjectsForApplicant() {
         return applicationService.getAvailableProjectsForApplicant();
     }
