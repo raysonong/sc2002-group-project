@@ -258,12 +258,12 @@ public class HDBOfficerView {
      * @param appContext The application context.
      */
     private void submitEnquiryMenu(AppContext appContext) {
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
+        // List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
-        if (!managedProjects.isEmpty()) {
-            System.out.println("You cannot submit an enquiry as you are managing a project.");
-            return;
-        }
+        // if (!managedProjects.isEmpty()) {
+        //     System.out.println("You cannot submit an enquiry as you are managing a project.");
+        //     return;
+        // }
 
         // Display eligible projects for the applicant
         System.out.println("Eligible Projects for Enquiry: ");
@@ -274,21 +274,21 @@ public class HDBOfficerView {
         int selectedProjectID = appContext.getScanner().nextInt();
         appContext.getScanner().nextLine();
 
-        // check project selected is available for applicant
-        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
+        // // check project selected is available for applicant
+        // List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
 
-        BTOProjectModel selectedProject = null;
-        for (BTOProjectModel project : availableProjects) {
-            if (project.getProjectID() == selectedProjectID) {
-                selectedProject = project;
-                break;
-            }
-        }
+        // BTOProjectModel selectedProject = null;
+        // for (BTOProjectModel project : availableProjects) {
+        //     if (project.getProjectID() == selectedProjectID) {
+        //         selectedProject = project;
+        //         break;
+        //     }
+        // }
 
-        if (selectedProject == null) {
-            System.out.println("Invalid Project ID or project is not available for your profile.");
-            return;
-        }
+        // if (selectedProject == null) {
+        //     System.out.println("Invalid Project ID or project is not available for your profile.");
+        //     return;
+        // }
 
         System.out.print("Enter your enquiry: ");
         String enquiryText = appContext.getScanner().nextLine();
@@ -310,12 +310,12 @@ public class HDBOfficerView {
      * @param appContext The application context.
      */
     private void viewMyEnquiriesMenu(AppContext appContext) {
-        List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
+        // List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
 
-        if (!managedProjects.isEmpty()) {
-            System.out.println("You cannot view your enquiry as you are managing a project.");
-            return;
-        }
+        // if (!managedProjects.isEmpty()) {
+        //     System.out.println("You cannot view your enquiry as you are managing a project.");
+        //     return;
+        // }
 
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
 

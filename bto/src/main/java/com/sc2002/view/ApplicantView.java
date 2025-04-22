@@ -11,7 +11,6 @@ import com.sc2002.controllers.UserController;
 import com.sc2002.enums.ApplicationStatus;
 import com.sc2002.model.ApplicantModel;
 import com.sc2002.model.BTOApplicationModel;
-import com.sc2002.model.BTOProjectModel;
 import com.sc2002.model.EnquiryModel;
 import com.sc2002.utilities.Receipt;
 
@@ -221,21 +220,21 @@ public class ApplicantView {
         appContext.getScanner().nextLine();
 
 
-        //check project selected is available for applicant
-        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();
+        // //check project selected is available for applicant
+        // List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();
 
-        BTOProjectModel selectedProject = null;
-        for (BTOProjectModel project : availableProjects) {
-            if (project.getProjectID() == selectedProjectID) {
-                selectedProject = project;
-                break;
-            }
-        }
+        // BTOProjectModel selectedProject = null;
+        // for (BTOProjectModel project : availableProjects) {
+        //     if (project.getProjectID() == selectedProjectID) {
+        //         selectedProject = project;
+        //         break;
+        //     }
+        // }
         
-        if (selectedProject == null) {
-            System.out.println("Invalid Project ID or project is not available for your profile.");
-            return;
-        }
+        // if (selectedProject == null) {
+        //     System.out.println("Invalid Project ID or project is not available for your profile.");
+        //     return;
+        // }
 
         System.out.print("Enter your enquiry: ");
         String enquiryText = appContext.getScanner().nextLine();
