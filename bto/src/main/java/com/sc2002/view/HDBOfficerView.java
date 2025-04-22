@@ -258,13 +258,6 @@ public class HDBOfficerView {
      * @param appContext The application context.
      */
     private void submitEnquiryMenu(AppContext appContext) {
-        // List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
-
-        // if (!managedProjects.isEmpty()) {
-        //     System.out.println("You cannot submit an enquiry as you are managing a project.");
-        //     return;
-        // }
-        // Display eligible projects for the applicant
         System.out.println("Eligible Projects for Enquiry: ");
         applicationController.viewAvailableProjectsForApplicant();
 
@@ -274,18 +267,18 @@ public class HDBOfficerView {
         appContext.getScanner().nextLine();
 
         // // check project selected is available for applicant
-        // List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
-        // BTOProjectModel selectedProject = null;
-        // for (BTOProjectModel project : availableProjects) {
-        //     if (project.getProjectID() == selectedProjectID) {
-        //         selectedProject = project;
-        //         break;
-        //     }
-        // }
-        // if (selectedProject == null) {
-        //     System.out.println("Invalid Project ID or project is not available for your profile.");
-        //     return;
-        // }
+        List<BTOProjectModel> availableProjects = applicationController.getAvailableProjectsForApplicant();;
+        BTOProjectModel selectedProject = null;
+        for (BTOProjectModel project : availableProjects) {
+            if (project.getProjectID() == selectedProjectID) {
+                selectedProject = project;
+                break;
+            }
+        }
+        if (selectedProject == null) {
+            System.out.println("Invalid Project ID or project is not available for your profile.");
+            return;
+        }
         System.out.print("Enter your enquiry: ");
         String enquiryText = appContext.getScanner().nextLine();
 
@@ -306,12 +299,6 @@ public class HDBOfficerView {
      * @param appContext The application context.
      */
     private void viewMyEnquiriesMenu(AppContext appContext) {
-        // List<BTOProjectModel> managedProjects = appContext.getProjectRepo().getProjectsByOfficer(appContext.getCurrentUser());
-
-        // if (!managedProjects.isEmpty()) {
-        //     System.out.println("You cannot view your enquiry as you are managing a project.");
-        //     return;
-        // }
         String applicantNRIC = ((ApplicantModel) appContext.getCurrentUser()).getNRIC();
 
         //get enquiries of applicant 
@@ -459,7 +446,7 @@ public class HDBOfficerView {
         List<BTOApplicationModel> applicants = appContext.getApplicationRepo().findByProjectID(managedProject.getProjectID());
 
         for (int i = 0; i < applicants.size(); i++) {
-            if (applicants.get(i).getStatus() == ApplicationStatus.SUCCESSFUL && applicants.get(i).getStatus() == ApplicationStatus.BOOKED) {
+            if (applicants.get(i).getStatus() == ApplicationStatus.SUCCESSFUL || applicants.get(i).getStatus() == ApplicationStatus.BOOKED) {
                 System.out.println((i + 1) + ". " + applicants.get(i).getApplicantNRIC());
             } else {
                 applicants.remove(i);
@@ -530,6 +517,11 @@ public class HDBOfficerView {
                         // Convert the input to a FlatType enum
                         FlatType newFlatType = FlatType.valueOf(newFlatTypeInput.toUpperCase());
 
+                        // Check if officers tries to reset the same flat type
+                        if (application.getFlatType() == newFlatType) {
+                            System.out.println("Flat type is already set to " + newFlatType + ". No changes made.");
+                            return;
+                        }
                         // Call the service to update the flat type
                         boolean updated = applicationController.updateApplicationFlatType(applicationID, newFlatType, availableFlatTypes);
 
@@ -543,7 +535,6 @@ public class HDBOfficerView {
                 }
                 case "3" -> {
                     System.out.println("Exiting to menu...");
-                    return;
                 }
                 default ->
                     System.out.println("Invalid option selected.");

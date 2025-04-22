@@ -422,19 +422,19 @@ public class ApplicationService {
             BTOProjectModel project = appContext.getProjectRepo().findByID(application.getProjectID());
 
             if (newFlatType == FlatType.TWO_ROOM) {
-                System.out.println("old 2 room count: " + project.getTwoRoomCount());
-                System.out.println("old 3 room count: " + project.getThreeRoomCount());
+                // System.out.println("old 2 room count: " + project.getTwoRoomCount());
+                // System.out.println("old 3 room count: " + project.getThreeRoomCount());
                 project.setTwoRoomCount(project.getTwoRoomCount() - 1);
                 project.setThreeRoomCount(project.getThreeRoomCount() + 1);
-                System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
-                System.out.println("New 3 room count: " + project.getThreeRoomCount());
+                // System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
+                // System.out.println("New 3 room count: " + project.getThreeRoomCount());
             } else if (newFlatType == FlatType.THREE_ROOM) {
-                System.out.println("old 2 room count: " + project.getTwoRoomCount());
-                System.out.println("old 3 room count: " + project.getThreeRoomCount());
+                // System.out.println("old 2 room count: " + project.getTwoRoomCount());
+                // System.out.println("old 3 room count: " + project.getThreeRoomCount());
                 project.setTwoRoomCount(project.getTwoRoomCount() + 1);
                 project.setThreeRoomCount(project.getThreeRoomCount() - 1);
-                System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
-                System.out.println("New 3 room count: " + project.getThreeRoomCount());
+                // System.out.println("\nNew 2 room count: " + project.getTwoRoomCount());
+                // System.out.println("New 3 room count: " + project.getThreeRoomCount());
             }
 
             // Update the flat type
