@@ -53,7 +53,7 @@ public class Main {
         OfficerRegistrationRepo officerRegistrationList = new OfficerRegistrationRepo();
         // Initialize userList
         initController.initializeUsers(userList);
-        initController.initializeProjects(projectList,userList,authController);
+        initController.initializeProjects(projectList,userList,officerRegistrationList,authController);
         // Declaring variables
         UserModel currentUser = null;
         // AppContext service, To make things less clustered, improving readibility
